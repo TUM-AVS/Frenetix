@@ -6,9 +6,9 @@ services:
 build:
   stage: build
   script:
-    - #docker build -t frenetperformanceplanner .
+    - docker build -t frenetperformanceplanner .
     - docker run -d --name my-container frenetperformanceplanner
-    - docker exec my-container bash -c 'for file in /app/dist/*.whl; do file=${file#/app/}; docker cp "my-container:$file" . ; done'
+    - docker cp my-container:/app/dist/frenetPlannerHelper-1.0.0-cp310-cp310-linux_x86_64.whl .
     - docker stop my-container
     - docker rm my-container
 
