@@ -7,6 +7,10 @@ WORKDIR /app
 # Copy your source code into the Docker container
 COPY . /app
 
+# Make the scripts executable
+RUN chmod +x /app/setup_script1.sh
+RUN chmod +x /app/setup_script2.sh
+
 # Create symbolic links to Python 3.10 and pip3.10
 RUN ln -s /opt/python/cp310-cp310/bin/python /usr/bin/python3
 RUN ln -s /opt/python/cp310-cp310/bin/pip /usr/bin/pip
