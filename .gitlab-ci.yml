@@ -6,8 +6,8 @@ services:
 build:
   stage: build
   script:
-    - docker build -t frenetPerformancePlanner .
-    - docker run -d --name my-container frenetPerformancePlanner
+    - docker build -t frenetperformanceplanner .
+    - docker run -d --name my-container frenetperformanceplanner
     - docker cp my-container:/app/dist/*.whl .
   artifacts:
     paths:
