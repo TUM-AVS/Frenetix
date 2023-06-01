@@ -1,6 +1,3 @@
-[submodule "thirdParty/commonroad-driveability-checker"]
-	path = thirdParty/commonroad-driveability-checker
-	url = https://gitlab.lrz.de/tum-cps/commonroad-drivability-checker.git
 [submodule "thirdParty/taskflow"]
 	path = thirdParty/taskflow
 	url = https://github.com/taskflow/taskflow.git
@@ -10,3 +7,6 @@
 [submodule "thirdParty/pybind11"]
 	path = thirdParty/pybind11
 	url = https://github.com/pybind/pybind11.git
+[submodule "thirdParty/commonroad-drivability-checker"]
+	path = thirdParty/commonroad-drivability-checker
+	url = https://gitlab.lrz.de/tum-cps/commonroad-drivability-checker.git
