@@ -1,0 +1,14 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+build:
+  stage: build
+  script:
+    - docker build -t frenetPerformancePlanner .
+    - docker run -d --name my-container frenetPerformancePlanner
+    - docker cp my-container:/app/dist/*.whl .
+  artifacts:
+    paths:
+      - ./*.whl
