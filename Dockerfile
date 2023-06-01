@@ -20,4 +20,4 @@ RUN yum install -y gcc gcc-c++ make cmake git wget unzip boost-devel eigen3-deve
 RUN setup_script1.sh
 
 # Compile the frenetPlannerHelper library and make a wheel including the dynamic library from the driveablity_checker
-RUN setup_script2.sh
+RUN setup_script.sh
