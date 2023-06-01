@@ -21,7 +21,7 @@ RUN yum install -y nano
 RUN yum install -y gcc gcc-c++ make cmake git wget unzip boost-devel eigen3-devel libgomp
 
 # Compile the driveablility library
-RUN setup_script1.sh
+RUN /app/setup_script1.sh
 
 # Compile the frenetPlannerHelper library and make a wheel including the dynamic library from the driveablity_checker
-RUN setup_script.sh
+RUN /app/setup_script.sh
