@@ -1,0 +1,127 @@
+#include "TrajectorySample.hpp"
+
+TrajectorySample::TrajectorySample(double horizon, 
+                                   double dT,
+                                   std::shared_ptr<std::map<std::string, double>> costWeightMap,              
+                                   PolynomialTrajectory<4>& trajectoryLongitudinal,                     
+                                   PolynomialTrajectory<5>& trajectoryLateral,                     
+                                   int uniqueId)
+    : m_horizon (horizon)
+    , m_dT (dT)
+    , m_cost (0)
+    , m_uniqueId (uniqueId)
+    , m_feasible (true)
+    , m_costWeightMap (costWeightMap)
+    , m_trajectoryLongitudinal (trajectoryLongitudinal)
+    , m_trajectoryLateral (trajectoryLateral)
+    , m_cartesianSample ()
+    , m_curvilinearSample ()
+{
+
+}
+
+TrajectorySample::TrajectorySample(double horizon, 
+                                   double dT,          
+                                   PolynomialTrajectory<4>& trajectoryLongitudinal,                     
+                                   PolynomialTrajectory<5>& trajectoryLateral,                     
+                                   int uniqueId)
+    : m_horizon (horizon)
+    , m_dT (dT)
+    , m_cost (0)
+    , m_uniqueId (uniqueId)
+    , m_feasible (true)
+    , m_costWeightMap (nullptr)
+    , m_trajectoryLongitudinal (trajectoryLongitudinal)
+    , m_trajectoryLateral (trajectoryLateral)
+    , m_cartesianSample ()
+    , m_curvilinearSample ()
+{
+
+}
+
+
+TrajectorySample::TrajectorySample(double x_0,
+                                   double y_0,
+                                   double orientation_0,
+                                   double acceleration_0,
+                                   double velocity_0)
+    : m_horizon (0)
+    , m_dT (0)
+    , m_cost (0)
+    , m_uniqueId (0)
+    , m_feasible (true)
+    , m_costWeightMap (nullptr)
+    , m_trajectoryLongitudinal ()
+    , m_trajectoryLateral ()
+    , m_cartesianSample ()
+    , m_curvilinearSample ()
+{
+    initArraysWithSize(1);
+    m_cartesianSample.x[0] = x_0;
+    m_cartesianSample.y[0] = y_0;
+    m_cartesianSample.theta[0] = orientation_0;
+    m_cartesianSample.acceleration[0] = acceleration_0;
+    m_cartesianSample.velocity[0] = velocity_0;
+}
+
+void TrajectorySample::initArraysWithSize(int size)
+{
+    m_size = static_cast<size_t>(size);
+
+    m_curvilinearSample.s.resize(size);
+    m_curvilinearSample.ss.resize(size);
+    m_curvilinearSample.sss.resize(size);
+    m_curvilinearSample.d.resize(size);
+    m_curvilinearSample.dd.resize(size);
+    m_curvilinearSample.ddd.resize(size);
+    m_curvilinearSample.theta.resize(size);
+
+    m_cartesianSample.x.resize(size);
+    m_cartesianSample.y.resize(size);
+    m_cartesianSample.theta.resize(size);
+    m_cartesianSample.kappa.resize(size);
+    m_cartesianSample.kappaDot.resize(size);
+    m_cartesianSample.acceleration.resize(size);
+    m_cartesianSample.velocity.resize(size);
+}
+
+void TrajectorySample::setCurrentTimeStep(int currentTimeStep)
+{
+    m_currentTimeStep = currentTimeStep;
+}
+
+void TrajectorySample::addCostValueToList(std::string costFunctionName, double cost)
+{
+    auto costWeightIt = m_costWeightMap->find(costFunctionName);
+    //check if there is a weight for this cost function
+
+    if(costWeightIt != m_costWeightMap->end())
+    {
+        double costWeighted = cost*costWeightIt->second;
+        m_cost += costWeighted;
+        m_costMap[costFunctionName] = std::make_pair(cost, costWeighted);
+    }
+    else
+    {
+        throw std::runtime_error("No cost weight found for cost function: " + costFunctionName);
+    }
+}
+
+void TrajectorySample::addCostValueToList(std::string costFunctionName, double cost, double weight)
+{
+    double costWeighted = cost*weight;
+    m_cost += costWeighted;
+    m_costMap[costFunctionName] = std::make_pair(cost, costWeighted);
+}
+
+void TrajectorySample::addFeasabilityValueToList(std::string feasabilityFunctionsName, double value)
+{
+    if(value) m_feasible = false;
+    m_feasabilityMap[feasabilityFunctionsName] = value;
+}
+
+size_t TrajectorySample::size()
+{
+    return m_size;
+}
+

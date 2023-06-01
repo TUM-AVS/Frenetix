@@ -1,0 +1,29 @@
+#include "CheckCurvatureRateConstrains.hpp"
+
+CheckCurvatureRateConstraint::CheckCurvatureRateConstraint(double wheelbase, double velocityDeltaMax)
+    : FeasabilityStrategy("Curvature Rate Constraint")
+    , m_wheelbase(wheelbase)
+    , m_velocityDeltaMax(velocityDeltaMax)
+{   
+}
+
+void CheckCurvatureRateConstraint::evaluateTrajectory(TrajectorySample& trajectory)
+{
+    double inFeasablity {0};
+
+    
+    double steeringAngle {};
+    double kappaDotMax {};
+    double kappaDot {};
+
+    for (size_t iii = 0; iii < trajectory.size(); ++iii) 
+    {
+        steeringAngle = std::atan2(m_wheelbase * trajectory.m_cartesianSample.kappa[iii], 1.0);
+        kappaDotMax = m_velocityDeltaMax / (m_wheelbase * std::pow(std::cos(steeringAngle), 2));
+        kappaDot = (iii > 0) ? (trajectory.m_cartesianSample.kappa[iii] - trajectory.m_cartesianSample.kappa[iii - 1]) / trajectory.m_dT : 0.0;
+
+        if (std::abs(kappaDot) > kappaDotMax)  inFeasablity++;
+    }
+
+    trajectory.addFeasabilityValueToList(m_functionName, inFeasablity);
+}
