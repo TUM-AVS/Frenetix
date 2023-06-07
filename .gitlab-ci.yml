@@ -21,6 +21,7 @@ build_wheels:
   stage: build
   script:
     - docker start my-container
+    - docker logs my-container
     - docker exec my-container /app/setup_script.sh
     - docker cp my-container:/app/dist/frenetPlannerHelper-1.0.0-cp310-cp310-linux_x86_64.whl .
     - docker stop my-container
