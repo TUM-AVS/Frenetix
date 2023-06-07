@@ -9,7 +9,7 @@ stages:
 build_wheels:
   stage: build
   script:
-    - /app/setup_local.sh
+    - ./setup_local.sh
   artifacts:
     paths:
-      - /app/dist
+      - ./dist
