@@ -21,6 +21,7 @@
 #include "strategies/CostFunctions/CalculateYawCost.hpp"
 #include "strategies/CostFunctions/CalculateCollisionProbabilityFast.hpp"
 #include "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.hpp"
+#include "strategies/CostFunctions/CalculateDistanceToObstacleCost.hpp"
 
 namespace py = pybind11;
 
@@ -161,6 +162,19 @@ namespace plannerCPP
             (
                 "evaluate_trajectory", 
                 &CalculateCollisionProbabilityMahalanobis::evaluateTrajectory, 
+                py::arg("trajectory")
+            );
+        
+        py::class_<CalculateDistanceToObstacleCost, CostStrategy, std::shared_ptr<CalculateDistanceToObstacleCost>>(m, "CalculateDistanceToObstacleCost")
+            .def
+            (
+                py::init<Eigen::Ref<RowMatrixXd>>(), 
+                py::arg("obstacles")
+            )
+            .def
+            (
+                "evaluate_trajectory", 
+                &CalculateDistanceToObstacleCost::evaluateTrajectory, 
                 py::arg("trajectory")
             );
     }

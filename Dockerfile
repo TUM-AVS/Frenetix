@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy your source code into the Docker container
 COPY . /app
 
+
 # Make the scripts executable
 RUN chmod +x /app/setup_drivability_checker.sh
 RUN chmod +x /app/setup_wheel.sh

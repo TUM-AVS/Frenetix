@@ -1,2 +1,6 @@
 venv
-
+/thirdParty/*
+/dist/*
+build
+*.egg-info
+*.so

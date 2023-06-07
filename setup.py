@@ -10,6 +10,7 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 third_party_dir = os.path.join(current_dir, "thirdParty")
 # Define build directory
 third_party_lib_dir = os.path.join(third_party_dir, "driveabilityChecker", "lib64")
+third_party_lib_dir_1 = os.path.join(third_party_dir, "driveabilityChecker", "lib")
 build_dir = os.path.join(current_dir, "build")
 
 class CustomBuildExt(build_ext):
@@ -62,6 +63,7 @@ ext_modules = [
         library_dirs=
         [
             third_party_lib_dir,
+            third_party_lib_dir_1
         ],
         extra_compile_args=
         [

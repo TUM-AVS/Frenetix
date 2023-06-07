@@ -1,7 +1,9 @@
 #!/bin/bash
-git -C /app/thirdParty/commonroad-drivability-checker submodule update --init
-mkdir /app/thirdParty/commonroad-drivability-checker/build_debug && cd /app/thirdParty/commonroad-drivability-checker/build_debug
+base_dir=./thirdParty/commonroad-drivability-checker
 
-cmake -DCMAKE_INSTALL_PREFIX=/app/thirdParty/driveabilityChecker -DCMAKE_BUILD_TYPE=Release ..
+git -C $base_dir submodule update --init
+mkdir -p $base_dir/build_debug && cd $base_dir/build_debug
+
+cmake -DCMAKE_INSTALL_PREFIX=../../driveabilityChecker -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . -- -j $(nproc)
 cmake --install .
