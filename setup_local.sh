@@ -1,5 +1,5 @@
-
 IMAGE_NAME="frenetperformanceplanner"
+CONTAINER_NAME="my-container"
 
 if [ -z "$(docker images -q $IMAGE_NAME)" ]; then
   echo "Image does not exist. Building..."
@@ -8,8 +8,14 @@ else
   echo "Image exists. Skipping build..."
 fi
 
-docker run -td --name my-container $IMAGE_NAME
-docker exec my-container /app/setup_script.sh
-docker cp my-container:/app/dist/ .
-docker stop my-container
-docker rm my-container
+if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
+  echo "Container already exists. Removing..."
+  docker stop $CONTAINER_NAME
+  docker rm $CONTAINER_NAME
+fi
+
+docker run -td --name $CONTAINER_NAME $IMAGE_NAME
+docker exec $CONTAINER_NAME /app/setup_script.sh
+docker cp $CONTAINER_NAME:/app/dist/ .
+docker stop $CONTAINER_NAME
+docker rm $CONTAINER_NAME
