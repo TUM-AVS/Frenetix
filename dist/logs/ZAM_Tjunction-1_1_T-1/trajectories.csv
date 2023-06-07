@@ -1,1 +1,0 @@
-time_step;trajectory_number;unique_id;feasible;horizon;dt;actual_traj_length;x_positions_m;y_positions_m;theta_orientations_rad;velocities_mps;accelerations_mps2;s_position_m;d_position_m;cluster_number;costs_cumulative_weighted;prediction_cost;responsibility_cost;
