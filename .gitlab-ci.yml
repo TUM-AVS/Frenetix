@@ -3,7 +3,7 @@ image: docker:latest
 services:
   - docker:dind
 
-build drivabilityChecker:
+build_drivabilityChecker:
   stage: build
   script:
     - docker build -t frenetperformanceplanner .
@@ -14,7 +14,7 @@ build drivabilityChecker:
     - when: never
 
 
-buid wheels:
+build_wheels:
   stage: build
   script:
     - docker run -d --name my-container frenetperformanceplanner
