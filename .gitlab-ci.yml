@@ -6,10 +6,27 @@ services:
 stages:
   - build
 
-build_wheels:
+build_with_new_drivabilitychecker:
   stage: build
   script:
-    - ./setup_local.sh
+    - ./setup_with_docker.sh d
   artifacts:
     paths:
       - ./dist
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^d/'
+      when: always
+    - when: never
+
+build_just_wheel_if_possible:
+  stage: build
+  script:
+    - ./setup_with_docker.sh
+  artifacts:
+    paths:
+      - ./dist
+  rules:
+    - if: '$CI_COMMIT_TAG != /^d/'
+      when: always
+    - when: never
+
