@@ -9,8 +9,11 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext, ParallelCompile
 current_dir = os.path.dirname(os.path.realpath(__file__))
 third_party_dir = os.path.join(current_dir, "thirdParty")
 # Define build directory
+# For manylinux docker 
 third_party_lib_dir = os.path.join(third_party_dir, "driveabilityChecker", "lib64")
+# For local machine
 third_party_lib_dir_1 = os.path.join(third_party_dir, "driveabilityChecker", "lib")
+
 build_dir = os.path.join(current_dir, "build")
 
 class CustomBuildExt(build_ext):
