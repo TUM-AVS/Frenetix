@@ -6,10 +6,17 @@ services:
 stages:
   - build
 
+variables:
+  IMAGE_NAME: $CI_REGISTRY_IMAGE/frenetperformanceplanner:$CI_COMMIT_REF_SLUG
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
 build_drivabilityChecker:
   stage: build
   script:
-    - docker build -t frenetperformanceplanner .
+    - docker build -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
   rules:
     - if: '$CI_COMMIT_TAG =~ /^d/'
       when: always
@@ -18,7 +25,8 @@ build_drivabilityChecker:
 build_wheels:
   stage: build
   script:
-    - docker run -d --name my-container frenetperformanceplanner
+    - docker pull $IMAGE_NAME
+    - docker run -d --name my-container $IMAGE_NAME
     - docker cp my-container:/app/dist/frenetPlannerHelper-1.0.0-cp310-cp310-linux_x86_64.whl .
     - docker stop my-container
     - docker rm my-container
