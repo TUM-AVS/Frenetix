@@ -1,0 +1,47 @@
+[project]
+name = "frenetPlannerHelper"
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.7,<3.12"
+# license = {file = "LICENSE"}
+#authors = [
+#  {email = "todo"},
+#  {name = "todo"}
+#]
+#description = "todo"
+
+dependencies = [
+    "numpy~=1.24.3"
+]
+
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "wheel",
+    "scikit-build~=0.17.6",
+    "cmake~=3.26.0",
+    "ninja",
+    "pybind11~=2.10.4",
+    #"setuptools_scm[toml]~=7.1.0"
+    ]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[tool.cibuildwheel]
+# Skip PyPy and older CPython versions
+skip = "pp* cp37-* cp38-*"
+archs = ["auto"]
+environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }
+#build-verbosity = 1
+
+# Skip tests on musllinux due to missing wheels
+test-skip = "*i686 *-musllinux*"
+test-extras = ["test"]
+test-command = "python -m pytest {package}/tests/python"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64"]
+
+# macOS 10.14 is required for full C++17 support
+environment = {MACOSX_DEPLOYMENT_TARGET=10.14}
