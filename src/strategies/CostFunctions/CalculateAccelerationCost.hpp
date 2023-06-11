@@ -7,13 +7,31 @@
 #include "TrajectorySample.hpp"
 #include "util.hpp"
 
-
+/**
+ * @class CalculateAccelerationCost
+ * @brief A class to calculate the cost of acceleration for a trajectory.
+ *
+ * This class inherits from the CostStrategy class and is used to calculate 
+ * the cost of acceleration for a given TrajectorySample. The cost is 
+ * calculated by squaring the acceleration at each point in the trajectory, 
+ * and then integrating these values over the trajectory using Simpson's rule.
+ */
 class CalculateAccelerationCost : public CostStrategy
 {
-private:
-
 public:
+
+    /**
+     * @brief Constructor for the CalculateAccelerationCost class.
+     *
+     * This initializes the cost function name to "Acceleration".
+     */
     CalculateAccelerationCost();
+
+    /**
+     * @brief Evaluate the cost of acceleration for a trajectory.
+     *
+     * @param trajectory The trajectory to evaluate.
+     */
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 
