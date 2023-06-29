@@ -58,7 +58,7 @@ if(SKBUILD)
 
     target_link_libraries(${python_module_name} PRIVATE fp_core)
 
-    install(TARGETS ${python_module_name} fp_core
+    install(TARGETS ${python_module_name}
             LIBRARY DESTINATION .
             COMPONENT PythonModules
             )
