@@ -6,14 +6,22 @@
 # The cmake_minimum_required(VERSION) command implicitly invokes the cmake_policy(VERSION)
 # command to specify that the current project code is written for the given range of CMake versions.
 # Source: https://cmake.org/cmake/help/v3.25/command/cmake_minimum_required.html
-cmake_minimum_required(VERSION 3.20..3.25)
+cmake_minimum_required(VERSION 3.24..3.26)
 
-project(fppp
-    LANGUAGES C CXX
+if(NOT DEFINED SKBUILD_PROJECT_NAME)
+    set(SKBUILD_PROJECT_NAME frenetPlannerHelper)
+    message(STATUS "SKBUILD_PROJECT_NAME not defined, falling back to ${SKBUILD_PROJECT_NAME}")
+endif()
+if(NOT DEFINED SKBUILD_PROJECT_VERSION)
+    set(SKBUILD_PROJECT_VERSION 0.0.1)
+    message(STATUS "SKBUILD_PROJECT_VERSION not defined, falling back to ${SKBUILD_PROJECT_VERSION}")
+endif()
+
+project(${SKBUILD_PROJECT_NAME}
+    LANGUAGES CXX
     # TODO: Find an automatic way to sync the version with setuptools_scm/Git tags
-    VERSION 2022.0
-    HOMEPAGE_URL "https://commonroad.in.tum.de/"
-    DESCRIPTION "Classes and methods to represent the CommonRoad format in C++17")
+    VERSION ${SKBUILD_PROJECT_VERSION}
+    )
 
 # CMP0077 (3.13) - option() honors normal variables.
 # Relevant for Eigen3
