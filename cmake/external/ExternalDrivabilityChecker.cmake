@@ -12,6 +12,8 @@ FetchContent_Declare(
     GIT_TAG        a2cf908db1ab123bef1a4c40f58dd94e3bdd756d
 )
 
+set(BUILD_S11N FALSE CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(crdc)
 
 set_property(DIRECTORY ${crdc_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL ON)
