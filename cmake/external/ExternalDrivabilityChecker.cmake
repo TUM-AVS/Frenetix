@@ -1,12 +1,15 @@
 include(FetchContent)
 
-message(STATUS "DrivabilityChecker - using bundled version")
+find_package(Threads REQUIRED)
+
+# Required for LINK_LIBRARIES_ONLY_TARGETS (gtest links directly to pthread)
+add_library(pthread ALIAS Threads::Threads)
+
 FetchContent_Declare(
     crdc
     GIT_REPOSITORY git@gitlab.lrz.de:cps/commonroad-drivability-checker.git
-    #GIT_TAG "wip-skbuild"
-    GIT_TAG e8e75d6033cbcd5831d9425deb9a3b5b548baac2
-    GIT_SUBMODULES third_party/gpc # triangle not required
+    # branch feature/cmake-fetch-content
+    GIT_TAG        a2cf908db1ab123bef1a4c40f58dd94e3bdd756d
 )
 
 FetchContent_MakeAvailable(crdc)
