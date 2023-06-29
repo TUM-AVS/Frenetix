@@ -18,3 +18,5 @@ set(TF_BUILD_TESTS OFF)
 
 FetchContent_MakeAvailable(taskflow)
 
+set_property(DIRECTORY ${taskflow_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL ON)
+
