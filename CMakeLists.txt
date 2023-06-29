@@ -15,6 +15,9 @@ endif()
 if(NOT DEFINED SKBUILD_PROJECT_VERSION)
     set(SKBUILD_PROJECT_VERSION 0.0.1)
     message(STATUS "SKBUILD_PROJECT_VERSION not defined, falling back to ${SKBUILD_PROJECT_VERSION}")
+else()
+    # Strip version suffix (CMake only allows integer version components)
+    string(REGEX MATCH "^[0-9]+\.[0-9]+\.[0-9]+" SKBUILD_PROJECT_VERSION ${SKBUILD_PROJECT_VERSION})
 endif()
 
 project(${SKBUILD_PROJECT_NAME}
