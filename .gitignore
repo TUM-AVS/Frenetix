@@ -4,3 +4,4 @@ venv
 build
 *.egg-info
 *.so
+_skbuild
