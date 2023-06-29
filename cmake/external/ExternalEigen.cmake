@@ -21,6 +21,6 @@ FetchContent_MakeAvailable(Eigen3)
 
 if(TARGET eigen)
     install(TARGETS eigen
-            EXPORT EnvironmentModel_Targets
-            )
+        EXPORT ${PROJECT_NAME}_Targets
+        )
 endif()

@@ -152,15 +152,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 include(CMakeDependentOption)
 
-option(BUILD_SHARED_LIBS "Build environment model as a shared library" ON)
+option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library" ON)
 
-option(ENV_MODEL_BUILD_SHARED_LIBS "Build using shared libraries" ${BUILD_SHARED_LIBS})
-
-cmake_dependent_option(ENV_MODEL_BUILD_CODE_COVERAGE
-    "Build code coverage"
-    OFF
-    "ENV_MODEL_BUILD_TESTS;NOT SKBUILD"
-    OFF)
+option(${PROJECT_NAME}_BUILD_SHARED_LIBS "Build using shared libraries" ${BUILD_SHARED_LIBS})
 
 set(CMAKE_SUPPORTS_TRY_FIND_PACKAGE OFF)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24.0)
@@ -174,12 +168,12 @@ else()
         "process a bit.\n"
         "In case you have all required dependencies installed, you can try "
         "enabling the option\n"
-        "\tENV_MODEL_SYSTEM_PACKAGES_FORCE\n"
+        "\t${PROJECT_NAME}_SYSTEM_PACKAGES_FORCE\n"
         "which will force using find_package for all dependencies.")
 endif()
 
-option(ENV_MODEL_SYSTEM_PACKAGES "Try to use system packages for dependencies" ON)
-cmake_dependent_option(ENV_MODEL_SYSTEM_PACKAGES_FORCE
+option(${PROJECT_NAME}_SYSTEM_PACKAGES "Try to use system packages for dependencies" ON)
+cmake_dependent_option(${PROJECT_NAME}_SYSTEM_PACKAGES_FORCE
     "For CMake<3.24: Force using system packages for all dependencies"
     OFF
     "NOT CMAKE_SUPPORTS_TRY_FIND_PACKAGE"
@@ -223,6 +217,5 @@ include(ExternalDrivabilityChecker)
 include(ExternalEigen)
 include(ExternalTaskflow)
 
-# Add Environment model node
 add_subdirectory(src)
 
