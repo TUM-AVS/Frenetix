@@ -53,7 +53,7 @@ public:
     void sort();
     void addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function);
     void addFunction(std::shared_ptr<TrajectoryStrategy> function);
-    void addCostFunction(std::shared_ptr<CostStrategy> function, std::string functionName, double costWeight);
+    void addCostFunction(std::shared_ptr<CostStrategy> function);
 
     /**
      * @brief Evaluates all current functions for each trajectory in the container.
@@ -71,23 +71,6 @@ public:
      * 
      */
     void evaluateAllCurrentFunctionsConcurrent(bool calculateAllCosts);
-
-    /**
-     * @brief Set the Cost Weights. The cost weights are used to scale the cost functions. 
-     * The names of the cost functions are used as keys and can be extracted from the cost functions 
-     * by calling the getName() function.
-     * 
-     * @param costWeightsMap 
-     */
-    void setCostWeights(std::map<std::string, double> costWeightsMap);
-
-    /**
-     * @brief Adds a cost weight for the given cost function name.
-     * 
-     * @param costFunctionName 
-     * @param costWeight 
-     */
-    void addCostWeight(std::string costFunctionName, double costWeight);
 
     /**
      * @brief Resets the trajectories container.

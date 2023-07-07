@@ -6,34 +6,14 @@ TrajectoryHandler::TrajectoryHandler(double dt)
 
 }
 
-void TrajectoryHandler::addCostFunction(std::shared_ptr<CostStrategy> function, std::string functionName, double costWeight)
+void TrajectoryHandler::addCostFunction(std::shared_ptr<CostStrategy> function)
 {
-    if (!m_costWeightsMap) {
-        throw std::runtime_error("m_costWeightsMap is null!");
-    }
 
     // check if there exits a cost weight for the given cost function
-    m_costFunctions.insert_or_assign(functionName, function);
-    m_costWeightsMap.insert_or_assign(functionName, costWeight);
+    m_costFunctions.insert_or_assign(function->getFunctionName(), function);
 }
 
 void TrajectoryHandler::addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function)
-{
-    if (!m_costWeightsMap) {
-        throw std::runtime_error("m_costWeightsMap is null!");
-    }
-
-    // check if there exits a cost weight for the given cost function
-    if(m_costWeightsMap->find(functionName) != m_costWeightsMap->end())
-    {
-        m_feasabilityFunctions.insert_or_assign(functionName, function);
-        m_costWeightsMap->insert_or_assign(functionName, costWeight);
-    }
-    else
-    {
-        throw std::runtime_error("No cost weight for the given cost function found!");
-    }    
-}
 {
     m_feasabilityFunctions.insert_or_assign(function->getFunctionName(),function);
 }
@@ -174,15 +154,9 @@ void TrajectoryHandler::generateTrajectories(RowMatrixXd samplingMatrix, bool lo
     }
 }
 
-void TrajectoryHandler::setCostWeights(std::map<std::string, double> costWeightsMap)
-{
-    m_costWeightsMap = std::make_shared<std::map<std::string, double>>(costWeightsMap);
-}
-
-
 void TrajectoryHandler::addCostWeight(std::string costFunctionName, double costWeight) 
 { 
-    m_costWeightsMap->insert_or_assign(costFunctionName, costWeight); 
+    m_costWeightsMap.insert_or_assign(costFunctionName, costWeight); 
 }
 
 void TrajectoryHandler::resetTrajectories()
