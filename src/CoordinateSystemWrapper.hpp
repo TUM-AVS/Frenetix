@@ -43,9 +43,8 @@ public:
     
     CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> ref_path);
 
-    int getS_idx(double& s) const;
-    double getSLambda(double& s, int& s_idx) const;
-    
+    int getS_idx(double s) const;
+    double getSLambda(double s, int s_idx) const;
 
 };
 

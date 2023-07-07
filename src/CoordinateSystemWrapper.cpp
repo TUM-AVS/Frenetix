@@ -16,7 +16,7 @@ CoordinateSystemWrapper::CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> refPath
 
 }
 
-int CoordinateSystemWrapper::getS_idx(double& s) const
+int CoordinateSystemWrapper::getS_idx(double s) const
 {
     int s_idx=0;
     for(int k=0; k < m_refPos.size(); k++)
@@ -30,7 +30,7 @@ int CoordinateSystemWrapper::getS_idx(double& s) const
     return s_idx-1;
 }
 
-double CoordinateSystemWrapper::getSLambda(double& s, int& s_idx) const
+double CoordinateSystemWrapper::getSLambda(double s, int s_idx) const
 {
     return (s-m_refPos[s_idx]) / (m_refPos[s_idx+1] - m_refPos[s_idx]);
 }
