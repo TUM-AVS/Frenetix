@@ -13,6 +13,9 @@ public:
     {
 
     }
+
+    virtual ~TrajectoryStrategy() = default;
+
     virtual void evaluateTrajectory(TrajectorySample& trajectory) = 0;
     std::string getFunctionName() const{ return m_functionName; }
 

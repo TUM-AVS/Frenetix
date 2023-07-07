@@ -12,6 +12,8 @@ public:
 
     }
 
+    virtual ~FeasabilityStrategy() = default;
+
     virtual void evaluateTrajectory(TrajectorySample& trajectory) = 0;
 };
 

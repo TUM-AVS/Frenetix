@@ -10,7 +10,9 @@ public:
         : TrajectoryStrategy(functionName)
     {
     }
-    
+
+    virtual ~CostStrategy() = default;
+
     virtual void evaluateTrajectory(TrajectorySample& trajectory) = 0;
 
 };
