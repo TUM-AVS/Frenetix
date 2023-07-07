@@ -36,7 +36,7 @@ public:
                     const Eigen::Ref<Eigen::VectorXd> kappa_, 
                     const Eigen::Ref<Eigen::VectorXd> kappaDot_);
 
-    bool isInitialized;                  ///< If the cartesisan coordinates are filled
+    bool isInitialized = false;          ///< If the cartesisan coordinates are filled
     Eigen::VectorXd x;                   ///< The x positions in cartesian coordinates
     Eigen::VectorXd y;                   ///< The y positions in cartesian coordinates
     Eigen::VectorXd theta;               ///< The orientation of the sample.
