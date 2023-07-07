@@ -2,10 +2,10 @@
 #define FEASABILITYFUNCTIONBINDING_HPP
 
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <nanobind/ndarray.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/bind_vector.h>
+#include <nanobind/eigen/dense.h>
 
 #include "strategies/FeasabilityFunctions/CheckAccelerationConstraint.hpp"
 #include "strategies/FeasabilityFunctions/CheckCurvatureConstraints.hpp"
@@ -14,63 +14,63 @@
 #include "strategies/FeasabilityFunctions/CheckYawRateConstraint.hpp"
 
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
-    void initBindFeasabilityFunctions(pybind11::module &m) 
+    void initBindFeasabilityFunctions(nb::module_ &m) 
     {   
-        py::class_<CheckAccelerationConstraint, FeasabilityStrategy, std::shared_ptr<CheckAccelerationConstraint>>(m, "CheckAccelerationConstraint")
-            .def(py::init<double, double>(),
-                py::arg("switchingVelocity"), py::arg("maxAcceleration"))
+        nb::class_<CheckAccelerationConstraint, FeasabilityStrategy>(m, "CheckAccelerationConstraint")
+            .def(nb::init<double, double>(),
+                nb::arg("switchingVelocity"), nb::arg("maxAcceleration"))
             .def
             (
                 "evaluate_trajectory", 
                 &CheckAccelerationConstraint::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
 
-        py::class_<CheckCurvatureConstraint, FeasabilityStrategy, std::shared_ptr<CheckCurvatureConstraint>>(m, "CheckCurvatureConstraint")
-            .def(py::init<double, double>(),
-                py::arg("deltaMax"), py::arg("wheelbase"))
+        nb::class_<CheckCurvatureConstraint, FeasabilityStrategy>(m, "CheckCurvatureConstraint")
+            .def(nb::init<double, double>(),
+                nb::arg("deltaMax"), nb::arg("wheelbase"))
             .def
             (
                 "evaluate_trajectory", 
                 &CheckCurvatureConstraint::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
 
-        py::class_<CheckCurvatureRateConstraint, FeasabilityStrategy, std::shared_ptr<CheckCurvatureRateConstraint>>(m, "CheckCurvatureRateConstraint")
-            .def(py::init<double, double>(),
-                py::arg("wheelbase"), py::arg("velocityDeltaMax"))
+        nb::class_<CheckCurvatureRateConstraint, FeasabilityStrategy>(m, "CheckCurvatureRateConstraint")
+            .def(nb::init<double, double>(),
+                nb::arg("wheelbase"), nb::arg("velocityDeltaMax"))
             .def
             (
                 "evaluate_trajectory", 
                 &CheckCurvatureRateConstraint::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
 
-        py::class_<CheckVelocityConstraint, FeasabilityStrategy, std::shared_ptr<CheckVelocityConstraint>>(m, "CheckVelocityConstraint")
-            .def(py::init<>())
+        nb::class_<CheckVelocityConstraint, FeasabilityStrategy>(m, "CheckVelocityConstraint")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CheckVelocityConstraint::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
 
-        py::class_<CheckYawRateConstraint, FeasabilityStrategy, std::shared_ptr<CheckYawRateConstraint>>(m, "CheckYawRateConstraint")
-            .def(py::init<double, double>(),
-                py::arg("deltaMax"), py::arg("wheelbase"))
+        nb::class_<CheckYawRateConstraint, FeasabilityStrategy>(m, "CheckYawRateConstraint")
+            .def(nb::init<double, double>(),
+                nb::arg("deltaMax"), nb::arg("wheelbase"))
             .def
             (
                 "evaluate_trajectory", 
                 &CheckYawRateConstraint::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
     }

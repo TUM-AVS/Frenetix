@@ -2,10 +2,10 @@
 #define TRAJECTORYSTRATEGYBINDING_HPP
 
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/ndarray.h>
+#include <nanobind/stl/bind_vector.h>
+#include <nanobind/eigen/dense.h>
 
 #include "strategies/TrajectoryStrategy.hpp"
 
@@ -14,16 +14,16 @@
 #include "feasabilityStrategyBinding.hpp"
 #include "trajectoryFunctionsBinding/otherFunctionsBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindTrajectoryStrategy(pybind11::module &m) 
+    void initBindTrajectoryStrategy(nb::module_ &m) 
     {
-        py::module sub_m = m.def_submodule("trajectory_functions");
+        nb::module_ sub_m = m.def_submodule("trajectory_functions");
 
-        py::class_<TrajectoryStrategy, std::shared_ptr<TrajectoryStrategy>>(sub_m, "TrajectoryStrategy");
+        nb::class_<TrajectoryStrategy>(sub_m, "TrajectoryStrategy");
 
         initBindCostStrategy(sub_m);
         initBindFeasabilityStrategy(sub_m);

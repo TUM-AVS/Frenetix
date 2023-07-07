@@ -37,8 +37,6 @@ target_include_directories(fp_core
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/trajectory>
         )
 
-find_package(pybind11 2.7.0 QUIET)
-
 # add pybind module
 if(SKBUILD)
     message(STATUS "The project is built using scikit-build")
@@ -46,15 +44,20 @@ endif()
 if(pybind11_FOUND AND NOT SKBUILD)
     message(STATUS "Adding Python interface for compilation only")
 endif()
-if(pybind11_FOUND)
+if(pybind11_FOUND AND FALSE)
         add_library(fp_python OBJECT ${FP_PYTHON_SRC_FILES} ${FP_PYTHON_HDR_FILES})
-        target_link_libraries(fp_python PRIVATE fp_core pybind11::module)
+        target_link_libraries(fp_python PRIVATE fp_core nanobind::module)
         set_property(TARGET fp_python PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
 if(SKBUILD)
     set(python_module_name frenetPlannerHelper)
-    pybind11_add_module(${python_module_name} MODULE $<TARGET_OBJECTS:fp_python>)
+    #pybind11_add_module(${python_module_name} MODULE $<TARGET_OBJECTS:fp_python>)
+    nanobind_add_module(
+        ${python_module_name}
+        NB_STATIC STABLE_ABI LTO
+        ${FP_PYTHON_SRC_FILES} ${FP_PYTHON_HDR_FILES}
+        )
 
     target_link_libraries(${python_module_name} PRIVATE fp_core)
 

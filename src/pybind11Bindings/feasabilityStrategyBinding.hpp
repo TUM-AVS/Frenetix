@@ -2,24 +2,25 @@
 #define FEASABILITYSTRATEGYBINDING_HPP
 
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <nanobind/ndarray.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/bind_vector.h>
+#include <nanobind/eigen/dense.h>
+#include <string>
 
 #include "strategies/FeasabilityStrategy.hpp"
 #include "trajectoryFunctionsBinding/feasabilityFunctionsBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindFeasabilityStrategy(pybind11::module &m) 
+    void initBindFeasabilityStrategy(nb::module_ &m) 
     {
-        py::class_<FeasabilityStrategy, TrajectoryStrategy, std::shared_ptr<FeasabilityStrategy>>(m, "FeasabilityStrategy");
+        nb::class_<FeasabilityStrategy, TrajectoryStrategy>(m, "FeasabilityStrategy");
 
-        py::module sub_m = m.def_submodule("feasability_functions");
+        nb::module_ sub_m = m.def_submodule("feasability_functions");
 
         initBindFeasabilityFunctions(sub_m);
     }

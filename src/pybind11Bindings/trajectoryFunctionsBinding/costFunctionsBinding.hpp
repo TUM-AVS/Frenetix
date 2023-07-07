@@ -2,10 +2,10 @@
 #define COSTFUNCTIONBINDING_HPP
 
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/bind_vector.h>
+#include <nanobind/eigen/dense.h>
+#include <nanobind/stl/map.h>
 
 #include "strategies/CostFunctions/CalculateAccelerationCost.hpp"
 #include "strategies/CostFunctions/CalculateDistanceToReferencePathCost.hpp"
@@ -23,159 +23,159 @@
 #include "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.hpp"
 #include "strategies/CostFunctions/CalculateDistanceToObstacleCost.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
-    void initBindCostFunctions(pybind11::module &m) 
+    void initBindCostFunctions(nb::module_ &m) 
     {
-        py::class_<CalculateAccelerationCost, CostStrategy, std::shared_ptr<CalculateAccelerationCost>>(m, "CalculateAccelerationCost")
-            .def(py::init<>())
+        nb::class_<CalculateAccelerationCost, CostStrategy>(m, "CalculateAccelerationCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateAccelerationCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateDistanceToReferencePathCost, CostStrategy, std::shared_ptr<CalculateDistanceToReferencePathCost>>(m, "CalculateDistanceToReferencePathCost")
-            .def(py::init<>())
+        nb::class_<CalculateDistanceToReferencePathCost, CostStrategy>(m, "CalculateDistanceToReferencePathCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateDistanceToReferencePathCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateJerkCost, CostStrategy, std::shared_ptr<CalculateJerkCost>>(m, "CalculateJerkCost")
-            .def(py::init<>())
+        nb::class_<CalculateJerkCost, CostStrategy>(m, "CalculateJerkCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateJerkCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateLaneCenterOffsetCost, CostStrategy, std::shared_ptr<CalculateLaneCenterOffsetCost>>(m, "CalculateLaneCenterOffsetCost")
-            .def(py::init<>())
+        nb::class_<CalculateLaneCenterOffsetCost, CostStrategy>(m, "CalculateLaneCenterOffsetCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateLaneCenterOffsetCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateLateralJerkCost, CostStrategy, std::shared_ptr<CalculateLateralJerkCost>>(m, "CalculateLateralJerkCost")
-            .def(py::init<>())
+        nb::class_<CalculateLateralJerkCost, CostStrategy>(m, "CalculateLateralJerkCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateLateralJerkCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateLongitudinalJerkCost, CostStrategy, std::shared_ptr<CalculateLongitudinalJerkCost>>(m, "CalculateLongitudinalJerkCost")
-            .def(py::init<>())
+        nb::class_<CalculateLongitudinalJerkCost, CostStrategy>(m, "CalculateLongitudinalJerkCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateLongitudinalJerkCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateLongitudinalVelocityCost, CostStrategy, std::shared_ptr<CalculateLongitudinalVelocityCost>>(m, "CalculateLongitudinalVelocityCost")
-            .def(py::init<>())
+        nb::class_<CalculateLongitudinalVelocityCost, CostStrategy>(m, "CalculateLongitudinalVelocityCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateLongitudinalVelocityCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateOrientationOffsetCost, CostStrategy, std::shared_ptr<CalculateOrientationOffsetCost>>(m, "CalculateOrientationOffsetCost")
-            .def(py::init<>())
+        nb::class_<CalculateOrientationOffsetCost, CostStrategy>(m, "CalculateOrientationOffsetCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateOrientationOffsetCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateSteeringAngleCost, CostStrategy, std::shared_ptr<CalculateSteeringAngleCost>>(m, "CalculateSteeringAngleCost")
-            .def(py::init<>())
+        nb::class_<CalculateSteeringAngleCost, CostStrategy>(m, "CalculateSteeringAngleCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateSteeringAngleCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateSteeringRateCost, CostStrategy, std::shared_ptr<CalculateSteeringRateCost>>(m, "CalculateSteeringRateCost")
-            .def(py::init<>())
+        nb::class_<CalculateSteeringRateCost, CostStrategy>(m, "CalculateSteeringRateCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateSteeringRateCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateVelocityOffsetCost, CostStrategy, std::shared_ptr<CalculateVelocityOffsetCost>>(m, "CalculateVelocityOffsetCost")
-            .def(py::init<double>(), py::arg("desiredSpeed"))
+        nb::class_<CalculateVelocityOffsetCost, CostStrategy>(m, "CalculateVelocityOffsetCost")
+            .def(nb::init<double>(), nb::arg("desiredSpeed"))
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateVelocityOffsetCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateYawCost, CostStrategy, std::shared_ptr<CalculateYawCost>>(m, "CalculateYawCost")
-            .def(py::init<>())
+        nb::class_<CalculateYawCost, CostStrategy>(m, "CalculateYawCost")
+            .def(nb::init<>())
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateYawCost::evaluateTrajectory,
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
 
-        py::class_<CalculateCollisionProbabilityFast, CostStrategy, std::shared_ptr<CalculateCollisionProbabilityFast>>(m, "CalculateCollisionProbabilityFast")
+        nb::class_<CalculateCollisionProbabilityFast, CostStrategy>(m, "CalculateCollisionProbabilityFast")
             .def(
-                py::init<const std::map<int, std::map<std::string, RowMatrixXd>>, double, double>(),
-                py::arg("predictions"), 
-                py::arg("vehicleLength"), 
-                py::arg("vehicleWidth")
+                nb::init<const std::map<int, std::map<std::string, RowMatrixXd>>, double, double>(),
+                nb::arg("predictions"), 
+                nb::arg("vehicleLength"), 
+                nb::arg("vehicleWidth")
             )
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateCollisionProbabilityFast::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             )
             .def("printPredictions", &CalculateCollisionProbabilityFast::printPredictions);
 
-        py::class_<CalculateCollisionProbabilityMahalanobis, CostStrategy, std::shared_ptr<CalculateCollisionProbabilityMahalanobis>>(m, "CalculateCollisionProbabilityMahalanobis")
+        nb::class_<CalculateCollisionProbabilityMahalanobis, CostStrategy>(m, "CalculateCollisionProbabilityMahalanobis")
             .def
             (
-                py::init<const std::map<int, std::map<std::string, RowMatrixXd>>>(), 
-                py::arg("predictions")
+                nb::init<const std::map<int, std::map<std::string, RowMatrixXd>>>(), 
+                nb::arg("predictions")
             )
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateCollisionProbabilityMahalanobis::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
         
-        py::class_<CalculateDistanceToObstacleCost, CostStrategy, std::shared_ptr<CalculateDistanceToObstacleCost>>(m, "CalculateDistanceToObstacleCost")
+        nb::class_<CalculateDistanceToObstacleCost, CostStrategy>(m, "CalculateDistanceToObstacleCost")
             .def
             (
-                py::init<Eigen::Ref<RowMatrixXd>>(), 
-                py::arg("obstacles")
+                nb::init<Eigen::Ref<RowMatrixXd>>(), 
+                nb::arg("obstacles")
             )
             .def
             (
                 "evaluate_trajectory", 
                 &CalculateDistanceToObstacleCost::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
     }
     

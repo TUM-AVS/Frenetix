@@ -2,47 +2,48 @@
 #define OTHERFUNCTIONBINDING_HPP
 
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <nanobind/ndarray.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/bind_vector.h>
+#include <nanobind/eigen/dense.h>
 
 #include "strategies/Functions/FillCoordinates.hpp"
 #include "strategies/Functions/ComputeInitalState.hpp"
 #include "CoordinateSystemWrapper.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
-    void initBindOtherFunctions(pybind11::module &m) 
+    void initBindOtherFunctions(nb::module_ &m) 
     {
-        py::class_<FillCoordinates, TrajectoryStrategy, std::shared_ptr<FillCoordinates>>(m, "FillCoordinates")
-            .def(py::init<const Eigen::Ref<Eigen::VectorXd>&, bool, double, std::shared_ptr<CoordinateSystemWrapper>&>(),
-                py::arg("times"), 
-                py::arg("lowVelocityMode"), 
-                py::arg("initialOrientation"), 
-                py::arg("coordinateSystem")
+        nb::class_<FillCoordinates, TrajectoryStrategy>(m, "FillCoordinates")
+            .def(nb::init<const Eigen::Ref<Eigen::VectorXd>&, bool, double, std::shared_ptr<CoordinateSystemWrapper>&>(),
+                nb::arg("times"), 
+                nb::arg("lowVelocityMode"), 
+                nb::arg("initialOrientation"), 
+                nb::arg("coordinateSystem")
             )
             .def
             (
                 "evaluate_trajectory", 
                 &FillCoordinates::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
         
-        py::class_<ComputeInitialState, TrajectoryStrategy, std::shared_ptr<ComputeInitialState>>(m, "ComputeInitialState")
-            .def(py::init<std::shared_ptr<CoordinateSystemWrapper>&, double, double, bool>(),
-                py::arg("coordinateSystem"), 
-                py::arg("wheelBase"), 
-                py::arg("steeringAngle"), 
-                py::arg("lowVelocityMode")
+        nb::class_<ComputeInitialState, TrajectoryStrategy>(m, "ComputeInitialState")
+            .def(nb::init<std::shared_ptr<CoordinateSystemWrapper>&, double, double, bool>(),
+                nb::arg("coordinateSystem"), 
+                nb::arg("wheelBase"), 
+                nb::arg("steeringAngle"), 
+                nb::arg("lowVelocityMode")
             )
             .def
             (
                 "evaluate_trajectory", 
                 &ComputeInitialState::evaluateTrajectory, 
-                py::arg("trajectory")
+                nb::arg("trajectory")
             );
     }
 } //plannerCPP
