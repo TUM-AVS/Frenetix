@@ -26,7 +26,7 @@ void CalculateCollisionProbabilityMahalanobis::evaluateTrajectory(TrajectorySamp
                 Eigen::Vector2d v = mean_list.row(i - 1);
                 Eigen::Matrix2d cov;
                 cov << cov_list1.row(i - 1), cov_list2.row(i - 1);
-                cov = cov.transpose();
+                cov.transposeInPlace();
                 Eigen::Matrix2d iv = cov.inverse();
                 // Calculate Mahalanobis distance manually
                 Eigen::Vector2d diff = u - v;
