@@ -7,6 +7,7 @@
 #include <pybind11/eigen.h>
 
 #include "TrajectoryHandler.hpp"
+#include "TrajectorySample.hpp"
 
 namespace py = pybind11;
 

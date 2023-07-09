@@ -4,13 +4,12 @@
 #include <Eigen/Core>
 #include <memory>
 
-#include "geometry/util.h"
-#include "util.hpp"
+#include <geometry/util.h>
+#include <util.hpp>
 
 namespace geometry {
 class CurvilinearCoordinateSystem;
 }  // namespace geometry
-
 
 class CoordinateSystemWrapper
 {
