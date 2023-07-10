@@ -140,16 +140,16 @@ void TrajectoryHandler::generateTrajectories(RowMatrixXd samplingMatrix, bool lo
         Eigen::Vector3d x0_lat {samplingMatrix.row(iii)[7], samplingMatrix.row(iii)[8], samplingMatrix.row(iii)[9]};
         Eigen::Vector3d x1_lat {samplingMatrix.row(iii)[10], samplingMatrix.row(iii)[11], samplingMatrix.row(iii)[12]};
 
-        PolynomialTrajectory<5> lateralTrajectory (samplingMatrix.row(iii)[0]
-                                                  ,t1
-                                                  ,x0_lat
-                                                  ,x1_lat);
+        PolynomialTrajectory<5> lateralTrajectory(samplingMatrix.row(iii)[0],
+                                                 t1,
+                                                 x0_lat,
+                                                 x1_lat);
 
-        m_trajectories.push_back(TrajectorySample( samplingMatrix.row(iii)[1]-samplingMatrix.row(iii)[0]
-                                                 , m_dt 
-                                                 , longitudinalTrajectory
-                                                 , lateralTrajectory
-                                                 , iii));
+        m_trajectories.push_back(TrajectorySample(m_dt,
+                                                 longitudinalTrajectory,
+                                                 lateralTrajectory,
+                                                 iii,
+                                                 samplingMatrix.row(iii)));
     }
 }
 

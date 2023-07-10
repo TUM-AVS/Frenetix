@@ -1,16 +1,14 @@
 #include "TrajectorySample.hpp"
 
-TrajectorySample::TrajectorySample(double horizon, 
-                                   double dT,
-                                   std::shared_ptr<std::map<std::string, double>> costWeightMap,              
+TrajectorySample::TrajectorySample(double dT,          
                                    PolynomialTrajectory<4>& trajectoryLongitudinal,                     
                                    PolynomialTrajectory<5>& trajectoryLateral,                     
                                    int uniqueId)
-    : m_horizon (horizon)
-    , m_dT (dT)
+    : m_dT (dT)
     , m_cost (0)
     , m_uniqueId (uniqueId)
     , m_feasible (true)
+    , m_samplingParameters ()
     , m_trajectoryLongitudinal (trajectoryLongitudinal)
     , m_trajectoryLateral (trajectoryLateral)
     , m_cartesianSample ()
@@ -19,16 +17,16 @@ TrajectorySample::TrajectorySample(double horizon,
 
 }
 
-TrajectorySample::TrajectorySample(double horizon, 
-                                   double dT,          
+TrajectorySample::TrajectorySample(double dT,          
                                    PolynomialTrajectory<4>& trajectoryLongitudinal,                     
                                    PolynomialTrajectory<5>& trajectoryLateral,                     
-                                   int uniqueId)
-    : m_horizon (horizon)
-    , m_dT (dT)
+                                   int uniqueId,
+                                   Eigen::VectorXd samplingParameters)
+    : m_dT (dT)
     , m_cost (0)
     , m_uniqueId (uniqueId)
     , m_feasible (true)
+    , m_samplingParameters (samplingParameters)
     , m_trajectoryLongitudinal (trajectoryLongitudinal)
     , m_trajectoryLateral (trajectoryLateral)
     , m_cartesianSample ()
@@ -43,11 +41,11 @@ TrajectorySample::TrajectorySample(double x_0,
                                    double orientation_0,
                                    double acceleration_0,
                                    double velocity_0)
-    : m_horizon (0)
-    , m_dT (0)
+    : m_dT (0)
     , m_cost (0)
     , m_uniqueId (0)
     , m_feasible (true)
+    , m_samplingParameters ()
     , m_trajectoryLongitudinal ()
     , m_trajectoryLateral ()
     , m_cartesianSample ()

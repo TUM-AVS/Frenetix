@@ -1,11 +1,9 @@
 #include "FillCoordinates.hpp"
 
-FillCoordinates::FillCoordinates(Eigen::Ref<Eigen::VectorXd> times, 
-                                 bool lowVelocityMode, 
+FillCoordinates::FillCoordinates(bool lowVelocityMode, 
                                  double initialOrienation, 
                                  std::shared_ptr<CoordinateSystemWrapper> coordinateSystem)
     : TrajectoryStrategy("Fill Coordinates")
-    , m_times(times)
     , m_lowVelocityMode(lowVelocityMode)
     , m_initialOrientation(initialOrienation)
     , m_coordinateSystem(coordinateSystem)
@@ -22,13 +20,18 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
 
     double dp {0};
     double dpp {0};
-    trajectory.m_currentTimeStep = m_times.size();
-    trajectory.m_currentTimeStep = m_times.size();
-    trajectory.initArraysWithSize(m_times.size());
 
-    for (int iii = 0; iii < m_times.size(); ++iii) 
+    size_t length = static_cast<size_t>(1+(trajectory.m_samplingParameters[1]- trajectory.m_samplingParameters[0]) 
+        / trajectory.m_dT);
+
+    trajectory.initArraysWithSize(length);
+    trajectory.m_currentTimeStep = length;
+
+    double t {0};
+
+    for (int iii = 0; iii < length; ++iii) 
     {
-        double t = m_times[iii];
+        t = trajectory.m_samplingParameters[0] + trajectory.m_dT*iii;
         trajectory.m_curvilinearSample.s[iii] = trajectory.m_trajectoryLongitudinal(t, 0);
         trajectory.m_curvilinearSample.ss[iii] = trajectory.m_trajectoryLongitudinal(t, 1);
         trajectory.m_curvilinearSample.sss[iii] = trajectory.m_trajectoryLongitudinal(t, 2);

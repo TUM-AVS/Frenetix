@@ -188,3 +188,4 @@ namespace plannerCPP
 } //plannerCPP
 
 #endif //COSTFUNCTIONBINDING_HPP
+

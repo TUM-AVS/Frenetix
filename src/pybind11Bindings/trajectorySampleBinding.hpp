@@ -17,7 +17,7 @@ namespace plannerCPP
     void initBindTrajectorySample(nb::module_ &m)
     {
         nb::class_<TrajectorySample>(m, "TrajectorySample")
-            .def(nb::init<double, double, PolynomialTrajectory<4>&, PolynomialTrajectory<5>&, int>(),
+            .def(nb::init<double, PolynomialTrajectory<4>&, PolynomialTrajectory<5>&, int>(),
                  nb::arg("horizon"),
                  nb::arg("dt"),
                  nb::arg("trajectoryLongitudinal"),
@@ -29,11 +29,9 @@ namespace plannerCPP
                  nb::arg("orientation0"),
                  nb::arg("acceleration0"),
                  nb::arg("velocity0"))
-            .def_rw("horizon", &TrajectorySample::m_horizon)
             .def_rw("dt", &TrajectorySample::m_dT)
             .def_rw("cost", &TrajectorySample::m_cost)
             .def_rw("_coll_detected", &TrajectorySample::m_collisionDetected)
-            .def_rw("actual_traj_length", &TrajectorySample::m_actualTrajectoryLength)
             .def_rw("uniqueId", &TrajectorySample::m_uniqueId)
             .def_rw("trajectory_long", &TrajectorySample::m_trajectoryLongitudinal)
             .def_rw("trajectory_lat", &TrajectorySample::m_trajectoryLateral)
@@ -45,6 +43,9 @@ namespace plannerCPP
             .def_rw("feasabilityMap", &TrajectorySample::m_feasabilityMap)
             .def_rw("costMap", &TrajectorySample::m_costMap)
             .def_rw("feasible", &TrajectorySample::m_feasible)
+            .def_prop("sampling_parameters",
+                [](TrajectorySample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_samplingParameters;},
+                [](TrajectorySample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_samplingParameters = arr;})
             .def("add_cost_value_to_list",
                 (void (TrajectorySample::*)(std::string, double, double)) &TrajectorySample::addCostValueToList,
                 nb::arg("cost_function_name"),

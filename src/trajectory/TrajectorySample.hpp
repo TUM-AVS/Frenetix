@@ -16,11 +16,9 @@ class TrajectorySample
 {
     size_t m_size;
 public:
-    double m_horizon;
     double m_dT;
     double m_cost;
     bool m_collisionDetected;
-    int m_actualTrajectoryLength;
     int m_uniqueId;
     double m_boundaryHarm;
     double m_egoRisk;
@@ -28,6 +26,7 @@ public:
     int m_currentTimeStep;
     bool m_feasible;
 
+    Eigen::VectorXd m_samplingParameters;
 
     std::map<std::string, std::pair<double,double>> m_costMap;
     std::map<std::string, double> m_feasabilityMap;
@@ -37,20 +36,18 @@ public:
     CartesianSample m_cartesianSample;
     CurviLinearSample m_curvilinearSample;
     
-
-
-    TrajectorySample(double horizon, 
-                     double dt,
-                     std::shared_ptr<std::map<std::string, double>> costWeightMap, 
+    TrajectorySample(double dt,
                      PolynomialTrajectory<4>& trajectoryLongitudinal, 
                      PolynomialTrajectory<5>& trajectoryLateral, 
                      int uniqueId);
 
-    TrajectorySample(double horizon, 
-                    double dt,
-                    PolynomialTrajectory<4>& trajectoryLongitudinal, 
-                    PolynomialTrajectory<5>& trajectoryLateral, 
-                    int uniqueId);
+    TrajectorySample(double dt,
+                     PolynomialTrajectory<4>& trajectoryLongitudinal, 
+                     PolynomialTrajectory<5>& trajectoryLateral, 
+                     int uniqueId,
+                     Eigen::VectorXd samplingParameters);
+
+                    
 
     /**
      * @brief Construct a new Trajectory Sample object just with the initial position.
