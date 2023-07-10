@@ -201,7 +201,7 @@ double PolynomialTrajectory<Degree>::get_t1() const
 template<int Degree>
 double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
 {
-    if(Degree == 5 || Degree == 4)
+    if constexpr(Degree == 5)
     {
         double t2 = t * t;
         double t3 = t2 * t;
@@ -214,6 +214,17 @@ double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
                                         192 * coeffs[4] * coeffs[4] * t3 +
                                         720 * coeffs[4] * coeffs[5] * t4 +
                                         720 * coeffs[5] * coeffs[5] * t5);
+        return integral_squared_jerk;
+    }
+    else if constexpr( Degree == 4)
+    {
+        double t2 = t * t;
+        double t3 = t2 * t;
+        double t4 = t3 * t;
+
+        double integral_squared_jerk = (36 * coeffs[3] * coeffs[3] * t +
+                                        144 * coeffs[3] * coeffs[4] * t2 +
+                                        192 * coeffs[4] * coeffs[4] * t3);
         return integral_squared_jerk;
     }
     else
