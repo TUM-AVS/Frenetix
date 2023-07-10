@@ -9,7 +9,7 @@
 class CalculateDistanceToReferencePathCost : public CostStrategy
 {
 public:
-    CalculateDistanceToReferencePathCost();
+    CalculateDistanceToReferencePathCost(std::string funName, double costWeight);
     virtual void evaluateTrajectory(TrajectorySample& trajectory) override;
 };
 

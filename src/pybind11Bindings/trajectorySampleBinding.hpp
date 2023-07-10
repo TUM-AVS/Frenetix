@@ -29,12 +29,12 @@ namespace plannerCPP
                  nb::arg("orientation0"),
                  nb::arg("acceleration0"),
                  nb::arg("velocity0"))
-            .def_rw("m_horizon", &TrajectorySample::m_horizon)
+            .def_rw("horizon", &TrajectorySample::m_horizon)
             .def_rw("dt", &TrajectorySample::m_dT)
             .def_rw("cost", &TrajectorySample::m_cost)
             .def_rw("_coll_detected", &TrajectorySample::m_collisionDetected)
             .def_rw("actual_traj_length", &TrajectorySample::m_actualTrajectoryLength)
-            .def_rw("m_uniqueId", &TrajectorySample::m_uniqueId)
+            .def_rw("uniqueId", &TrajectorySample::m_uniqueId)
             .def_rw("trajectory_long", &TrajectorySample::m_trajectoryLongitudinal)
             .def_rw("trajectory_lat", &TrajectorySample::m_trajectoryLateral)
             .def_rw("cartesian", &TrajectorySample::m_cartesianSample)
@@ -46,19 +46,12 @@ namespace plannerCPP
             .def_rw("costMap", &TrajectorySample::m_costMap)
             .def_rw("feasible", &TrajectorySample::m_feasible)
             .def("add_cost_value_to_list",
-                (void (TrajectorySample::*)(std::string, double)) &TrajectorySample::addCostValueToList,
-                nb::arg("costFunctionName"),
-                nb::arg("cost"),
-                "Add a cost value to the list of cost values. The weight must therefore be specified in the costWeightMap."
-            )
-            .def("add_cost_value_to_list",
                 (void (TrajectorySample::*)(std::string, double, double)) &TrajectorySample::addCostValueToList,
-                nb::arg("costFunctionName"),
+                nb::arg("cost_function_name"),
                 nb::arg("cost"),
-                nb::arg("weight"),
-                "Add a cost value to the list of cost values when the costWeight is not specified in the CostWeightMap."
+                nb::arg("weighted_costs"),
+                "Add a cost value to the list of cost values. This includes the weighted and unweighted cost."
             );
-
     }
 
 

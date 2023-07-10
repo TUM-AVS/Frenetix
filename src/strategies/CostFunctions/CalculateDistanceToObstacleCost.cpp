@@ -1,7 +1,7 @@
 #include "CalculateDistanceToObstacleCost.hpp"
 
-CalculateDistanceToObstacleCost::CalculateDistanceToObstacleCost(Eigen::Ref<RowMatrixXd> obstacles)
-    : CostStrategy("Distance to Obstacles")
+CalculateDistanceToObstacleCost::CalculateDistanceToObstacleCost(std::string funName, double costWeight, Eigen::Ref<RowMatrixXd> obstacles)
+    : CostStrategy(funName, costWeight)
     , m_obstacles(obstacles)
 {
 }
@@ -20,5 +20,5 @@ void CalculateDistanceToObstacleCost::evaluateTrajectory(TrajectorySample& traje
         cost += (1.0 / (diffMatrix.array() * diffMatrix.array())).sum();
     }
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

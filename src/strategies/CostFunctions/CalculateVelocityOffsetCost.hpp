@@ -9,7 +9,7 @@ class CalculateVelocityOffsetCost : public CostStrategy
 private:
     double m_desiredSpeed;
 public:
-    CalculateVelocityOffsetCost(double desiredSpeed);
+    CalculateVelocityOffsetCost(std::string funName, double costWeight, double desiredSpeed);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

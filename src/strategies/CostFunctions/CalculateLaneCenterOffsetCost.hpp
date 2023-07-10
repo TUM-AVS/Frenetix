@@ -9,7 +9,7 @@
 class CalculateLaneCenterOffsetCost : public CostStrategy
 {
 public:
-    CalculateLaneCenterOffsetCost();
+    CalculateLaneCenterOffsetCost(std::string funName, double costWeight);
     
     void evaluateTrajectory(TrajectorySample& trajectory);
 };

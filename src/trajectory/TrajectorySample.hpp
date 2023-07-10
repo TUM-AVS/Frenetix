@@ -87,19 +87,9 @@ public:
      * 
      * @param costFunctionName 
      * @param cost 
+     * @param costWeighted
      */
-    void addCostValueToList(std::string costFunctionName, double cost);
-
-    /**
-     * @brief Add a cost value to the list of cost values when the costWeight is not specified in 
-     * the CostWeightMap.
-     * 
-     * @param costFunctionName 
-     * @param cost 
-     * @param weight 
-     */
-    void addCostValueToList(std::string costFunctionName, double cost, double weight);
-
+    void addCostValueToList(std::string costFunctionName, double cost, double costWeighted);
 
     void addFeasabilityValueToList(std::string costFunctionName, double value);
 

@@ -6,8 +6,9 @@
 class CostStrategy: public TrajectoryStrategy
 {
 public:
-    CostStrategy(std::string functionName)
+    CostStrategy(std::string functionName, double costWeight)
         : TrajectoryStrategy(functionName)
+        , m_costWeight(costWeight)
     {
     }
 
@@ -15,6 +16,12 @@ public:
 
     virtual void evaluateTrajectory(TrajectorySample& trajectory) = 0;
 
+    void updateCostWeight(double costWeight)
+    {
+        m_costWeight = costWeight;
+    }
+private:
+    double m_costWeight;
 };
 
 #endif //COSTSTRATEGY_HPP

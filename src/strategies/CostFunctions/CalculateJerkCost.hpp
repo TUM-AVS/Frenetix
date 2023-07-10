@@ -8,7 +8,7 @@
 class CalculateJerkCost : public CostStrategy
 {
 public:
-    CalculateJerkCost();
+    CalculateJerkCost(std::string funName, double costWeight);
     virtual void evaluateTrajectory(TrajectorySample& trajectory) override;
 };
 

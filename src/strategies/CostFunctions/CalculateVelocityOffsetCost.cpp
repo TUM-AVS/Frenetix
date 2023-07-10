@@ -1,7 +1,7 @@
 #include "CalculateVelocityOffsetCost.hpp"
 
-CalculateVelocityOffsetCost::CalculateVelocityOffsetCost(double desiredSpeed)
-    : CostStrategy("Velocity Offset")
+CalculateVelocityOffsetCost::CalculateVelocityOffsetCost(std::string funName, double costWeight, double desiredSpeed)
+    : CostStrategy(funName, costWeight)
     , m_desiredSpeed(desiredSpeed)
 {
 }
@@ -17,5 +17,5 @@ void CalculateVelocityOffsetCost::evaluateTrajectory(TrajectorySample& trajector
     cost += std::pow((vel(vel.size()-1) - m_desiredSpeed), 2);
 
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost*m_costWeight);
 }

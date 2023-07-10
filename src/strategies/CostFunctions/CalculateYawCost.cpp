@@ -1,7 +1,7 @@
 #include "CalculateYawCost.hpp"
 
-CalculateYawCost::CalculateYawCost()
-    : CostStrategy("Yaw Rate")
+CalculateYawCost::CalculateYawCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
     std::cout << "Yaw Cost not implemented" << std::endl;
 }
@@ -12,5 +12,5 @@ void CalculateYawCost::evaluateTrajectory(TrajectorySample& trajectory)
 
     // Define cost calculation logic here
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

@@ -7,7 +7,7 @@
 class CalculateLongitudinalJerkCost : public CostStrategy
 {
 public:
-    CalculateLongitudinalJerkCost();
+    CalculateLongitudinalJerkCost(std::string funName, double costWeight);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

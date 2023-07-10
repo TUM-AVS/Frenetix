@@ -53,7 +53,7 @@ public:
     void sort();
     void addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function);
     void addFunction(std::shared_ptr<TrajectoryStrategy> function);
-    void addCostFunction(std::shared_ptr<CostStrategy> function);
+    void addCostFunction(std::shared_ptr<CostStrategy> function, std::string functionName, double costWeight);
 
     /**
      * @brief Evaluates all current functions for each trajectory in the container.
@@ -95,7 +95,7 @@ public:
      */
     void resetTrajectories();
 
-    std::shared_ptr<std::map<std::string, double>> m_costWeightsMap;
+    std::map<std::string, double> m_costWeightsMap;
     std::vector<TrajectorySample> m_trajectories;
     std::map<std::string, std::shared_ptr<CostStrategy>> m_costFunctions;
     std::map<std::string, std::shared_ptr<FeasabilityStrategy>> m_feasabilityFunctions;

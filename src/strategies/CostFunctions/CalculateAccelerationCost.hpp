@@ -25,7 +25,7 @@ public:
      *
      * This initializes the cost function name to "Acceleration".
      */
-    CalculateAccelerationCost();
+    CalculateAccelerationCost(std::string funName, double costWeight);
 
     /**
      * @brief Evaluate the cost of acceleration for a trajectory.

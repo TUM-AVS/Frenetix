@@ -7,7 +7,7 @@
 class CalculateSteeringAngleCost : public CostStrategy
 {
 public:
-    CalculateSteeringAngleCost();
+    CalculateSteeringAngleCost(std::string funName, double costWeight);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

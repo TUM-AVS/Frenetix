@@ -90,29 +90,12 @@ void TrajectorySample::setCurrentTimeStep(int currentTimeStep)
     m_currentTimeStep = currentTimeStep;
 }
 
-void TrajectorySample::addCostValueToList(std::string costFunctionName, double cost)
+void TrajectorySample::addCostValueToList(std::string costFunctionName, double cost, double costWeighted)
 {
-    auto costWeightIt = m_costWeightMap->find(costFunctionName);
-    //check if there is a weight for this cost function
-
-    if(costWeightIt != m_costWeightMap->end())
-    {
-        double costWeighted = cost*costWeightIt->second;
-        m_cost += costWeighted;
-        m_costMap[costFunctionName] = std::make_pair(cost, costWeighted);
-    }
-    else
-    {
-        throw std::runtime_error("No cost weight found for cost function: " + costFunctionName);
-    }
-}
-
-void TrajectorySample::addCostValueToList(std::string costFunctionName, double cost, double weight)
-{
-    double costWeighted = cost*weight;
     m_cost += costWeighted;
     m_costMap[costFunctionName] = std::make_pair(cost, costWeighted);
 }
+
 
 void TrajectorySample::addFeasabilityValueToList(std::string feasabilityFunctionsName, double value)
 {

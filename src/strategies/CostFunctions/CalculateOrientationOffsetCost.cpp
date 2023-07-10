@@ -1,8 +1,8 @@
 #include "CalculateOrientationOffsetCost.hpp"
 
 
-CalculateOrientationOffsetCost::CalculateOrientationOffsetCost()
-    : CostStrategy("Orientation Offset")
+CalculateOrientationOffsetCost::CalculateOrientationOffsetCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
 }
 
@@ -12,5 +12,5 @@ void CalculateOrientationOffsetCost::evaluateTrajectory(TrajectorySample& trajec
 
     // Define your cost calculation logic here
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

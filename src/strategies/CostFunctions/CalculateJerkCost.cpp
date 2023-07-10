@@ -1,7 +1,7 @@
 #include "CalculateJerkCost.hpp"
 
-CalculateJerkCost::CalculateJerkCost()
-    : CostStrategy("Jerk")
+CalculateJerkCost::CalculateJerkCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
 }
 
@@ -19,5 +19,5 @@ void CalculateJerkCost::evaluateTrajectory(TrajectorySample& trajectory)
 
     cost = util::simpsonIntegration(jerkSq, trajectory.m_dT);
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

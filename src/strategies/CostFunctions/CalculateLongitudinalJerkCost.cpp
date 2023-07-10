@@ -1,7 +1,7 @@
 #include "CalculateLongitudinalJerkCost.hpp"
 
-CalculateLongitudinalJerkCost::CalculateLongitudinalJerkCost()
-    : CostStrategy("Longitudinal Jerk")
+CalculateLongitudinalJerkCost::CalculateLongitudinalJerkCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
 }
 
@@ -11,5 +11,5 @@ void CalculateLongitudinalJerkCost::evaluateTrajectory(TrajectorySample& traject
 
     cost = trajectory.m_trajectoryLongitudinal.squaredJerkIntegral(trajectory.m_dT);
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

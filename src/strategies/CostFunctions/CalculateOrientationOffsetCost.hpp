@@ -7,7 +7,7 @@
 class CalculateOrientationOffsetCost : public CostStrategy
 {
 public:
-    CalculateOrientationOffsetCost();
+    CalculateOrientationOffsetCost(std::string funName, double costWeight);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

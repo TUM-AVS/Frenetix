@@ -6,24 +6,34 @@ TrajectoryHandler::TrajectoryHandler(double dt)
 
 }
 
-void TrajectoryHandler::addCostFunction(std::shared_ptr<CostStrategy> function)
+void TrajectoryHandler::addCostFunction(std::shared_ptr<CostStrategy> function, std::string functionName, double costWeight)
 {
     if (!m_costWeightsMap) {
         throw std::runtime_error("m_costWeightsMap is null!");
     }
 
     // check if there exits a cost weight for the given cost function
-    if(m_costWeightsMap->find(function->getFunctionName()) != m_costWeightsMap->end())
+    m_costFunctions.insert_or_assign(functionName, function);
+    m_costWeightsMap.insert_or_assign(functionName, costWeight);
+}
+
+void TrajectoryHandler::addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function)
+{
+    if (!m_costWeightsMap) {
+        throw std::runtime_error("m_costWeightsMap is null!");
+    }
+
+    // check if there exits a cost weight for the given cost function
+    if(m_costWeightsMap->find(functionName) != m_costWeightsMap->end())
     {
-        m_costFunctions.insert_or_assign(function->getFunctionName(), function);
+        m_feasabilityFunctions.insert_or_assign(functionName, function);
+        m_costWeightsMap->insert_or_assign(functionName, costWeight);
     }
     else
     {
         throw std::runtime_error("No cost weight for the given cost function found!");
     }    
 }
-
-void TrajectoryHandler::addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function)
 {
     m_feasabilityFunctions.insert_or_assign(function->getFunctionName(),function);
 }
@@ -55,7 +65,7 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
             //All costFunctions
             for(auto& [funName, function] : m_costFunctions)
             {
-                function->evaluateTrajectory(trajectory);
+                function->evaluateTrajectory(trajectory, m_costWeightsMap[funName]);
             }
         }
     }

@@ -18,7 +18,7 @@ class CalculateDistanceToObstacleCost : public CostStrategy
 private:
     Eigen::Ref<RowMatrixXd> m_obstacles; /**< A matrix holding the positions of the obstacles. */
 public:
-    CalculateDistanceToObstacleCost(Eigen::Ref<RowMatrixXd> obstacles);
+    CalculateDistanceToObstacleCost(std::string funName, double costWeight, Eigen::Ref<RowMatrixXd> obstacles);
     
     void evaluateTrajectory(TrajectorySample& trajectory) override;
 };

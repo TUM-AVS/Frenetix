@@ -7,7 +7,7 @@
 class CalculateLongitudinalVelocityCost : public CostStrategy
 {
 public:
-    CalculateLongitudinalVelocityCost();
+    CalculateLongitudinalVelocityCost(std::string funName, double costWeight);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

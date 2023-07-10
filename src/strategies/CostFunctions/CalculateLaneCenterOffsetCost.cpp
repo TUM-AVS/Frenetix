@@ -1,7 +1,7 @@
 #include "CalculateLaneCenterOffsetCost.hpp"
 
-CalculateLaneCenterOffsetCost::CalculateLaneCenterOffsetCost()
-    : CostStrategy("Lane Center Offset")
+CalculateLaneCenterOffsetCost::CalculateLaneCenterOffsetCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
     std::cout << "Lane Center Offset Cost not implemented" << std::endl;
 }
@@ -12,5 +12,5 @@ void CalculateLaneCenterOffsetCost::evaluateTrajectory(TrajectorySample& traject
 
     // Define your cost calculation logic here
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

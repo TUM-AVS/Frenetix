@@ -32,7 +32,7 @@ public:
      * @param vehicleLength The length of the vehicle.
      * @param vehicleWidth The width of the vehicle.
      */
-    CalculateCollisionProbabilityFast(std::map<int, std::map<std::string, RowMatrixXd>> predictions, double vehicleLength, double vehicleWidth);
+    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, std::map<std::string, RowMatrixXd>> predictions, double vehicleLength, double vehicleWidth);
 
     /**
      * @brief Evaluate the collision probability for a trajectory.

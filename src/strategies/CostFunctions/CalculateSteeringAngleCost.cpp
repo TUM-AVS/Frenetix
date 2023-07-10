@@ -1,7 +1,7 @@
 #include "CalculateSteeringAngleCost.hpp"
 
-CalculateSteeringAngleCost::CalculateSteeringAngleCost()
-    : CostStrategy("Steering Angle")
+CalculateSteeringAngleCost::CalculateSteeringAngleCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
     std::cout << "Steering Angle Cost not implemented" << std::endl;
 }
@@ -12,5 +12,5 @@ void CalculateSteeringAngleCost::evaluateTrajectory(TrajectorySample& trajectory
 
     // Define cost calculation logic here
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, m_cost*costWeight);
 }

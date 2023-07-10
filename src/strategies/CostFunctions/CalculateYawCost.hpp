@@ -7,7 +7,7 @@
 class CalculateYawCost : public CostStrategy
 {
 public:
-    CalculateYawCost();
+    CalculateYawCost(std::string funName, double costWeight);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

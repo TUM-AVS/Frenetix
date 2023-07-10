@@ -1,7 +1,7 @@
 #include "CalculateAccelerationCost.hpp"
 
-CalculateAccelerationCost::CalculateAccelerationCost()
-    : CostStrategy("Acceleration")
+CalculateAccelerationCost::CalculateAccelerationCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
 }
 
@@ -12,5 +12,5 @@ void CalculateAccelerationCost::evaluateTrajectory(TrajectorySample& trajectory)
 
     cost = util::simpsonIntegration(accelerationSq, trajectory.m_dT);
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

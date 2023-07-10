@@ -1,7 +1,7 @@
 #include "CalculateCollisionProbabilityMahalanobis.hpp"
 
-CalculateCollisionProbabilityMahalanobis::CalculateCollisionProbabilityMahalanobis(std::map<int, std::map<std::string, RowMatrixXd>> predictions)
-    : CostStrategy("Prediction")
+CalculateCollisionProbabilityMahalanobis::CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, std::map<std::string, RowMatrixXd>> predictions)
+    : CostStrategy(funName, costWeight)
     , m_predictions(predictions)
 {
 }
@@ -42,5 +42,5 @@ void CalculateCollisionProbabilityMahalanobis::evaluateTrajectory(TrajectorySamp
         cost += std::accumulate(inv_dist.begin(), inv_dist.end(), 0.0);
     
     }
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

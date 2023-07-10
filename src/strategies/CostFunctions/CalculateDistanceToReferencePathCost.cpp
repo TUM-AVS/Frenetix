@@ -1,7 +1,7 @@
 #include "CalculateDistanceToReferencePathCost.hpp"
 
-CalculateDistanceToReferencePathCost::CalculateDistanceToReferencePathCost()
-    : CostStrategy("Distance to Reference Path")
+CalculateDistanceToReferencePathCost::CalculateDistanceToReferencePathCost(std::string funName, double costWeight)
+    : CostStrategy(funName, costWeight)
 {
 }
 
@@ -12,5 +12,5 @@ void CalculateDistanceToReferencePathCost::evaluateTrajectory(TrajectorySample& 
 
     cost = (d.cwiseAbs().sum() + 5 * std::abs(d(d.size() - 1))) / (d.size() + 4);
 
-    trajectory.addCostValueToList(m_functionName, cost);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }
