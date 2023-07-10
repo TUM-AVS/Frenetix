@@ -7,9 +7,8 @@ add_library(pthread ALIAS Threads::Threads)
 
 FetchContent_Declare(
     crdc
-    GIT_REPOSITORY git@gitlab.lrz.de:cps/commonroad-drivability-checker.git
-    # branch feature/cmake-fetch-content
-    GIT_TAG        a2cf908db1ab123bef1a4c40f58dd94e3bdd756d
+    GIT_REPOSITORY git@gitlab.lrz.de:motionplanning1/commonroad-drivability-checker.git
+    GIT_TAG        wip-experimental-fallible-conversion
 )
 
 set(BUILD_S11N FALSE CACHE BOOL "" FORCE)
