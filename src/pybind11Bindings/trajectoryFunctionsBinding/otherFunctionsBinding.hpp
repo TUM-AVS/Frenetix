@@ -20,7 +20,6 @@ namespace plannerCPP
     {
         nb::class_<FillCoordinates, TrajectoryStrategy>(m, "FillCoordinates")
             .def(nb::init<bool, double, std::shared_ptr<CoordinateSystemWrapper>&>(),
-                nb::arg("times"), 
                 nb::arg("lowVelocityMode"), 
                 nb::arg("initialOrientation"), 
                 nb::arg("coordinateSystem")

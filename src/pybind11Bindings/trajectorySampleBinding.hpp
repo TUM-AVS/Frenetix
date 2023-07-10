@@ -18,7 +18,6 @@ namespace plannerCPP
     {
         nb::class_<TrajectorySample>(m, "TrajectorySample")
             .def(nb::init<double, PolynomialTrajectory<4>&, PolynomialTrajectory<5>&, int>(),
-                 nb::arg("horizon"),
                  nb::arg("dt"),
                  nb::arg("trajectoryLongitudinal"),
                  nb::arg("trajectoryLateral"),
@@ -43,9 +42,9 @@ namespace plannerCPP
             .def_rw("feasabilityMap", &TrajectorySample::m_feasabilityMap)
             .def_rw("costMap", &TrajectorySample::m_costMap)
             .def_rw("feasible", &TrajectorySample::m_feasible)
-            .def_prop("sampling_parameters",
-                [](TrajectorySample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_samplingParameters;},
-                [](TrajectorySample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_samplingParameters = arr;})
+            .def_prop_rw("sampling_parameters",
+                [](TrajectorySample &self) -> Eigen::VectorXd { return self.m_samplingParameters;},
+                [](TrajectorySample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.m_samplingParameters = arr;})
             .def("add_cost_value_to_list",
                 (void (TrajectorySample::*)(std::string, double, double)) &TrajectorySample::addCostValueToList,
                 nb::arg("cost_function_name"),
