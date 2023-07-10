@@ -78,7 +78,6 @@ public:
      */
     void resetTrajectories();
 
-    std::map<std::string, double> m_costWeightsMap;
     std::vector<TrajectorySample> m_trajectories;
     std::map<std::string, std::shared_ptr<CostStrategy>> m_costFunctions;
     std::map<std::string, std::shared_ptr<FeasabilityStrategy>> m_feasabilityFunctions;

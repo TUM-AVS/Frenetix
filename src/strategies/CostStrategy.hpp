@@ -20,7 +20,7 @@ public:
     {
         m_costWeight = costWeight;
     }
-private:
+protected:
     double m_costWeight;
 };
 

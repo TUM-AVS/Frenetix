@@ -17,5 +17,5 @@ void CalculateVelocityOffsetCost::evaluateTrajectory(TrajectorySample& trajector
     cost += std::pow((vel(vel.size()-1) - m_desiredSpeed), 2);
 
 
-    trajectory.addCostValueToList(m_functionName, cost*m_costWeight);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

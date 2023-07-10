@@ -30,7 +30,7 @@ namespace plannerCPP
     void initBindCostFunctions(nb::module_ &m) 
     {
         nb::class_<CalculateAccelerationCost, CostStrategy>(m, "CalculateAccelerationCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -39,7 +39,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateDistanceToReferencePathCost, CostStrategy>(m, "CalculateDistanceToReferencePathCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -48,7 +48,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateJerkCost, CostStrategy>(m, "CalculateJerkCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -57,7 +57,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateLaneCenterOffsetCost, CostStrategy>(m, "CalculateLaneCenterOffsetCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -66,7 +66,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateLateralJerkCost, CostStrategy>(m, "CalculateLateralJerkCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -75,7 +75,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateLongitudinalJerkCost, CostStrategy>(m, "CalculateLongitudinalJerkCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -84,7 +84,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateLongitudinalVelocityCost, CostStrategy>(m, "CalculateLongitudinalVelocityCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -93,7 +93,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateOrientationOffsetCost, CostStrategy>(m, "CalculateOrientationOffsetCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -102,7 +102,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateSteeringAngleCost, CostStrategy>(m, "CalculateSteeringAngleCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -111,7 +111,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateSteeringRateCost, CostStrategy>(m, "CalculateSteeringRateCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -120,7 +120,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateVelocityOffsetCost, CostStrategy>(m, "CalculateVelocityOffsetCost")
-            .def(nb::init<double>(), nb::arg("desiredSpeed"))
+            .def(nb::init<std::string, double, double>(), nb::arg("function_name"), nb::arg("cost_weight"), nb::arg("desiredSpeed"))
             .def
             (
                 "evaluate_trajectory", 
@@ -129,7 +129,7 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateYawCost, CostStrategy>(m, "CalculateYawCost")
-            .def(nb::init<>())
+            .def(nb::init<std::string, double>(), nb::arg("function_name"), nb::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory", 
@@ -139,7 +139,9 @@ namespace plannerCPP
 
         nb::class_<CalculateCollisionProbabilityFast, CostStrategy>(m, "CalculateCollisionProbabilityFast")
             .def(
-                nb::init<const std::map<int, std::map<std::string, RowMatrixXd>>, double, double>(),
+                nb::init<std::string, double, const std::map<int, std::map<std::string, RowMatrixXd>>, double, double>(),
+                nb::arg("function_name"),
+                nb::arg("cost_weight"),
                 nb::arg("predictions"), 
                 nb::arg("vehicleLength"), 
                 nb::arg("vehicleWidth")
@@ -155,7 +157,9 @@ namespace plannerCPP
         nb::class_<CalculateCollisionProbabilityMahalanobis, CostStrategy>(m, "CalculateCollisionProbabilityMahalanobis")
             .def
             (
-                nb::init<const std::map<int, std::map<std::string, RowMatrixXd>>>(), 
+                nb::init<std::string, double, const std::map<int, std::map<std::string, RowMatrixXd>>>(), 
+                nb::arg("function_name"),
+                nb::arg("cost_weight"),
                 nb::arg("predictions")
             )
             .def
@@ -168,7 +172,9 @@ namespace plannerCPP
         nb::class_<CalculateDistanceToObstacleCost, CostStrategy>(m, "CalculateDistanceToObstacleCost")
             .def
             (
-                nb::init<Eigen::Ref<RowMatrixXd>>(), 
+                nb::init<std::string, double, Eigen::Ref<RowMatrixXd>>(),
+                nb::arg("function_name"),
+                nb::arg("cost_weight"),
                 nb::arg("obstacles")
             )
             .def

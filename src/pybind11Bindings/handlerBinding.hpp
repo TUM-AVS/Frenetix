@@ -115,17 +115,8 @@ namespace plannerCPP
             ) */
             .def
             (
-                "set_cost_weights",
-                &TrajectoryHandler::setCostWeights,
-                "Sets the cost weights. The cost weights are used to scale the cost functions. "
-                "The names of the cost functions are used as keys and can be extracted from the cost functions "
-                "by calling the getName() function.",
-                nb::arg("cost_weights_map")
-            )
-            .def
-            (
-                "reset_Trajectories",
-                &TrajectoryHandler::resetTrajectories,
+                "reset_Trajectories", 
+                &TrajectoryHandler::resetTrajectories, 
                 "Resets the trajectories container."
             );
     }

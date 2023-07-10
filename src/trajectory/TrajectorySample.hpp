@@ -31,7 +31,6 @@ public:
 
     std::map<std::string, std::pair<double,double>> m_costMap;
     std::map<std::string, double> m_feasabilityMap;
-    std::shared_ptr<std::map<std::string, double>> m_costWeightMap;
 
     PolynomialTrajectory<4> m_trajectoryLongitudinal;
     PolynomialTrajectory<5> m_trajectoryLateral;

@@ -45,7 +45,7 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
             //All costFunctions
             for(auto& [funName, function] : m_costFunctions)
             {
-                function->evaluateTrajectory(trajectory, m_costWeightsMap[funName]);
+                function->evaluateTrajectory(trajectory);
             }
         }
     }
@@ -147,17 +147,12 @@ void TrajectoryHandler::generateTrajectories(RowMatrixXd samplingMatrix, bool lo
 
         m_trajectories.push_back(TrajectorySample( samplingMatrix.row(iii)[1]-samplingMatrix.row(iii)[0]
                                                  , m_dt 
-                                                 , m_costWeightsMap
                                                  , longitudinalTrajectory
                                                  , lateralTrajectory
                                                  , iii));
     }
 }
 
-void TrajectoryHandler::addCostWeight(std::string costFunctionName, double costWeight) 
-{ 
-    m_costWeightsMap.insert_or_assign(costFunctionName, costWeight); 
-}
 
 void TrajectoryHandler::resetTrajectories()
 {

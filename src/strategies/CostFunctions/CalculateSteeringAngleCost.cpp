@@ -12,5 +12,5 @@ void CalculateSteeringAngleCost::evaluateTrajectory(TrajectorySample& trajectory
 
     // Define cost calculation logic here
 
-    trajectory.addCostValueToList(m_functionName, cost, m_cost*costWeight);
+    trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }
