@@ -1,7 +1,6 @@
 //pybind includes
 #include <nanobind/ndarray.h>
 #include <nanobind/nanobind.h>
-#include <nanobind/stl/map.h>
 #include <nanobind/eigen/dense.h>
 
 #include "geometryMsgs.hpp"

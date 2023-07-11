@@ -23,3 +23,10 @@ struct PoseWithCovariance
     Pose pose;
     std::array<double, 36> covariance;
 };
+
+struct PredictedObject
+{
+    int object_id;
+    PoseWithCovariance pose;
+    
+}

@@ -28,11 +28,7 @@ namespace plannerCPP
             .def
             (
                 "generate_trajectories",
-<<<<<<< Updated upstream
                 [](TrajectoryHandler &self, const nb::DRef<SamplingMatrixXd>& samplingMatrix, bool lowVelocityMode)
-=======
-                [](TrajectoryHandler &self, const nb::DRef<RowMatrixXd>& samplingMatrix, bool lowVelocityMode)
->>>>>>> Stashed changes
                 {
                     self.generateTrajectories(samplingMatrix, lowVelocityMode);
                 },
