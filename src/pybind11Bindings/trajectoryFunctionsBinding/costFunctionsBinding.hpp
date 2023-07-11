@@ -139,7 +139,7 @@ namespace plannerCPP
 
         nb::class_<CalculateCollisionProbabilityFast, CostStrategy>(m, "CalculateCollisionProbabilityFast")
             .def(
-                nb::init<std::string, double, const std::map<int, std::map<std::string, RowMatrixXd>>, double, double>(),
+                nb::init<std::string, double, const std::map<int, PoseWithCovariance>, double, double>(),
                 nb::arg("function_name"),
                 nb::arg("cost_weight"),
                 nb::arg("predictions"), 
@@ -157,7 +157,7 @@ namespace plannerCPP
         nb::class_<CalculateCollisionProbabilityMahalanobis, CostStrategy>(m, "CalculateCollisionProbabilityMahalanobis")
             .def
             (
-                nb::init<std::string, double, std::map<int, std::map<std::string, RowMatrixXd>>>(),
+                nb::init<std::string, double, const std::map<int, PoseWithCovariance>>(),
                 nb::arg("function_name"),
                 nb::arg("cost_weight"),
                 nb::arg("predictions")

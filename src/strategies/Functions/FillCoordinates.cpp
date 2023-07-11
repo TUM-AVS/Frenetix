@@ -124,9 +124,14 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
             trajectory.m_cartesianSample.x[iii] = cartesianPoints[0];
             trajectory.m_cartesianSample.y[iii] = cartesianPoints[1];
         }  
+        catch(const std::exception& e) 
+        {
+            std::cout << "Caught exception: " << e.what() << std::endl;
+        }
         catch(...)
         {
-        }    
+            std::cout << "Caught unknown exception" << std::endl;
+        } 
     }
 
 }

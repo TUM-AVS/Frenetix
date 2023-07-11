@@ -16,7 +16,7 @@
 #include "polynomialTrajectoryBinding.hpp"
 #include "trajectoryStrategyBinding.hpp"
 #include "trajectorySampleBinding.hpp"
-
+#include "geometryMsgsBinding.hpp"
 
 namespace nb = nanobind;
 namespace plannerCPP
@@ -30,6 +30,7 @@ namespace plannerCPP
         initBindPolynomialTrajectory(m);
         initBindTrajectoryStrategy(m);
         initBindTrajectorySample(m);
+        initBindGeometryMsg(m);
     }
 } //plannerCPP
 

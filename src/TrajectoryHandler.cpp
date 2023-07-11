@@ -121,11 +121,12 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
 {
     Eigen::Vector3d x0_lonOrder {0,1,2};
     Eigen::Vector2d x1_lonOrder {1,2};
+    
     for(Eigen::Index iii = 0; iii < samplingMatrix.rows(); iii++)
     {
         Eigen::Vector3d x0_lon {samplingMatrix.row(iii)[2], samplingMatrix.row(iii)[3], samplingMatrix.row(iii)[4]};
         Eigen::Vector2d x1_lon {samplingMatrix.row(iii)[5], samplingMatrix.row(iii)[6]};
-
+        std::cout << "test" << samplingMatrix.row(iii) << std::endl;
         PolynomialTrajectory<4> longitudinalTrajectory (samplingMatrix.row(iii)[0]
                                                        ,samplingMatrix.row(iii)[1]
                                                        ,x0_lon

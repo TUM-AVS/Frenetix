@@ -34,8 +34,10 @@ wheel.packages = []
 build-dir = "build/{wheel_tag}"
 
 [tool.scikit-build.cmake.define]
-CMAKE_C_COMPILER_LAUNCHER = "sccache"
-CMAKE_CXX_COMPILER_LAUNCHER = "sccache"
+#CMAKE_C_COMPILER_LAUNCHER = "sccache"
+#CMAKE_CXX_COMPILER_LAUNCHER = "sccache"
+CMAKE_C_COMPILER_LAUNCHER = "ccache"
+CMAKE_CXX_COMPILER_LAUNCHER = "ccache"
 
 [tool.cibuildwheel]
 # Skip PyPy and older CPython versions

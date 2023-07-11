@@ -26,6 +26,8 @@ project(${SKBUILD_PROJECT_NAME}
     VERSION ${SKBUILD_PROJECT_VERSION}
     )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++")
+
 # CMP0077 (3.13) - option() honors normal variables.
 # Relevant for Eigen3
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)

@@ -6,6 +6,7 @@
 #include <map>
 #include <numeric>
 
+#include "geometryMsgs.hpp"
 #include "CostStrategy.hpp"
 #include "util.hpp"
 
@@ -24,7 +25,7 @@
 class CalculateCollisionProbabilityMahalanobis : public CostStrategy
 {
 private:
-    std::map<int, std::map<std::string, RowMatrixXd>> m_predictions; /**< A map holding the predicted states of other agents. */
+    std::map<int, PoseWithCovariance> m_predictions; /**< A map holding the predicted states of other agents. */
     
 public:
 
@@ -36,7 +37,7 @@ public:
      *
      * @param predictions A map holding the predicted states of other agents.
      */
-    CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, std::map<std::string, RowMatrixXd>> predictions);
+    CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PoseWithCovariance> predictions);
 
     /**
      * @brief Evaluate the collision probability for a trajectory.

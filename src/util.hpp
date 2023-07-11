@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include "geometry/util.h"
+#include <array>
 
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using SamplingMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, 13, Eigen::RowMajor>;
@@ -69,5 +70,30 @@ namespace util
      * @return The computed integral of the array over the specified interval.
      */
     double simpsonIntegration(Eigen::Ref<Eigen::VectorXd> array, double dT);
+
+
+
+
+    struct Position 
+    {
+        double x, y, z;
+    };
+
+    struct Orientation 
+    {
+        double x, y, z, w;
+    };
+
+    struct Pose 
+    {
+        Position position;
+        Orientation orientation;
+    };
+
+    struct PoseWithCovariance 
+    {
+        Pose pose;
+        std::array<double, 36> covariance;
+    };
 }
 #endif //UTIL_HPP

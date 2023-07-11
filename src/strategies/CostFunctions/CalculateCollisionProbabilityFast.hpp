@@ -1,6 +1,7 @@
 #ifndef CALCULATE_COLLISION_PROBABILITY_FAST_HPP
 #define CALCULATE_COLLISION_PROBABILITY_FAST_HPP
 
+#include "geometryMsgs.hpp"
 #include "CostStrategy.hpp"
 #include "util.hpp"
 #include <map>
@@ -17,7 +18,7 @@
 class CalculateCollisionProbabilityFast : public CostStrategy 
 {
 private:
-    std::map<int, std::map<std::string, RowMatrixXd>> m_predictions; /**< A map holding the predicted states of other agents. */
+    std::map<int, PoseWithCovariance> m_predictions; /**< A map holding the predicted states of other agents. */
     double m_vehicleLength; /**< The length of the vehicle. */
     double m_vehicleWidth; /**< The width of the vehicle. */
 public:
@@ -32,7 +33,7 @@ public:
      * @param vehicleLength The length of the vehicle.
      * @param vehicleWidth The width of the vehicle.
      */
-    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, std::map<std::string, RowMatrixXd>> predictions, double vehicleLength, double vehicleWidth);
+    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PoseWithCovariance> predictions, double vehicleLength, double vehicleWidth);
 
     /**
      * @brief Evaluate the collision probability for a trajectory.
