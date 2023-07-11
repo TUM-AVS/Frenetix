@@ -34,29 +34,13 @@ namespace plannerCPP
                 nb::arg("kappa_gl"),
                 nb::arg("kappa_dot"))
             .def_rw("is_initialized", &CartesianSample::isInitialized)
-		/*
-            .def_prop_rw("x",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.x;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.x = arr;})
-            .def_prop_rw("y",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd>{ return self.y;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.y = arr;})
-            .def_prop_rw("theta",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd>{ return self.theta;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.theta = arr;})
-            .def_prop_rw("v",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd>{ return self.velocity;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.velocity = arr;})
-            .def_prop_rw("a",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd>{ return self.acceleration;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.acceleration = arr;})
-            .def_prop_rw("kappa",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd>{ return self.kappa;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.kappa = arr;})
-            .def_prop_rw("kappa_dot",
-                          [](CartesianSample &self) -> Eigen::Ref<Eigen::VectorXd>{ return self.kappaDot;},
-                          [](CartesianSample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.kappaDot = arr;})
-		*/
+            .def_ro("x", &CartesianSample::x)
+            .def_ro("y", &CartesianSample::y)
+            .def_ro("theta", &CartesianSample::theta)
+            .def_ro("v", &CartesianSample::velocity)
+            .def_ro("a", &CartesianSample::acceleration)
+            .def_ro("kappa", &CartesianSample::kappa)
+            .def_ro("kappa_dot", &CartesianSample::kappaDot)
             .def("__str__", [](const CartesianSample &cs) {
                             std::ostringstream oss;
                             cs.print(oss);
