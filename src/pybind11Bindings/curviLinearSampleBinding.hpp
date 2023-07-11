@@ -33,29 +33,15 @@ namespace plannerCPP
                 nb::arg("ddd"),
                 nb::arg("ss"),
                 nb::arg("sss"))
-            .def_rw("is_initialized", &CurviLinearSample::isInitialized)
-            .def_prop_rw("s",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.s;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.s = arr;})
-            .def_prop_rw("d",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.d;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.d = arr;})
-            .def_prop_rw("theta",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.theta;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.theta = arr;})
-            .def_prop_rw("d_dot",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.dd;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.dd = arr;})
-            .def_prop_rw("d_ddot",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.ddd;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.ddd = arr;})
-            .def_prop_rw("s_dot",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.ss;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.ss = arr;})
-            .def_prop_rw("s_ddot",
-                          [](CurviLinearSample &self) -> Eigen::VectorXd { return self.sss;},
-                          [](CurviLinearSample &self, const nb::DRef<const Eigen::VectorXd>& arr) {self.sss = arr;})
-            .def("__str__", [](const CurviLinearSample &cls) {
+            .def_ro("is_initialized", &CurviLinearSample::isInitialized)
+	    .def_ro("s", &CurviLinearSample::s)
+	    .def_ro("s_dot", &CurviLinearSample::ss)
+	    .def_ro("s_ddot", &CurviLinearSample::sss)
+	    .def_ro("d", &CurviLinearSample::d)
+	    .def_ro("d_dot", &CurviLinearSample::dd)
+	    .def_ro("d_ddot", &CurviLinearSample::ddd)
+	    .def_ro("theta", &CurviLinearSample::theta)
+	    .def("__str__", [](const CurviLinearSample &cls) {
                                 std::ostringstream oss;
                                 cls.print(oss);
                                 return oss.str();});
