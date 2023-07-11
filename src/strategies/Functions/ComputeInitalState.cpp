@@ -23,12 +23,13 @@ void ComputeInitialState::evaluateTrajectory(TrajectorySample& trajectory)
     double dp {0};
     double dpp {0};
 
-    auto curviCords = m_coordinateSystem->getSystem()->convertToCurvilinearCoords(trajectory.m_cartesianSample.x[0],trajectory.m_cartesianSample.y[0]);
-    
+    Eigen::Vector2d curviCords = m_coordinateSystem->getSystem()->convertToCurvilinearCoords(trajectory.m_cartesianSample.x[0],trajectory.m_cartesianSample.y[0]);
+
     trajectory.m_curvilinearSample.s[0] = curviCords[0];
     trajectory.m_curvilinearSample.d[0] = curviCords[1];    
 
     int s_idx = m_coordinateSystem->getS_idx(trajectory.m_curvilinearSample.s[0]);
+    assert(s_idx != -1);
     double sLambda = m_coordinateSystem->getSLambda(trajectory.m_curvilinearSample.s[0], s_idx);
 
     trajectory.m_curvilinearSample.theta[0] = trajectory.m_cartesianSample.theta[0] - 

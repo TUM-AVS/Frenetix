@@ -28,13 +28,13 @@ public:
      * @param kappaDot The curvature rate of change of the sample.
      * @param currentTimeStep Time step of Sample
      */
-    CartesianSample(const Eigen::Ref<Eigen::VectorXd> x_,
-                    const Eigen::Ref<Eigen::VectorXd> y_,
-                    const Eigen::Ref<Eigen::VectorXd> theta_,
-                    const Eigen::Ref<Eigen::VectorXd> velocity_, 
-                    const Eigen::Ref<Eigen::VectorXd> acceleration_,
-                    const Eigen::Ref<Eigen::VectorXd> kappa_, 
-                    const Eigen::Ref<Eigen::VectorXd> kappaDot_);
+    CartesianSample(const Eigen::Ref<Eigen::VectorXd>& x_,
+                    const Eigen::Ref<Eigen::VectorXd>& y_,
+                    const Eigen::Ref<Eigen::VectorXd>& theta_,
+                    const Eigen::Ref<Eigen::VectorXd>& velocity_,
+                    const Eigen::Ref<Eigen::VectorXd>& acceleration_,
+                    const Eigen::Ref<Eigen::VectorXd>& kappa_,
+                    const Eigen::Ref<Eigen::VectorXd>& kappaDot_);
 
     bool isInitialized = false;          ///< If the cartesisan coordinates are filled
     Eigen::VectorXd x;                   ///< The x positions in cartesian coordinates

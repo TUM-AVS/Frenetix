@@ -19,13 +19,13 @@ namespace plannerCPP
         // Bind the CurvilinearSample class
         nb::class_<CurviLinearSample>(m, "CurviLinearSample")
             .def(nb::init<>())
-            .def(nb::init<const Eigen::Ref<Eigen::VectorXd>, 
-                          const Eigen::Ref<Eigen::VectorXd>,
-                          const Eigen::Ref<Eigen::VectorXd>,
-                          const Eigen::Ref<Eigen::VectorXd>, 
-                          const Eigen::Ref<Eigen::VectorXd>,
-                          const Eigen::Ref<Eigen::VectorXd>, 
-                          const Eigen::Ref<Eigen::VectorXd>>(),
+            .def(nb::init<const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&>(),
                 nb::arg("s"),
                 nb::arg("d"),
                 nb::arg("theta_gl"),

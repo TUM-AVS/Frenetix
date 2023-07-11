@@ -12,13 +12,13 @@ CurviLinearSample::CurviLinearSample()
 
 }
 
-CurviLinearSample::CurviLinearSample(const Eigen::Ref<Eigen::VectorXd> s_, 
-                                     const Eigen::Ref<Eigen::VectorXd> d_,
-                                     const Eigen::Ref<Eigen::VectorXd> theta_, 
-                                     const Eigen::Ref<Eigen::VectorXd> dd_,
-                                     const Eigen::Ref<Eigen::VectorXd> ddd_, 
-                                     const Eigen::Ref<Eigen::VectorXd> ss_,
-                                     const Eigen::Ref<Eigen::VectorXd> sss_)
+CurviLinearSample::CurviLinearSample(const Eigen::Ref<Eigen::VectorXd>& s_,
+                                     const Eigen::Ref<Eigen::VectorXd>& d_,
+                                     const Eigen::Ref<Eigen::VectorXd>& theta_,
+                                     const Eigen::Ref<Eigen::VectorXd>& dd_,
+                                     const Eigen::Ref<Eigen::VectorXd>& ddd_,
+                                     const Eigen::Ref<Eigen::VectorXd>& ss_,
+                                     const Eigen::Ref<Eigen::VectorXd>& sss_)
     : s(s_)
     , d(d_)
     , theta(theta_)

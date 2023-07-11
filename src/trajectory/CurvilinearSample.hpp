@@ -31,13 +31,13 @@ public:
      * @param ss_ The longitudinal velocity of the sample.
      * @param sss_ The longitudinal acceleration of the sample.
      */
-    CurviLinearSample(const Eigen::Ref<Eigen::VectorXd> s_, 
-                      const Eigen::Ref<Eigen::VectorXd> d_,
-                      const Eigen::Ref<Eigen::VectorXd> theta_,
-                      const Eigen::Ref<Eigen::VectorXd> dd_,
-                      const Eigen::Ref<Eigen::VectorXd> ddd_, 
-                      const Eigen::Ref<Eigen::VectorXd> ss_,
-                      const Eigen::Ref<Eigen::VectorXd> sss_);
+    CurviLinearSample(const Eigen::Ref<Eigen::VectorXd>& s_, 
+                      const Eigen::Ref<Eigen::VectorXd>& d_,
+                      const Eigen::Ref<Eigen::VectorXd>& theta_,
+                      const Eigen::Ref<Eigen::VectorXd>& dd_,
+                      const Eigen::Ref<Eigen::VectorXd>& ddd_, 
+                      const Eigen::Ref<Eigen::VectorXd>& ss_,
+                      const Eigen::Ref<Eigen::VectorXd>& sss_);
 
 
     void print(std::ostream& os) const;

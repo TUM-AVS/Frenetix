@@ -19,13 +19,13 @@ namespace plannerCPP
         // Bind the CartesianSample class
         nb::class_<CartesianSample>(m, "CartesianSample")
             .def(nb::init<>())
-            .def(nb::init<const Eigen::Ref<Eigen::VectorXd>, 
-                          const Eigen::Ref<Eigen::VectorXd>,
-                          const Eigen::Ref<Eigen::VectorXd>, 
-                          const Eigen::Ref<Eigen::VectorXd>,
-                          const Eigen::Ref<Eigen::VectorXd>, 
-                          const Eigen::Ref<Eigen::VectorXd>,
-                          const Eigen::Ref<Eigen::VectorXd>>(),
+            .def(nb::init<const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&,
+                          const Eigen::Ref<Eigen::VectorXd>&>(),
                 nb::arg("x"),
                 nb::arg("y"),
                 nb::arg("theta_gl"),

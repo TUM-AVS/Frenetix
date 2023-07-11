@@ -4,13 +4,13 @@
 
 CartesianSample::CartesianSample() = default;
 
-CartesianSample::CartesianSample(const Eigen::Ref<Eigen::VectorXd> x_,
-                                 const Eigen::Ref<Eigen::VectorXd> y_,
-                                 const Eigen::Ref<Eigen::VectorXd> theta_,
-                                 const Eigen::Ref<Eigen::VectorXd> velocity_, 
-                                 const Eigen::Ref<Eigen::VectorXd> acceleration_,
-                                 const Eigen::Ref<Eigen::VectorXd> kappa_, 
-                                 const Eigen::Ref<Eigen::VectorXd> kappaDot_)
+CartesianSample::CartesianSample(const Eigen::Ref<Eigen::VectorXd>& x_,
+                                 const Eigen::Ref<Eigen::VectorXd>& y_,
+                                 const Eigen::Ref<Eigen::VectorXd>& theta_,
+                                 const Eigen::Ref<Eigen::VectorXd>& velocity_,
+                                 const Eigen::Ref<Eigen::VectorXd>& acceleration_,
+                                 const Eigen::Ref<Eigen::VectorXd>& kappa_,
+                                 const Eigen::Ref<Eigen::VectorXd>& kappaDot_)
     : isInitialized(true)
     , x(x_)
     , y(y_)
