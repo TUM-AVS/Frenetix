@@ -49,7 +49,7 @@ public:
      * dd0/dd1:     start/end lateral velocity
      * ddd0/ddd1:   start/end lateral acceleration
      */
-    void generateTrajectories(RowMatrixXd samplingMatrix, bool lowVelocityMode);
+    void generateTrajectories(const SamplingMatrixXd& samplingMatrix, bool lowVelocityMode);
     void sort();
     void addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function);
     void addFunction(std::shared_ptr<TrajectoryStrategy> function);

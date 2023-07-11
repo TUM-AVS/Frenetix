@@ -6,6 +6,7 @@
 // #include <nanobind/ndarray.h>
 // #include <nanobind/stl/bind_vector.h>
 #include <nanobind/stl/map.h>
+#include <nanobind/stl/vector.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/eigen/dense.h>
@@ -27,7 +28,7 @@ namespace plannerCPP
             .def
             (
                 "generate_trajectories",
-                [](TrajectoryHandler &self, const Eigen::Ref<RowMatrixXd> samplingMatrix, bool lowVelocityMode)
+                [](TrajectoryHandler &self, const nb::DRef<SamplingMatrixXd>& samplingMatrix, bool lowVelocityMode)
                 {
                     self.generateTrajectories(samplingMatrix, lowVelocityMode);
                 },
@@ -80,11 +81,13 @@ namespace plannerCPP
                 [](TrajectoryHandler &self)
                 {
                     self.sort();
-                    return nb::make_iterator(
-                        nb::type<TrajectorySample>(), "iterator",
-                    self.m_trajectories.begin(), self.m_trajectories.end());
+                    return self.m_trajectories;
+                    // return self
+                    // return nb::make_iterator(
+                    //     nb::type<TrajectorySample>(), "iterator",
+                    // self.m_trajectories.begin(), self.m_trajectories.end());
                 }
-                , nb::keep_alive<0, 1>() // Keep object alive while iterator is used
+                // , nb::keep_alive<0, 1>() // Keep object alive while iterator is used
             )
             /* .def
             (

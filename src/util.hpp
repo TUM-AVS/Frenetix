@@ -7,6 +7,8 @@
 #include "geometry/util.h"
 
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+using SamplingMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, 13, Eigen::RowMajor>;
+
 
 namespace util
 {

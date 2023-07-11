@@ -117,7 +117,7 @@ void TrajectoryHandler::sort()
     );
 }
 
-void TrajectoryHandler::generateTrajectories(RowMatrixXd samplingMatrix, bool lowVelocityMode)
+void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMatrix, bool lowVelocityMode)
 {
     Eigen::Vector3d x0_lonOrder {0,1,2};
     Eigen::Vector2d x1_lonOrder {1,2};
