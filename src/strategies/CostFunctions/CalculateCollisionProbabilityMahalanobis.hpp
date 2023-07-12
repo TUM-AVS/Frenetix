@@ -37,7 +37,7 @@ public:
      *
      * @param predictions A map holding the predicted states of other agents.
      */
-    CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PredictedObject>& predictions);
+    CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PredictedObject> predictions);
 
     /**
      * @brief Evaluate the collision probability for a trajectory.

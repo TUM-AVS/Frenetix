@@ -7,6 +7,18 @@ PoseWithCovariance::PoseWithCovariance()
 
 }
 
+PoseWithCovariance::PoseWithCovariance(
+        const Eigen::Vector3d& position,
+        const Eigen::Vector4d& orientation,
+        const Eigen::Matrix<double,6,6>& covariance
+        )
+    : position(position)
+    , orientation(orientation)
+    , covariance(covariance)
+{
+
+}
+
 std::ostream& operator<<(std::ostream& os, const PoseWithCovariance& pose)
 {
     os << "PoseWithCovariance {" << std::endl;
@@ -17,10 +29,19 @@ std::ostream& operator<<(std::ostream& os, const PoseWithCovariance& pose)
     return os;
 }
 
-PredictedObject::PredictedObject(size_t length) 
-    : predictedPath(length) 
+PredictedObject::PredictedObject(size_t length)
+    : predictedPath(length)
 {
 
+}
+
+PredictedObject::PredictedObject(
+        int object_id,
+        std::vector<PoseWithCovariance> predictedPath
+)
+    : predictedPath(predictedPath)
+    , object_id(object_id)
+{
 }
 
 std::ostream& operator<<(std::ostream& os, const PredictedObject& obj)
@@ -28,9 +49,9 @@ std::ostream& operator<<(std::ostream& os, const PredictedObject& obj)
     os << "PredictedObject {" << std::endl;
     os << "  object_id: " << obj.object_id << std::endl;
     os << "  predictedPath: [" << std::endl;
-    for (const auto& pose : obj.predictedPath) 
+    for (const auto& pose : obj.predictedPath)
     {
-        os << "    " << pose << std::endl; 
+        os << "    " << pose << std::endl;
     }
     os << "  ]" << std::endl;
     os << "}" << std::endl;

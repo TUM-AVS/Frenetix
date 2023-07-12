@@ -1,6 +1,6 @@
 #include "CalculateCollisionProbabilityMahalanobis.hpp"
 
-CalculateCollisionProbabilityMahalanobis::CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PredictedObject>& predictions)
+CalculateCollisionProbabilityMahalanobis::CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PredictedObject> predictions)
     : CostStrategy(funName, costWeight)
     , m_predictions(predictions)
 {
@@ -14,27 +14,29 @@ void CalculateCollisionProbabilityMahalanobis::evaluateTrajectory(TrajectorySamp
 
         std::vector<double> inv_dist;
 
-        for (int i = 1; i < trajectory.m_cartesianSample.x.size(); ++i) 
+        for (int i = 1; i < trajectory.m_cartesianSample.x.size(); ++i)
         {
+            std::cout << i << " " << prediction.predictedPath.size() << std::endl;
             if (i < prediction.predictedPath.size())
             {
                 Eigen::Vector2d u(trajectory.m_cartesianSample.x[i], trajectory.m_cartesianSample.y[i]);
-                Eigen::Vector2d v = prediction.predictedPath[i-1].position.head<2>();
-                Eigen::Matrix2d cov = prediction.predictedPath[i-1].covariance.topLeftCorner<2,2>();
+                Eigen::Vector2d v = prediction.predictedPath.at(i-1).position.head<2>();
+                Eigen::Matrix2d cov = prediction.predictedPath.at(i-1).covariance.topLeftCorner<2,2>();
                 Eigen::Matrix2d iv = cov.inverse();
                 // Calculate Mahalanobis distance manually
                 Eigen::Vector2d diff = u - v;
+                std::cout << diff << std::endl;
                 double mahalanobis = std::sqrt((diff.transpose() * iv * diff)(0, 0));
-                inv_dist.push_back(1e-4 / mahalanobis);
+                inv_dist.push_back(1e-2 / mahalanobis);
             }
-            else 
+            else
             {
                 inv_dist.push_back(0.0);
             }
         }
         collision_prob_dict[obstacle_id] = inv_dist;
         cost += std::accumulate(inv_dist.begin(), inv_dist.end(), 0.0);
-    
+
     }
     trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

@@ -157,7 +157,7 @@ namespace plannerCPP
         nb::class_<CalculateCollisionProbabilityMahalanobis, CostStrategy>(m, "CalculateCollisionProbabilityMahalanobis")
             .def
             (
-                nb::init<std::string, double, std::map<int, PredictedObject>&>(),
+                nb::init<std::string, double, std::map<int, PredictedObject>>(),
                 nb::arg("function_name"),
                 nb::arg("cost_weight"),
                 nb::arg("predictions")

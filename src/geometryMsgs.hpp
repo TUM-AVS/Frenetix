@@ -5,9 +5,14 @@
 #include <Eigen/Dense>
 #include <iostream>
 
-struct PoseWithCovariance 
+struct PoseWithCovariance
 {
     PoseWithCovariance();
+    PoseWithCovariance(
+        const Eigen::Vector3d& position,
+        const Eigen::Vector4d& orientation,
+        const Eigen::Matrix<double,6,6>& covariance
+    );
 
     Eigen::Vector3d position;
     Eigen::Vector4d orientation;
@@ -21,6 +26,13 @@ struct PoseWithCovariance
 struct PredictedObject
 {
     PredictedObject(size_t length);
+    PredictedObject(
+        int object_id,
+        std::vector<PoseWithCovariance> predictedPath
+    );
+
+
+
 
     int object_id;
     std::vector<PoseWithCovariance> predictedPath;
