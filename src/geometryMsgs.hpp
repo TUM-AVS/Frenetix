@@ -1,32 +1,29 @@
 #pragma once
 
 #include <array>
-
-struct Position 
-{
-    double x, y, z;
-};
-
-struct Orientation 
-{
-    double x, y, z, w;
-};
-
-struct Pose 
-{
-    Position position;
-    Orientation orientation;
-};
+#include <vector>
+#include <Eigen/Dense>
+#include <iostream>
 
 struct PoseWithCovariance 
 {
-    Pose pose;
-    std::array<double, 36> covariance;
+    PoseWithCovariance();
+
+    Eigen::Vector3d position;
+    Eigen::Vector4d orientation;
+
+    Eigen::Matrix<double,6,6> covariance;
+
+    friend std::ostream& operator<<(std::ostream& os, const PoseWithCovariance& pose);
 };
+
 
 struct PredictedObject
 {
+    PredictedObject(size_t length);
+
     int object_id;
-    PoseWithCovariance pose;
-    
-}
+    std::vector<PoseWithCovariance> predictedPath;
+
+    friend std::ostream& operator<<(std::ostream& os, const PredictedObject& obj);
+};

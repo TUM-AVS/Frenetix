@@ -25,7 +25,7 @@
 class CalculateCollisionProbabilityMahalanobis : public CostStrategy
 {
 private:
-    std::map<int, PoseWithCovariance> m_predictions; /**< A map holding the predicted states of other agents. */
+    std::map<int, PredictedObject> m_predictions; /**< A map holding the predicted states of other agents. */
     
 public:
 
@@ -37,7 +37,7 @@ public:
      *
      * @param predictions A map holding the predicted states of other agents.
      */
-    CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PoseWithCovariance> predictions);
+    CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PredictedObject>& predictions);
 
     /**
      * @brief Evaluate the collision probability for a trajectory.

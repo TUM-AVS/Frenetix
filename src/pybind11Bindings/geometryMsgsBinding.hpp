@@ -11,27 +11,26 @@ namespace plannerCPP
 {
     void initBindGeometryMsg(nb::module_ &m) 
     {
-        nb::class_<Position>(m, "Position")
-            .def(nb::init<>())
-            .def_rw("x", &Position::x)
-            .def_rw("y", &Position::y)
-            .def_rw("z", &Position::z);
-
-        nb::class_<Orientation>(m, "Orientation")
-            .def(nb::init<>())
-            .def_rw("x", &Orientation::x)
-            .def_rw("y", &Orientation::y)
-            .def_rw("z", &Orientation::z)
-            .def_rw("w", &Orientation::w);
-
-        nb::class_<Pose>(m, "Pose")
-            .def(nb::init<>())
-            .def_rw("position", &Pose::position)
-            .def_rw("orientation", &Pose::orientation);
 
         nb::class_<PoseWithCovariance>(m, "PoseWithCovariance")
             .def(nb::init<>())
-            .def_rw("pose", &PoseWithCovariance::pose)
+            .def("__repr__", [](const PoseWithCovariance &p) {
+                std::ostringstream oss;
+                oss << p;
+                return oss.str();
+            })
+            .def_rw("position", &PoseWithCovariance::position)
+            .def_rw("orientation", &PoseWithCovariance::orientation)
             .def_rw("covariance", &PoseWithCovariance::covariance);
+
+        nb::class_<PredictedObject>(m, "PredictedObject")
+            .def(nb::init<size_t>())
+            .def("__repr__", [](const PredictedObject &p) {
+                std::ostringstream oss;
+                oss << p;
+                return oss.str();
+            })
+            .def_rw("object_id", &PredictedObject::object_id)
+            .def_rw("predictedPath", &PredictedObject::predictedPath);
     }
 }
