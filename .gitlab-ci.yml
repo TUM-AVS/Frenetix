@@ -1,0 +1,110 @@
+stages:
+  - build
+
+image: python:3.10
+
+default:
+  tags:
+    - cpp
+
+  before_script:
+    - apt-get update && apt-get install -y docker.io
+    - python -m venv venv
+    - source venv/bin/activate
+    - python -m pip install --upgrade pip
+    - python -m pip install build==1.0.0
+    - python -m pip install cibuildwheel==2.15.0
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lrz.de/".insteadOf "git@gitlab.lrz.de:"
+
+### static test ###
+build-sdist:
+  stage: build
+  script:
+    - python3 --version
+    - git describe
+    - python3 -m build --sdist
+  needs: []
+  variables:
+    # Necessary so that Git detects all tags
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
+    GIT_FETCH_EXTRA_FLAGS: --tags
+  artifacts:
+    paths:
+      - dist/*.tar.gz
+    expire_in: 30 minutes
+
+.common-rules:
+  rules:
+    # Rule to disable a job for merge request pipelines (imitate default job behaviour)
+    - &skip_merge_request_pipeline
+      if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: &full_wheel_build_condition $CI_COMMIT_TAG || $CI_COMMIT_REF_PROTECTED == "true" || $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH || $CI_COMMIT_REF_NAME =~ /^(master|develop)$/
+
+build-wheel:
+  stage: build
+  # make a docker daemon available for cibuildwheel to use
+  services:
+    - name: docker:24.0.5-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    CIBW_BEFORE_ALL: "git config --global url.\"https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lrz.de/\".insteadOf \"git@gitlab.lrz.de:\""
+    # NOTE: The following variables correspond to the default values.
+    # They are specified here so that it is possible to override them using
+    # Gitlab push options or in the UI when running a manual pipeline.
+    #
+    # For example, use git push -o ci.variable="CIBW_BUILD_VERBOSITY=1"
+    # to make cibuildwheel verbose in the pipeline created for the pushed commit.
+    CIBW_BUILD_VERBOSITY: 0
+    CIBW_TEST_SKIP: "*i686 *-musllinux*"
+    # We only use the artifacts (sdist/wheels) from previous jobs, so skip all Git operations
+    GIT_STRATEGY: none
+  script:
+    - docker info
+    - cibuildwheel dist/*.tar.gz
+  needs:
+    - job: build-sdist
+      artifacts: true
+  artifacts:
+    paths:
+      - wheelhouse/*.whl
+    expire_in: 30 minutes
+  rules:
+    - *skip_merge_request_pipeline
+    # When we are building wheels for a tag/release, build wheel for all supported Python versions and platform
+    # Also routinely build all wheels for the default branch as well as develop (commits on these branches are infrequent)
+    - if: *full_wheel_build_condition
+      variables:
+        CIBW_BUILD: "*"
+    # Fallback rule when we're not building wheels for a tag or a main branch:
+    # In that case, build only a single wheel to speed up the pipeline
+    - when: on_success
+      variables:
+        CIBW_BUILD: "cp310-manylinux_x86_64"
+
+upload-wheel:
+  stage: build
+  variables:
+    TWINE_USERNAME: gitlab-ci-token
+    TWINE_PASSWORD: ${CI_JOB_TOKEN}
+    TWINE_REPOSITORY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
+    UPLOAD_WHEELS: "0"
+    # We only use the artifacts (sdist/wheels) from previous jobs, so skip all Git operations
+    GIT_STRATEGY: none
+  script:
+    - twine upload dist/*.tar.gz wheelhouse/*.whl
+  needs:
+    - job: build-sdist
+      artifacts: true
+    - job: build-wheel
+      artifacts: true
+  rules:
+    # Disable job for merge request pipelines (imitate default job behaviour)
+    - *skip_merge_request_pipeline
+    # Only upload wheels whenever a tag is associated with the commit
+    - if: $CI_COMMIT_TAG
+    # Also upload wheels if the UPLOAD_WHEELS was manually set to true
+    # For example, use git push -o ci.variable="UPLOAD_WHEELS=1" to test this
+    - if: $UPLOAD_WHEELS == "1"
+
