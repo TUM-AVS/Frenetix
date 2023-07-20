@@ -2,7 +2,7 @@
 name = "frenetPlannerHelper"
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.7,<3.12"
+requires-python = ">=3.7,<3.13"
 # license = {file = "LICENSE"}
 #authors = [
 #  {email = "todo"},
@@ -17,7 +17,7 @@ dependencies = [
 [build-system]
 requires = [
     "scikit-build-core~=0.4.7",
-    "nanobind~=1.4.0",
+    "pybind11~=2.10.4",
     "setuptools_scm[toml]~=7.1.0"
     ]
 

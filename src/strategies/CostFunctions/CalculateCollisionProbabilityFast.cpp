@@ -1,6 +1,6 @@
 #include "CalculateCollisionProbabilityFast.hpp"
 
-CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject>& predictions, double vehicleLength, double vehicleWidth)
+CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth)
     : CostStrategy(funName, costWeight)
     , m_predictions(predictions)
     , m_vehicleLength(vehicleLength)
@@ -11,7 +11,7 @@ CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string
 
 void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& trajectory)
 {
-    
+
 }
 
 void CalculateCollisionProbabilityFast::printPredictions()

@@ -1,38 +1,38 @@
 //pybind includes
-#include <nanobind/nanobind.h>
-#include <nanobind/stl/vector.h>
-#include <nanobind/eigen/dense.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/eigen.h>
 
 #include "geometryMsgs.hpp"
 
-namespace nb = nanobind;
+namespace py = pybind11;
 
 namespace plannerCPP
 {
-    void initBindGeometryMsg(nb::module_ &m)
+    void initBindGeometryMsg(pybind11::module &m)
     {
 
-        nb::class_<PoseWithCovariance>(m, "PoseWithCovariance")
-            // .def(nb::init<>())
-            .def(nb::init<const Eigen::Vector3d&, const Eigen::Vector4d&, const Eigen::Matrix<double,6,6>&>())
+        py::class_<PoseWithCovariance>(m, "PoseWithCovariance")
+            // .def(py::init<>())
+            .def(py::init<const Eigen::Vector3d&, const Eigen::Vector4d&, const Eigen::Matrix<double,6,6>&>())
             .def("__repr__", [](const PoseWithCovariance &p) {
                 std::ostringstream oss;
                 oss << p;
                 return oss.str();
             })
-            .def_rw("position", &PoseWithCovariance::position)
-            .def_rw("orientation", &PoseWithCovariance::orientation)
-            .def_rw("covariance", &PoseWithCovariance::covariance);
+            .def_readonly("position", &PoseWithCovariance::position)
+            .def_readonly("orientation", &PoseWithCovariance::orientation)
+            .def_readonly("covariance", &PoseWithCovariance::covariance);
 
-        nb::class_<PredictedObject>(m, "PredictedObject")
-            //.def(nb::init<size_t>())
-            .def(nb::init<int, const std::vector<PoseWithCovariance>&>())
+        py::class_<PredictedObject>(m, "PredictedObject")
+            //.def(py::init<size_t>())
+            .def(py::init<int, const std::vector<PoseWithCovariance>&>())
             .def("__repr__", [](const PredictedObject &p) {
                 std::ostringstream oss;
                 oss << p;
                 return oss.str();
             })
-            .def_rw("object_id", &PredictedObject::object_id)
-            .def_rw("predictedPath", &PredictedObject::predictedPath);
+            .def_readonly("object_id", &PredictedObject::object_id)
+            .def_readonly("predictedPath", &PredictedObject::predictedPath);
     }
 }

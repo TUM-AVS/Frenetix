@@ -3,10 +3,10 @@
 #include <memory>
 
 //pybind includes
-#include <nanobind/ndarray.h>
-#include <nanobind/nanobind.h>
-#include <nanobind/stl/bind_vector.h>
-#include <nanobind/eigen/dense.h>
+#include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/eigen.h>
 
 //Other Bindings
 #include "handlerBinding.hpp"
@@ -18,10 +18,10 @@
 #include "trajectorySampleBinding.hpp"
 #include "geometryMsgsBinding.hpp"
 
-namespace nb = nanobind;
+namespace py = pybind11;
 namespace plannerCPP
 {
-    NB_MODULE(frenetPlannerHelper, m) 
+    PYBIND11_MODULE(frenetPlannerHelper, m) 
     {
         initBindHandler(m);
         initBindCoordinateSystemWrapper(m);

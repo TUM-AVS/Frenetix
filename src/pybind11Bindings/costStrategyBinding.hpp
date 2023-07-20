@@ -2,23 +2,23 @@
 #define COSTSTRATEGYBINDING_HPP
 
 //pybind includes
-#include <nanobind/nanobind.h>
-#include <nanobind/ndarray.h>
-#include <nanobind/stl/bind_vector.h>
-#include <nanobind/eigen/dense.h>
+#include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/eigen.h>
 
 #include "strategies/CostStrategy.hpp"
 #include "trajectoryFunctionsBinding/costFunctionsBinding.hpp"
 
-namespace nb = nanobind;
+namespace py = pybind11;
 
 namespace plannerCPP
 {
 
-    void initBindCostStrategy(nb::module_ &m) 
+    void initBindCostStrategy(pybind11::module &m) 
     {
-        nb::class_<CostStrategy, TrajectoryStrategy>(m, "CostStrategy");
-        nb::module_ sub_m = m.def_submodule("cost_functions");
+        py::class_<CostStrategy, TrajectoryStrategy, std::shared_ptr<CostStrategy>>(m, "CostStrategy");
+        py::module sub_m = m.def_submodule("cost_functions");
 
         initBindCostFunctions(sub_m);
     }

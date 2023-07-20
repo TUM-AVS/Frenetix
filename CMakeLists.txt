@@ -26,8 +26,6 @@ project(${SKBUILD_PROJECT_NAME}
     VERSION ${SKBUILD_PROJECT_VERSION}
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++")
-
 # CMP0077 (3.13) - option() honors normal variables.
 # Relevant for Eigen3
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
@@ -69,7 +67,6 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
   set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
 
-if(FALSE)
 include(FetchContent)
 FetchContent_Declare(
   pybind11
@@ -79,18 +76,8 @@ FetchContent_Declare(
 
   FIND_PACKAGE_ARGS
 )
-endif()
 
-#find_package(nan
 find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
-
-# Detect the installed nanobind package and import it into CMake
-execute_process(
-  COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir
-  OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NB_DIR)
-list(APPEND CMAKE_PREFIX_PATH "${NB_DIR}")
-find_package(nanobind CONFIG REQUIRED)
-
 
 
 # IMPORTANT: DO NOT MOVE this section, in particular the calls to find_package(Python)
@@ -110,10 +97,10 @@ if(SKBUILD)
         # set(Python_FIND_VIRTUALENV ONLY)
 
         set(PYBIND11_FINDPYTHON ON)
-        #find_package(Python 3.7 REQUIRED COMPONENTS Development.Module)
+        find_package(Python 3.7 REQUIRED COMPONENTS Development.Module)
 
         # Now we can find pybind11
-        #find_package(pybind11 2.7.0 CONFIG REQUIRED)
+        find_package(pybind11 2.7.0 CONFIG REQUIRED)
 
         # SKBUILD_SELF_CONTAINED controls whether we try to build all dependencies
         # ourselves. This is used in order to build cross-platform wheels
