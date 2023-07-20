@@ -6,3 +6,4 @@ build
 *.so
 _skbuild
 src/python/frenetPlannerHelper/_version.py
+.idea
