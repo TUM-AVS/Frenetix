@@ -16,7 +16,6 @@ void CalculateCollisionProbabilityMahalanobis::evaluateTrajectory(TrajectorySamp
 
         for (int i = 1; i < trajectory.m_cartesianSample.x.size(); ++i)
         {
-            std::cout << i << " " << prediction.predictedPath.size() << std::endl;
             if (i < prediction.predictedPath.size())
             {
                 Eigen::Vector2d u(trajectory.m_cartesianSample.x[i], trajectory.m_cartesianSample.y[i]);
@@ -25,9 +24,8 @@ void CalculateCollisionProbabilityMahalanobis::evaluateTrajectory(TrajectorySamp
                 Eigen::Matrix2d iv = cov.inverse();
                 // Calculate Mahalanobis distance manually
                 Eigen::Vector2d diff = u - v;
-                std::cout << diff << std::endl;
-                double mahalanobis = std::sqrt((diff.transpose() * iv * diff)(0, 0));
-                inv_dist.push_back(1e-2 / mahalanobis);
+                double mahalanobis = std::abs((diff.transpose() * iv * diff)(0, 0));
+                inv_dist.push_back(1e-4 / mahalanobis);
             }
             else
             {
