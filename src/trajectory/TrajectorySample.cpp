@@ -41,15 +41,7 @@ TrajectorySample::TrajectorySample(double x_0,
                                    double orientation_0,
                                    double acceleration_0,
                                    double velocity_0)
-    : m_dT (0)
-    , m_cost (0)
-    , m_uniqueId (0)
-    , m_feasible (true)
-    , m_samplingParameters ()
-    , m_trajectoryLongitudinal ()
-    , m_trajectoryLateral ()
-    , m_cartesianSample ()
-    , m_curvilinearSample ()
+    : m_feasible (true)
 {
     initArraysWithSize(1);
     m_cartesianSample.x[0] = x_0;

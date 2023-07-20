@@ -6,6 +6,7 @@
 #include <Eigen/Dense>
 #include <omp.h>
 #include <memory>
+#include <optional>
 
 #include "CartesianSample.hpp"
 #include "CurvilinearSample.hpp"
@@ -18,13 +19,16 @@ class TrajectorySample
 public:
     double m_dT;
     double m_cost;
-    bool m_collisionDetected;
-    int m_uniqueId;
-    double m_boundaryHarm;
-    double m_egoRisk;
-    double m_obstRisk;
-    int m_currentTimeStep;
+    std::optional<double> m_boundaryHarm;
+
+    std::optional<int> m_currentTimeStep;
+    std::optional<int> m_uniqueId;
+
     bool m_feasible;
+
+    std::optional<bool> m_collisionDetected;
+    std::optional<double> m_egoRisk;
+    std::optional<double> m_obstRisk;
 
     Eigen::VectorXd m_samplingParameters;
 
