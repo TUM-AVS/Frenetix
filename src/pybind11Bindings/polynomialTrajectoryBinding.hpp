@@ -38,7 +38,7 @@ namespace plannerCPP
                             py::arg("x_d"),
                             py::arg("x_0_order") = Eigen::VectorXd(), 
                             py::arg("x_d_order") = Eigen::VectorXd())
-            .def("coeffs", &PolynomialTrajectory<Degree>::getCoeffs)
+            .def_property("coeffs", &PolynomialTrajectory<Degree>::getCoeffs, nullptr)
             .def("__call__", py::vectorize(&PolynomialTrajectory<Degree>::operator()))
             .def("squared_jerk_integral", &PolynomialTrajectory<Degree>::squaredJerkIntegral)
             .def_property("delta_tau",
