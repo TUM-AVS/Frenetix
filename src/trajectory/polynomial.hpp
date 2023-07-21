@@ -67,6 +67,19 @@ public:
 
     double get_t1() const;
 
+    /**
+    * @brief Computes the integral of the squared jerk over the trajectory for a given time \p t.
+    *
+    * For a polynomial trajectory, the jerk is the third derivative of the position.
+    * This function calculates the squared jerk, integrated over time, up to the specified time \p t.
+    * This is specifically implemented for polynomials of Degree 4 and 5.
+    *
+    * @tparam Degree The degree of the polynomial trajectory. Valid values are 4 and 5.
+    * @param t The time up to which the squared jerk is integrated.
+    * @return The value of the integral of the squared jerk from 0 to \p t.
+    *
+    * @throw std::invalid_argument If the Degree is not 4 or 5.
+    */
     double squaredJerkIntegral(double t) const;
 
 private:
@@ -121,14 +134,8 @@ template<int Degree>
 void PolynomialTrajectory<Degree>::calc_coeffs(double& t0, double& t1) 
 {
     int n = Degree + 1;
-
-    ////cache a if it stays the same
-    //static double lastT0 = 0;
-    //static double lastT1 = 0; 
-
     static Eigen::MatrixXd a(n, n);
     Eigen::VectorXd b(n);
-
 
     for(int iii = 0; iii < n; iii++)
     {
@@ -216,7 +223,7 @@ double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
                                         720 * coeffs[5] * coeffs[5] * t5);
         return integral_squared_jerk;
     }
-    else if constexpr( Degree == 4)
+    else if constexpr(Degree == 4)
     {
         double t2 = t * t;
         double t3 = t2 * t;
