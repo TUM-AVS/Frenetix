@@ -5,7 +5,7 @@ CheckYawRateConstraint::CheckYawRateConstraint(double deltaMax, double wheelbase
     , m_deltaMax(deltaMax)
     , m_wheelbase(wheelbase)
 {
-    m_kappaMax = std::tan(m_deltaMax/m_wheelbase);
+    m_kappaMax = std::tan(m_deltaMax) / m_wheelbase;
 }
 
 void CheckYawRateConstraint::evaluateTrajectory(TrajectorySample& trajectory)
