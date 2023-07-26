@@ -38,12 +38,11 @@ namespace plannerCPP
                             py::arg("x_d"),
                             py::arg("x_0_order") = Eigen::VectorXd(), 
                             py::arg("x_d_order") = Eigen::VectorXd())
-            .def_property("coeffs", &PolynomialTrajectory<Degree>::getCoeffs, nullptr)
+            .def_property_readonly("coeffs", &PolynomialTrajectory<Degree>::getCoeffs)
             .def("__call__", py::vectorize(&PolynomialTrajectory<Degree>::operator()))
             .def("squared_jerk_integral", &PolynomialTrajectory<Degree>::squaredJerkIntegral)
-            .def_property("delta_tau",
-                        &PolynomialTrajectory<Degree>::get_t1,
-                        nullptr);
+            .def_property_readonly("delta_tau",
+                        &PolynomialTrajectory<Degree>::get_t1);
     }
 
     void initBindPolynomialTrajectory(pybind11::module &m) 
