@@ -2,13 +2,14 @@
 
 FillCoordinates::FillCoordinates(bool lowVelocityMode, 
                                  double initialOrienation, 
-                                 std::shared_ptr<CoordinateSystemWrapper> coordinateSystem)
+                                 std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
+                                 double horizon)
     : TrajectoryStrategy("Fill Coordinates")
     , m_lowVelocityMode(lowVelocityMode)
     , m_initialOrientation(initialOrienation)
     , m_coordinateSystem(coordinateSystem)
+    , m_horizon(horizon)
 {
-
 }
 
 void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
@@ -21,32 +22,62 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
     double dp {0};
     double dpp {0};
 
-    size_t length = static_cast<size_t>(1+(trajectory.m_samplingParameters[1]- trajectory.m_samplingParameters[0]) 
-        / trajectory.m_dT);
+    double currentHorizon = trajectory.m_samplingParameters[1] - trajectory.m_samplingParameters[0];
+    size_t actualLength = static_cast<size_t>(1+(currentHorizon / trajectory.m_dT));
+    size_t length {0};
+    
+    if(m_horizon > currentHorizon)
+    {
+        length = static_cast<size_t>(1+(m_horizon / trajectory.m_dT));
+    }
+    else
+    {
+        length = actualLength;        
+    }
 
     trajectory.initArraysWithSize(length);
     trajectory.m_currentTimeStep = length;
 
     double t {0};
-
+    
     for (int iii = 0; iii < length; ++iii) 
     {
         t = trajectory.m_samplingParameters[0] + trajectory.m_dT*iii;
-        trajectory.m_curvilinearSample.s[iii] = trajectory.m_trajectoryLongitudinal(t, 0);
-        trajectory.m_curvilinearSample.ss[iii] = trajectory.m_trajectoryLongitudinal(t, 1);
-        trajectory.m_curvilinearSample.sss[iii] = trajectory.m_trajectoryLongitudinal(t, 2);
-
-        double ttt {t};
-
-        if(m_lowVelocityMode)
+        
+        if(iii >= actualLength)
         {
-            ttt = trajectory.m_curvilinearSample.s[iii] -  trajectory.m_curvilinearSample.s[0];
+
+            trajectory.m_curvilinearSample.s[iii] = trajectory.m_curvilinearSample.s[iii-1] + trajectory.m_dT*trajectory.m_curvilinearSample.ss[iii-1];
+            trajectory.m_curvilinearSample.ss[iii] =  trajectory.m_curvilinearSample.ss[iii-1];
+            trajectory.m_curvilinearSample.sss[iii] = 0;
+
+            trajectory.m_curvilinearSample.d[iii] = trajectory.m_curvilinearSample.d[iii-1];
+            trajectory.m_curvilinearSample.dd[iii] = 0;
+            trajectory.m_curvilinearSample.ddd[iii] = 0;
         }
-        trajectory.m_curvilinearSample.d[iii] = trajectory.m_trajectoryLateral(ttt, 0);
-        trajectory.m_curvilinearSample.dd[iii] = trajectory.m_trajectoryLateral(ttt, 1);
-        trajectory.m_curvilinearSample.ddd[iii] = trajectory.m_trajectoryLateral(ttt, 2);
+        else
+        {
+            trajectory.m_curvilinearSample.s[iii] = trajectory.m_trajectoryLongitudinal(t, 0);
+            trajectory.m_curvilinearSample.ss[iii] = trajectory.m_trajectoryLongitudinal(t, 1);
+            trajectory.m_curvilinearSample.sss[iii] = trajectory.m_trajectoryLongitudinal(t, 2);
 
+            double ttt {t};
 
+            if(m_lowVelocityMode)
+            {
+                ttt = trajectory.m_curvilinearSample.s[iii] -  trajectory.m_curvilinearSample.s[0];
+            }
+            trajectory.m_curvilinearSample.d[iii] = trajectory.m_trajectoryLateral(ttt, 0);
+            trajectory.m_curvilinearSample.dd[iii] = trajectory.m_trajectoryLateral(ttt, 1);
+            trajectory.m_curvilinearSample.ddd[iii] = trajectory.m_trajectoryLateral(ttt, 2);
+        }
+
+        if(trajectory.m_curvilinearSample.ss[iii] < 0)
+        {
+            trajectory.m_valid = false;
+            trajectory.m_feasible = false;
+            return;
+        }
 
         if(m_lowVelocityMode)
         {
@@ -126,13 +157,14 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         }  
         catch(const std::exception& e) 
         {
-            std::cout << "Caught exception: " << e.what() << std::endl;
+            trajectory.m_valid = false;
+            trajectory.m_feasible = false;
+            return;
         }
         catch(...)
         {
             std::cout << "Caught unknown exception" << std::endl;
         } 
     }
-
 }
 

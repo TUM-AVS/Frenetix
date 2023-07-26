@@ -18,10 +18,11 @@ namespace plannerCPP
     void initBindOtherFunctions(pybind11::module &m) 
     {
         py::class_<FillCoordinates, TrajectoryStrategy, std::shared_ptr<FillCoordinates>>(m, "FillCoordinates")
-            .def(py::init<bool, double, std::shared_ptr<CoordinateSystemWrapper>>(),
+            .def(py::init<bool, double, std::shared_ptr<CoordinateSystemWrapper>, double>(),
                 py::arg("lowVelocityMode"),
                 py::arg("initialOrientation"),
-                py::arg("coordinateSystem")
+                py::arg("coordinateSystem"),
+                py::arg("horizon")
             )
             .def
             (

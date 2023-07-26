@@ -39,6 +39,7 @@ public:
     PolynomialTrajectory<5> m_trajectoryLateral;
     CartesianSample m_cartesianSample;
     CurviLinearSample m_curvilinearSample;
+    bool m_valid = true;
     
     TrajectorySample(double dt,
                      PolynomialTrajectory<4>& trajectoryLongitudinal, 
