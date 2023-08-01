@@ -23,7 +23,9 @@ namespace plannerCPP
     {
         py::module sub_m = m.def_submodule("trajectory_functions");
 
-        py::class_<TrajectoryStrategy, std::shared_ptr<TrajectoryStrategy>>(sub_m, "TrajectoryStrategy");
+        py::class_<TrajectoryStrategy, std::shared_ptr<TrajectoryStrategy>>(sub_m, "TrajectoryStrategy")
+            .def("evaluate_trajectory", &TrajectoryStrategy::evaluateTrajectory, py::arg("trajectory"))
+            .def_property_readonly("name", &TrajectoryStrategy::getFunctionName);
 
         initBindCostStrategy(sub_m);
         initBindFeasabilityStrategy(sub_m);

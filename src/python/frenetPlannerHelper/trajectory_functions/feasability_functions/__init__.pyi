@@ -2,6 +2,7 @@ from __future__ import annotations
 import frenetPlannerHelper.trajectory_functions.feasability_functions
 import typing
 import frenetPlannerHelper.trajectory_functions
+from frenetPlannerHelper import TrajectorySample
 
 __all__ = [
     "CheckAccelerationConstraint",

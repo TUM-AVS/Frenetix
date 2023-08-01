@@ -3,7 +3,7 @@ import frenetPlannerHelper.trajectory_functions.cost_functions
 import typing
 import frenetPlannerHelper.trajectory_functions
 import numpy
-_Shape = typing.Tuple[int, ...]
+from frenetPlannerHelper import TrajectorySample, PredictedObject
 
 __all__ = [
     "CalculateAccelerationCost",
@@ -38,7 +38,7 @@ class CalculateCollisionProbabilityMahalanobis(frenetPlannerHelper.trajectory_fu
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
 class CalculateDistanceToObstacleCost(frenetPlannerHelper.trajectory_functions.CostStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
-    def __init__(self, function_name: str, cost_weight: float, obstacles: numpy.ndarray[numpy.float64, _Shape[m, n]]) -> None: ...
+    def __init__(self, function_name: str, cost_weight: float, obstacles: numpy.ndarray) -> None: ...
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
 class CalculateDistanceToReferencePathCost(frenetPlannerHelper.trajectory_functions.CostStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
