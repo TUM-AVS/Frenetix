@@ -143,12 +143,10 @@ class CoordinateSystemWrapper():
     def ref_theta(self, arg1: numpy.ndarray) -> None:
         pass
     @property
-    def system(self) -> _CurvilinearCoordinateSystem:
-        """
-        :type: _CurvilinearCoordinateSystem
-        """
+    def system(self) -> typing.Any:
+        pass
     @system.setter
-    def system(self, arg1: _CurvilinearCoordinateSystem) -> None:
+    def system(self, arg1: typing.Any) -> None:
         pass
     pass
 class CurviLinearSample():
