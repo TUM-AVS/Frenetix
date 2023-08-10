@@ -6,7 +6,7 @@
 class CheckVelocityConstraint : public FeasabilityStrategy
 {
 public:
-    CheckVelocityConstraint();
+    CheckVelocityConstraint(bool wholeTrajectory);
     void evaluateTrajectory(TrajectorySample& trajectory);
 };
 

@@ -30,7 +30,7 @@ public:
      * @param deltaMax The maximum steering angle.
      * @param wheelbase The wheelbase of the vehicle.
      */
-    CheckCurvatureConstraint(double deltaMax, double wheelbase);
+    CheckCurvatureConstraint(double deltaMax, double wheelbase, bool wholeTrajectory);
 
     /**
      * @brief Evaluate the trajectory and check if it meets the curvature constraints.

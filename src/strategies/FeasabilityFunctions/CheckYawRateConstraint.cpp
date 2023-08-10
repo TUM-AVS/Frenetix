@@ -1,7 +1,7 @@
 #include "CheckYawRateConstraint.hpp"
 
-CheckYawRateConstraint::CheckYawRateConstraint(double deltaMax, double wheelbase)
-    : FeasabilityStrategy("Yaw rate Constraint")
+CheckYawRateConstraint::CheckYawRateConstraint(double deltaMax, double wheelbase, bool wholeTrajectory)
+    : FeasabilityStrategy("Yaw rate Constraint", wholeTrajectory)
     , m_deltaMax(deltaMax)
     , m_wheelbase(wheelbase)
 {
@@ -12,7 +12,9 @@ void CheckYawRateConstraint::evaluateTrajectory(TrajectorySample& trajectory)
 {
     double inFeasability {0};
 
-    for (size_t iii = 0; iii < trajectory.size(); ++iii) 
+    size_t lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_acutualSize;
+
+    for (size_t iii = 0; iii < lengthToCheck; ++iii) 
     {
             double yawRate = (iii > 0) ? (trajectory.m_cartesianSample.theta[iii] - trajectory.m_cartesianSample.theta[iii - 1]) / trajectory.m_dT : 0.0;
             double thetaDotMax = m_kappaMax * trajectory.m_cartesianSample.velocity[iii];

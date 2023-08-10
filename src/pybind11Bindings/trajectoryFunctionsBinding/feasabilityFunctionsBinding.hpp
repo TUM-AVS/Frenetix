@@ -21,8 +21,8 @@ namespace plannerCPP
     void initBindFeasabilityFunctions(pybind11::module &m) 
     {   
         py::class_<CheckAccelerationConstraint, FeasabilityStrategy, std::shared_ptr<CheckAccelerationConstraint>>(m, "CheckAccelerationConstraint")
-            .def(py::init<double, double>(),
-                py::arg("switchingVelocity"), py::arg("maxAcceleration"))
+            .def(py::init<double, double, bool>(),
+                py::arg("switchingVelocity"), py::arg("maxAcceleration"), py::arg("wholeTrajectory"))
             .def
             (
                 "evaluate_trajectory", 
@@ -32,8 +32,8 @@ namespace plannerCPP
 
 
         py::class_<CheckCurvatureConstraint, FeasabilityStrategy, std::shared_ptr<CheckCurvatureConstraint>>(m, "CheckCurvatureConstraint")
-            .def(py::init<double, double>(),
-                py::arg("deltaMax"), py::arg("wheelbase"))
+            .def(py::init<double, double, bool>(),
+                py::arg("deltaMax"), py::arg("wheelbase"), py::arg("wholeTrajectory"))
             .def
             (
                 "evaluate_trajectory", 
@@ -43,8 +43,8 @@ namespace plannerCPP
 
 
         py::class_<CheckCurvatureRateConstraint, FeasabilityStrategy, std::shared_ptr<CheckCurvatureRateConstraint>>(m, "CheckCurvatureRateConstraint")
-            .def(py::init<double, double>(),
-                py::arg("wheelbase"), py::arg("velocityDeltaMax"))
+            .def(py::init<double, double, bool>(),
+                py::arg("wheelbase"), py::arg("velocityDeltaMax"),  py::arg("wholeTrajectory"))
             .def
             (
                 "evaluate_trajectory", 
@@ -54,7 +54,8 @@ namespace plannerCPP
 
 
         py::class_<CheckVelocityConstraint, FeasabilityStrategy, std::shared_ptr<CheckVelocityConstraint>>(m, "CheckVelocityConstraint")
-            .def(py::init<>())
+            .def(py::init<bool>(),
+                py::arg("wholeTrajectory"))
             .def
             (
                 "evaluate_trajectory", 
@@ -64,8 +65,8 @@ namespace plannerCPP
 
 
         py::class_<CheckYawRateConstraint, FeasabilityStrategy, std::shared_ptr<CheckYawRateConstraint>>(m, "CheckYawRateConstraint")
-            .def(py::init<double, double>(),
-                py::arg("deltaMax"), py::arg("wheelbase"))
+            .def(py::init<double, double, bool>(),
+                py::arg("deltaMax"), py::arg("wheelbase"), py::arg("wholeTrajectory"))
             .def
             (
                 "evaluate_trajectory", 

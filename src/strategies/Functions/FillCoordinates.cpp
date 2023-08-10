@@ -35,6 +35,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         length = actualLength;        
     }
 
+    trajectory.m_acutualSize = actualLength;
     trajectory.initArraysWithSize(length);
     trajectory.m_currentTimeStep = length;
 

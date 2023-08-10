@@ -31,8 +31,9 @@ public:
      *
      * @param deltaMax The maximum steering angle.
      * @param wheelbase The wheelbase of the vehicle.
+     * @param wholeTrajectory Whether to check the whole trajectory including the enlarged part.
      */
-    CheckYawRateConstraint(double deltaMax, double wheelbase);
+    CheckYawRateConstraint(double deltaMax, double wheelbase, bool wholeTrajectory);
 
     /**
      * @brief Evaluate the trajectory and check if it meets the yaw rate constraints.

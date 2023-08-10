@@ -23,7 +23,7 @@ public:
      * @param switchingVelocity The switching velocity.
      * @param maxAcceleration The maximum acceleration.
      */
-    CheckAccelerationConstraint(double switchingVelocity, double maxAcceleration);
+    CheckAccelerationConstraint(double switchingVelocity, double maxAcceleration, bool wholeTrajectory);
 
 
     /**

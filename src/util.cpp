@@ -90,7 +90,7 @@ namespace util
         double value {0};
         int size = array.size();
 
-        for (int iii = 0; iii < size - 1; iii += 2) 
+        for (int iii = 0; iii < size - 2; iii += 2) 
         {
             value += array(iii) + 4*array(iii+1) + array(iii+2);
         }

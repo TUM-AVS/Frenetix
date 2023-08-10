@@ -30,7 +30,7 @@ public:
      * @param wheelbase The wheelbase of the vehicle.
      * @param velocityDeltaMax The maximum change in velocity.
      */
-    CheckCurvatureRateConstraint(double wheelbase, double velocityDeltaMax);
+    CheckCurvatureRateConstraint(double wheelbase, double velocityDeltaMax, bool wholeTrajectory);
 
     /**
      * @brief Evaluate the trajectory and check if it meets the curvature rate constraints.

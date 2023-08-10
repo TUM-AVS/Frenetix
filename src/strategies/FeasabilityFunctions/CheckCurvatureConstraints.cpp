@@ -1,7 +1,7 @@
 #include "CheckCurvatureConstraints.hpp"
 
-CheckCurvatureConstraint::CheckCurvatureConstraint(double deltaMax, double wheelbase)
-    : FeasabilityStrategy("Curvature Constraint")
+CheckCurvatureConstraint::CheckCurvatureConstraint(double deltaMax, double wheelbase, bool wholeTrajectory)
+    : FeasabilityStrategy("Curvature Constraint", wholeTrajectory)
     , m_deltaMax(deltaMax)
     , m_wheelbase(wheelbase)
 {   
@@ -13,7 +13,9 @@ void CheckCurvatureConstraint::evaluateTrajectory(TrajectorySample& trajectory)
 
     double kappaMax = std::tan(m_deltaMax) / m_wheelbase;
 
-    for (size_t iii = 0; iii < trajectory.size(); ++iii) 
+    size_t lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_acutualSize;
+
+    for (size_t iii = 2; iii < lengthToCheck-2; ++iii) 
     {
         if (std::abs(trajectory.m_cartesianSample.kappa[iii]) > kappaMax) inFeasablity++;
     }

@@ -43,6 +43,7 @@ namespace plannerCPP
             .def_readwrite("feasabilityMap", &TrajectorySample::m_feasabilityMap)
             .def_readwrite("costMap", &TrajectorySample::m_costMap)
             .def_readwrite("feasible", &TrajectorySample::m_feasible)
+            .def_readwrite("valid", &TrajectorySample::m_valid)
             .def_property("sampling_parameters",
                 [](TrajectorySample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_samplingParameters;},
                 [](TrajectorySample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_samplingParameters = arr;})

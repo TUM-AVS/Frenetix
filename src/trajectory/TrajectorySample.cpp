@@ -51,10 +51,8 @@ TrajectorySample::TrajectorySample(double x_0,
     m_cartesianSample.velocity[0] = velocity_0;
 }
 
-void TrajectorySample::initArraysWithSize(int size)
+void TrajectorySample::initArraysWithSize(size_t size)
 {
-    m_size = static_cast<size_t>(size);
-
     m_curvilinearSample.s.resize(size);
     m_curvilinearSample.ss.resize(size);
     m_curvilinearSample.sss.resize(size);

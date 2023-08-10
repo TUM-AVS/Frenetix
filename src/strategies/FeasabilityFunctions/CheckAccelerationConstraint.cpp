@@ -1,7 +1,7 @@
 #include "CheckAccelerationConstraint.hpp"
 
-CheckAccelerationConstraint::CheckAccelerationConstraint(double switchingVelocity, double maxAcceleration)
-    : FeasabilityStrategy("Acceleration Constraint")
+CheckAccelerationConstraint::CheckAccelerationConstraint(double switchingVelocity, double maxAcceleration, bool wholeTrajectory)
+    : FeasabilityStrategy("Acceleration Constraint", wholeTrajectory)
     , m_switchingVelocity(switchingVelocity)
     , m_maxAcceleration(maxAcceleration)
 {   
@@ -11,7 +11,9 @@ void CheckAccelerationConstraint::evaluateTrajectory(TrajectorySample& trajector
 {
     double inFeasability {0};
 
-    for (size_t iii = 0; iii < trajectory.size(); ++iii) 
+    size_t lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_acutualSize;
+
+    for (size_t iii = 0; iii < lengthToCheck; ++iii) 
     {
         double aMax = (trajectory.m_cartesianSample.velocity[iii] > m_switchingVelocity) ? (m_maxAcceleration * m_switchingVelocity / trajectory.m_cartesianSample.velocity[iii]) : m_maxAcceleration;
         double aMin = -m_maxAcceleration;

@@ -15,8 +15,9 @@
 
 class TrajectorySample
 {
-    size_t m_size;
 public:
+    size_t m_size;
+    size_t m_acutualSize;
     double m_dT;
     double m_cost;
     std::optional<double> m_boundaryHarm;
@@ -72,7 +73,7 @@ public:
      *
      * @param size The size to resize the arrays to.
      */
-    void initArraysWithSize(int size);
+    void initArraysWithSize(size_t size);
 
     /**
      * @brief Set the current time step for the trajectory sample.
