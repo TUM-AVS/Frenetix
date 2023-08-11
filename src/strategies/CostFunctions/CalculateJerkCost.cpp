@@ -9,11 +9,14 @@ void CalculateJerkCost::evaluateTrajectory(TrajectorySample& trajectory)
 {
     double cost {0};
 
-    Eigen::VectorXd jerk = Eigen::VectorXd::Zero(trajectory.m_cartesianSample.acceleration.size() - 1);
+    auto size = trajectory.m_cartesianSample.acceleration.size() - 1;
 
-    for (size_t iii = 0; iii < trajectory.size() - 1; ++iii) 
+    Eigen::VectorXd jerk = Eigen::VectorXd::Zero(size);
+
+    for (size_t iii = 0; iii < size; ++iii)
     {
-        jerk(iii) = trajectory.m_cartesianSample.acceleration(iii + 1);
+        auto diff = trajectory.m_cartesianSample.acceleration(iii + 1) - trajectory.m_cartesianSample.acceleration(iii);
+        jerk(iii) = diff / trajectory.m_dT;
     }
     Eigen::VectorXd jerkSq = jerk.array().square();
 
