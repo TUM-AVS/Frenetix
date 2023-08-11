@@ -53,6 +53,8 @@ TrajectorySample::TrajectorySample(double x_0,
 
 void TrajectorySample::initArraysWithSize(size_t size)
 {
+    m_size = size;
+
     m_curvilinearSample.s.resize(size);
     m_curvilinearSample.ss.resize(size);
     m_curvilinearSample.sss.resize(size);
