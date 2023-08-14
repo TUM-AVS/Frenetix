@@ -8,6 +8,7 @@
 #include <pybind11/eigen.h>
 
 #include "CoordinateSystemWrapper.hpp"
+#include "geometry/curvilinear_coordinate_system.h"
 
 namespace py = pybind11;
 
@@ -16,6 +17,11 @@ namespace plannerCPP
 
     void initBindCoordinateSystemWrapper(pybind11::module &m)
     {
+        // TODO: Registering the CCS class is required for correct type signatures,
+        // but we can't register the class here since it is also exported by commonroad_dc.
+        // Registering it multiple times would result in pybind11 errors.
+        // py::class_<geometry::CurvilinearCoordinateSystem, std::shared_ptr<geometry::CurvilinearCoordinateSystem>>(m, "_CurvilinearCoordinateSystem", py::module_local());
+
         py::class_<CoordinateSystemWrapper, std::shared_ptr<CoordinateSystemWrapper>>(m, "CoordinateSystemWrapper")
             .def(py::init<Eigen::Ref<RowMatrixXd>>(), py::arg("ref_path"))
             .def_property("system", &CoordinateSystemWrapper::getSystem, &CoordinateSystemWrapper::setSystem)

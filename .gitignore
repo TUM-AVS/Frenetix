@@ -7,3 +7,5 @@ build
 _skbuild
 src/python/frenetPlannerHelper/_version.py
 .idea
+
+__pycache__
