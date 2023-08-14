@@ -6,8 +6,12 @@ FetchContent_Declare_Fallback(
 
     SYSTEM
 
-    URL "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz"
-    URL_HASH SHA256=8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72
+    GIT_REPOSITORY "https://gitlab.com/libeigen/eigen.git"
+    # We need the fix provided by 68e03ab240aa340b91f0b6fea8d382ef5cfb9258
+    GIT_TAG 23299632c246b77937fb78e8607863a2f02e191b
+
+    #URL "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz"
+    #URL_HASH SHA256=8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72
 
     FIND_PACKAGE_ARGS 3.3.7
 )
