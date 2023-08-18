@@ -19,7 +19,7 @@ void CheckYawRateConstraint::evaluateTrajectory(TrajectorySample& trajectory)
             double yawRate = (iii > 0) ? (trajectory.m_cartesianSample.theta[iii] - trajectory.m_cartesianSample.theta[iii - 1]) / trajectory.m_dT : 0.0;
             double thetaDotMax = m_kappaMax * trajectory.m_cartesianSample.velocity[iii];
 
-            if (std::abs(yawRate) > thetaDotMax) inFeasability++;
+            if (std::abs(std::round(yawRate * 100000) / 100000.0) > thetaDotMax) inFeasability++; 
     }
 
     trajectory.addFeasabilityValueToList(m_functionName, inFeasability);
