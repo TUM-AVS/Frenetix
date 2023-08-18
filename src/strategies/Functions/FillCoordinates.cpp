@@ -73,11 +73,17 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
             trajectory.m_curvilinearSample.ddd[iii] = trajectory.m_trajectoryLateral(ttt, 2);
         }
 
-        if(trajectory.m_curvilinearSample.ss[iii] < 0)
+
+        double _EPS = 1e-5;
+        if(trajectory.m_curvilinearSample.ss[iii] < -_EPS)
         {
             trajectory.m_valid = false;
             trajectory.m_feasible = false;
             return;
+        }
+        else if(std::abs(trajectory.m_curvilinearSample.ss[iii]) < _EPS)
+        {
+            trajectory.m_curvilinearSample.ss[iii] = 0;
         }
 
         if(m_lowVelocityMode)
