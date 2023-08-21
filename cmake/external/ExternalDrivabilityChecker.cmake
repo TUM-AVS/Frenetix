@@ -7,7 +7,7 @@ add_library(pthread ALIAS Threads::Threads)
 
 FetchContent_Declare(
     crdc
-    GIT_REPOSITORY https://access_alienware:glpat-_rXLgimNhyGoxQ_8n-n9@gitlab.lrz.de:motionplanning1/commonroad-drivability-checker.git
+    GIT_REPOSITORY git@gitlab.lrz.de:motionplanning1/commonroad-drivability-checker.git
     GIT_TAG        wip-experimental-fallible-conversion
 )
 
