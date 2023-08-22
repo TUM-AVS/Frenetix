@@ -13,9 +13,11 @@ void CheckCurvatureConstraint::evaluateTrajectory(TrajectorySample& trajectory)
 
     double kappaMax = std::tan(m_deltaMax) / m_wheelbase;
 
-    size_t lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_acutualSize;
-
-    for (size_t iii = 2; iii < lengthToCheck-2; ++iii) 
+    int lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_acutualSize;
+    if (trajectory.m_cartesianSample.kappa.size() < lengthToCheck) {
+    	throw std::runtime_error("kappa array is smaller than expected.");
+    }
+    for (int iii = 2; iii < lengthToCheck-2; ++iii) 
     {
         if (std::abs(trajectory.m_cartesianSample.kappa[iii]) > kappaMax) inFeasablity++;
     }
