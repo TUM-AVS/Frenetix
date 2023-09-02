@@ -5,17 +5,25 @@ find_package(Threads REQUIRED)
 # Required for LINK_LIBRARIES_ONLY_TARGETS (gtest links directly to pthread)
 add_library(pthread ALIAS Threads::Threads)
 
-FetchContent_Declare(
-    crdc
-    GIT_REPOSITORY git@gitlab.lrz.de:motionplanning1/commonroad-drivability-checker.git
-    GIT_TAG        wip-experimental-fallible-conversion
-)
+set(_crdc_local ON)
+
+if(_crdc_local)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/crdc)
+
+    set_property(DIRECTORY ${PROJECT_SOURCE_DIR}/third_party/crdc PROPERTY EXCLUDE_FROM_ALL ON)
+else()
+    FetchContent_Declare(
+        crdc
+        GIT_REPOSITORY git@gitlab.lrz.de:motionplanning1/commonroad-drivability-checker.git
+        GIT_TAG        wip-experimental-fallible-conversion
+    )
+
+    FetchContent_MakeAvailable(crdc)
+
+    set_property(DIRECTORY ${crdc_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL ON)
+endif()
 
 set(BUILD_S11N FALSE CACHE BOOL "" FORCE)
-
-FetchContent_MakeAvailable(crdc)
-
-set_property(DIRECTORY ${crdc_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL ON)
 
 mark_as_advanced(
     ADD_MODULE_GEOMETRY

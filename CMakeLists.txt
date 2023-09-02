@@ -237,8 +237,8 @@ find_package(OpenMP REQUIRED)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/external)
 
-include(ExternalDrivabilityChecker)
 include(ExternalEigen)
+include(ExternalDrivabilityChecker)
 include(ExternalTaskflow)
 
 add_subdirectory(src)
