@@ -1,7 +1,8 @@
 from __future__ import annotations
-import frenetix.trajectory_functions
+import frenetix._frenetix.trajectory_functions
 import typing
-import frenetix
+import frenetix._frenetix
+from frenetix._frenetix import TrajectorySample
 
 __all__ = [
     "ComputeInitialState",
@@ -15,16 +16,22 @@ __all__ = [
 
 
 class TrajectoryStrategy():
+    def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
+    @property
+    def name(self) -> str:
+        """
+        :type: str
+        """
     pass
 class CostStrategy(TrajectoryStrategy):
     pass
 class FeasabilityStrategy(TrajectoryStrategy):
     pass
 class FillCoordinates(TrajectoryStrategy):
-    def __init__(self, lowVelocityMode: bool, initialOrientation: float, coordinateSystem: frenetix.CoordinateSystemWrapper) -> None: ...
-    def evaluate_trajectory(self, trajectory: frenetix.TrajectorySample) -> None: ...
+    def __init__(self, lowVelocityMode: bool, initialOrientation: float, coordinateSystem: frenetix._frenetix.CoordinateSystemWrapper, horizon: float) -> None: ...
+    def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
 class ComputeInitialState(TrajectoryStrategy):
-    def __init__(self, coordinateSystem: frenetix.CoordinateSystemWrapper, wheelBase: float, steeringAngle: float, lowVelocityMode: bool) -> None: ...
-    def evaluate_trajectory(self, trajectory: frenetix.TrajectorySample) -> None: ...
+    def __init__(self, coordinateSystem: frenetix._frenetix.CoordinateSystemWrapper, wheelBase: float, steeringAngle: float, lowVelocityMode: bool) -> None: ...
+    def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass

@@ -5,7 +5,7 @@ build
 *.egg-info
 *.so
 _skbuild
-src/python/frenetPlannerHelper/_version.py
+/src/python/frenetix/_version.py
 .idea
 
 __pycache__

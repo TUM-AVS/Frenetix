@@ -12,4 +12,18 @@ from frenetix._frenetix import TrajectoryHandler
 from frenetix._frenetix import TrajectorySample
 import frenetix._frenetix.trajectory_functions
 
+__all__ = [
+    "CartesianSample",
+    "CoordinateSystemWrapper",
+    "CurviLinearSample",
+    "PoseWithCovariance",
+    "PredictedObject",
+    "QuarticTrajectory",
+    "QuinticTrajectory",
+    "TrajectoryHandler",
+    "TrajectorySample",
+    "trajectory_functions"
+]
+
+
 __all__ = ('CartesianSample', 'CoordinateSystemWrapper', 'CurviLinearSample', 'PoseWithCovariance', 'PredictedObject', 'QuarticTrajectory', 'QuinticTrajectory', 'TrajectoryHandler', 'TrajectorySample', 'trajectory_functions')

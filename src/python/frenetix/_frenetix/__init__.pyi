@@ -1,6 +1,5 @@
 from __future__ import annotations
 import frenetix._frenetix
-import frenetix._frenetix.trajectory_functions
 import typing
 import numpy
 
@@ -17,9 +16,6 @@ __all__ = [
     "trajectory_functions"
 ]
 
-
-array = numpy.ndarray
-float64 = numpy.float64
 
 class CartesianSample():
     @typing.overload
@@ -285,9 +281,9 @@ class QuinticTrajectory():
     pass
 class TrajectoryHandler():
     def __init__(self, dt: float) -> None: ...
-    def add_cost_function(self, arg0: frenetix._frenetix.trajectory_functions.CostStrategy) -> None: ...
-    def add_feasability_function(self, arg0: frenetix._frenetix.trajectory_functions.FeasabilityStrategy) -> None: ...
-    def add_function(self, arg0: frenetix._frenetix.trajectory_functions.TrajectoryStrategy) -> None: ...
+    def add_cost_function(self, arg0: CostStrategy) -> None: ...
+    def add_feasability_function(self, arg0: FeasabilityStrategy) -> None: ...
+    def add_function(self, arg0: TrajectoryStrategy) -> None: ...
     def evaluate_all_current_functions(self, calculateAllCosts: bool = False) -> None: ...
     def evaluate_all_current_functions_concurrent(self, calculateAllCosts: bool = False) -> None: ...
     def generate_trajectories(self, samplingMatrix: numpy.ndarray, lowVelocityMode: bool) -> None: ...
@@ -438,6 +434,12 @@ class TrajectorySample():
     @uniqueId.setter
     def uniqueId(self, arg0: typing.Optional[int]) -> None:
         pass
-    pass
-class _CurvilinearCoordinateSystem():
+    @property
+    def valid(self) -> bool:
+        """
+        :type: bool
+        """
+    @valid.setter
+    def valid(self, arg0: bool) -> None:
+        pass
     pass
