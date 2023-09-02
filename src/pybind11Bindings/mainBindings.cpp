@@ -21,7 +21,7 @@
 namespace py = pybind11;
 namespace plannerCPP
 {
-    PYBIND11_MODULE(_frenetPlannerHelper, m) 
+    PYBIND11_MODULE(_frenetix, m)
     {
         initBindHandler(m);
         initBindCoordinateSystemWrapper(m);

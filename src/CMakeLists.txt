@@ -51,13 +51,13 @@ if(pybind11_FOUND)
 endif()
 
 if(SKBUILD)
-    set(python_module_name _frenetPlannerHelper)
+    set(python_module_name _frenetix)
     pybind11_add_module(${python_module_name} MODULE $<TARGET_OBJECTS:fp_python>)
 
     target_link_libraries(${python_module_name} PRIVATE fp_core)
 
     install(TARGETS ${python_module_name}
-            LIBRARY DESTINATION frenetPlannerHelper
+            LIBRARY DESTINATION frenetix
             COMPONENT PythonModules
             )
 
