@@ -1,4 +1,4 @@
-from ._frenetPlannerHelper import (
+from ._frenetix import (
     CartesianSample,
     CoordinateSystemWrapper, CurviLinearSample,
     QuarticTrajectory, QuinticTrajectory,

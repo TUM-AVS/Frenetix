@@ -1,4 +1,4 @@
-from .._frenetPlannerHelper import trajectory_functions
+from .._frenetix import trajectory_functions
 
 __all__ = []
 

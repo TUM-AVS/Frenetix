@@ -1,8 +1,8 @@
 from __future__ import annotations
-import frenetPlannerHelper.trajectory_functions.feasability_functions
+import frenetix.trajectory_functions.feasability_functions
 import typing
-import frenetPlannerHelper.trajectory_functions
-from frenetPlannerHelper import TrajectorySample
+import frenetix.trajectory_functions
+from frenetix import TrajectorySample
 
 __all__ = [
     "CheckAccelerationConstraint",
@@ -13,23 +13,23 @@ __all__ = [
 ]
 
 
-class CheckAccelerationConstraint(frenetPlannerHelper.trajectory_functions.FeasabilityStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
+class CheckAccelerationConstraint(frenetix.trajectory_functions.FeasabilityStrategy, frenetix.trajectory_functions.TrajectoryStrategy):
     def __init__(self, switchingVelocity: float, maxAcceleration: float) -> None: ...
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
-class CheckCurvatureConstraint(frenetPlannerHelper.trajectory_functions.FeasabilityStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
+class CheckCurvatureConstraint(frenetix.trajectory_functions.FeasabilityStrategy, frenetix.trajectory_functions.TrajectoryStrategy):
     def __init__(self, deltaMax: float, wheelbase: float) -> None: ...
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
-class CheckCurvatureRateConstraint(frenetPlannerHelper.trajectory_functions.FeasabilityStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
+class CheckCurvatureRateConstraint(frenetix.trajectory_functions.FeasabilityStrategy, frenetix.trajectory_functions.TrajectoryStrategy):
     def __init__(self, wheelbase: float, velocityDeltaMax: float) -> None: ...
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
-class CheckVelocityConstraint(frenetPlannerHelper.trajectory_functions.FeasabilityStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
+class CheckVelocityConstraint(frenetix.trajectory_functions.FeasabilityStrategy, frenetix.trajectory_functions.TrajectoryStrategy):
     def __init__(self) -> None: ...
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
-class CheckYawRateConstraint(frenetPlannerHelper.trajectory_functions.FeasabilityStrategy, frenetPlannerHelper.trajectory_functions.TrajectoryStrategy):
+class CheckYawRateConstraint(frenetix.trajectory_functions.FeasabilityStrategy, frenetix.trajectory_functions.TrajectoryStrategy):
     def __init__(self, deltaMax: float, wheelbase: float) -> None: ...
     def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
     pass
