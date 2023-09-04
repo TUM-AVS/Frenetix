@@ -1,14 +1,18 @@
 [project]
 name = "frenetix"
+description = "C++-accelerated Frenet Trajectory Planning Handler"
 dynamic = ["version"]
 readme = "README.md"
 requires-python = ">=3.7,<3.13"
-# license = {file = "LICENSE"}
-#authors = [
-#  {email = "todo"},
-#  {name = "todo"}
-#]
-#description = "todo"
+license = {text = "LGPL-3.0-or-later"}
+authors = [
+    { name = "Georg Schmalhofer", email = "georg.schmalhofer@tum.de" },
+    { name = "Tobias Markus", email = "tobias.markus@tum.de" },
+    { name = "Rainer Trauth", email = "rainer.trauth@tum.de" },
+]
+maintainers = [
+    { name = "Rainer Trauth", email = "rainer.trauth@tum.de" },
+]
 
 dependencies = [
     "numpy>=1.24.3"
@@ -33,18 +37,12 @@ sdist.include = ["src/python/frenetix/_version.py"]
 wheel.packages = [ "src/python/frenetix" ]
 build-dir = "build/{wheel_tag}"
 
-[tool.scikit-build.cmake.define]
-#CMAKE_C_COMPILER_LAUNCHER = "sccache"
-#CMAKE_CXX_COMPILER_LAUNCHER = "sccache"
-#CMAKE_C_COMPILER_LAUNCHER = "ccache"
-#CMAKE_CXX_COMPILER_LAUNCHER = "ccache"
-
 [tool.cibuildwheel]
 # Skip PyPy and older CPython versions
 skip = "pp* cp37-* cp38-*"
 archs = ["auto"]
 environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }
-#build-verbosity = 1
+build-verbosity = 1
 
 # Skip tests on musllinux due to missing wheels
 test-skip = "*i686 *-musllinux*"
