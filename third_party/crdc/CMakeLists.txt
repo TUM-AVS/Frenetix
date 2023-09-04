@@ -32,6 +32,7 @@ else()
 	target_link_libraries(crccosy  PRIVATE "-fopenmp")
 endif()
 
+target_link_libraries(crccosy PUBLIC Boost::headers)
 
 target_compile_features(crccosy
     PUBLIC
@@ -43,7 +44,6 @@ target_include_directories(crccosy
         $<BUILD_INTERFACE:${CRCCOSY_ROOT}/include>
     PRIVATE
         ${CRCCOSY_ROOT}
-        ${Boost_INCLUDE_DIRS} 
     )
 
 
