@@ -1,5 +1,7 @@
 ### Definition of crccosy
 
+set(CRCCOSY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+
 set(CRCCOSY_SRC_ROOT ${CRCCOSY_ROOT}/src)
 
 set(LIB_CRCCOSY_SRC

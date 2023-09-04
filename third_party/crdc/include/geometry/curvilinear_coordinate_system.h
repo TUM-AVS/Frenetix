@@ -9,6 +9,7 @@
 #include <memory>
 #include <numeric>
 #include <vector>
+#include <list>
 
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
