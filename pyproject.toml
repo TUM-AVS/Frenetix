@@ -18,6 +18,10 @@ dependencies = [
     "numpy>=1.24.3"
 ]
 
+[project.urls]
+"Homepage" = "https://github.com/TUM-AVS/Frenetix"
+"Bug Tracker" = "https://github.com/TUM-AVS/Frenetix/issues"
+
 [build-system]
 requires = [
     "scikit-build-core~=0.4.7",
