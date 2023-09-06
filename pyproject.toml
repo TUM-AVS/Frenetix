@@ -24,7 +24,7 @@ dependencies = [
 
 [build-system]
 requires = [
-    "scikit-build-core~=0.4.7",
+    "scikit-build-core~=0.5.0",
     "pybind11~=2.11.1",
     "setuptools_scm[toml]~=7.1.0"
     ]
