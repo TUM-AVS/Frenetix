@@ -25,7 +25,11 @@ void CalculateCollisionProbabilityMahalanobis::evaluateTrajectory(TrajectorySamp
                 // Calculate Mahalanobis distance manually
                 Eigen::Vector2d diff = u - v;
                 double mahalanobis = std::abs((diff.transpose() * iv * diff)(0, 0));
-                inv_dist.push_back(1.0/ (mahalanobis * mahalanobis));
+
+                // Linearly interpolate the weight based on the prediction timestep
+                double weight = 1.0 - static_cast<double>(i) / prediction.predictedPath.size();
+
+                inv_dist.push_back(weight / mahalanobis);
             }
             else
             {
