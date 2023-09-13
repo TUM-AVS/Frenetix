@@ -60,6 +60,7 @@ build-wheel:
     GIT_STRATEGY: none
     # Build aarch64 wheels using emulation
     CIBW_ARCHS_LINUX: "auto aarch64"
+    CIBW_BUILD_FRONTEND: "build"
   script:
     - apt-get update && apt-get install -y docker.io
     - docker info
