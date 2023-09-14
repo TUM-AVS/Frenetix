@@ -8,7 +8,6 @@ default:
     - cpp
 
   before_script:
-    - apt-get update && apt-get install -y docker.io
     - python -m venv venv
     - source venv/bin/activate
     - python -m pip install --upgrade pip
@@ -57,11 +56,15 @@ build-wheel:
     # For example, use git push -o ci.variable="CIBW_BUILD_VERBOSITY=1"
     # to make cibuildwheel verbose in the pipeline created for the pushed commit.
     CIBW_BUILD_VERBOSITY: 0
-    CIBW_TEST_SKIP: "*i686 *-musllinux*"
     # We only use the artifacts (sdist/wheels) from previous jobs, so skip all Git operations
     GIT_STRATEGY: none
+    # Build aarch64 wheels using emulation
+    CIBW_ARCHS_LINUX: "auto aarch64"
+    CIBW_BUILD_FRONTEND: "build"
   script:
+    - apt-get update && apt-get install -y docker.io
     - docker info
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - cibuildwheel dist/*.tar.gz
   needs:
     - job: build-sdist
@@ -81,7 +84,7 @@ build-wheel:
     # In that case, build only a single wheel to speed up the pipeline
     - when: on_success
       variables:
-        CIBW_BUILD: "cp310-manylinux_x86_64"
+        CIBW_BUILD: "cp310-manylinux_x86_64 cp310-manylinux_aarch64"
 
 upload-wheel:
   stage: build

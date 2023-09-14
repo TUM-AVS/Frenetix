@@ -3,7 +3,7 @@ name = "frenetix"
 description = "C++-accelerated Frenet Trajectory Planning Handler"
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.7,<3.13"
+requires-python = ">=3.8,<3.13"
 license = {text = "LGPL-3.0-or-later"}
 authors = [
     { name = "Georg Schmalhofer", email = "georg.schmalhofer@tum.de" },
@@ -24,7 +24,7 @@ dependencies = [
 
 [build-system]
 requires = [
-    "scikit-build-core~=0.4.7",
+    "scikit-build-core~=0.5.0",
     "pybind11~=2.11.1",
     "setuptools_scm[toml]~=7.1.0"
     ]
@@ -42,8 +42,8 @@ wheel.packages = [ "src/python/frenetix" ]
 build-dir = "build/{wheel_tag}"
 
 [tool.cibuildwheel]
-# Skip PyPy and older CPython versions
-skip = "pp* cp37-* cp38-*"
+# Skip PyPy
+skip = "pp*"
 archs = ["auto"]
 environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }
 build-verbosity = 1
