@@ -26,8 +26,10 @@ dependencies = [
 requires = [
     "scikit-build-core~=0.5.0",
     "pybind11~=2.11.1",
-    "setuptools_scm[toml]~=7.1.0"
-    ]
+    "setuptools_scm[toml]~=7.1.0",
+    # Ninja >= 1.10 required for Fortran support
+    "ninja~=1.10",
+]
 
 build-backend = "scikit_build_core.build"
 

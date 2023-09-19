@@ -21,7 +21,7 @@ else()
 endif()
 
 project(${SKBUILD_PROJECT_NAME}
-    LANGUAGES CXX
+    LANGUAGES CXX Fortran
     # TODO: Find an automatic way to sync the version with setuptools_scm/Git tags
     VERSION ${SKBUILD_PROJECT_VERSION}
     )

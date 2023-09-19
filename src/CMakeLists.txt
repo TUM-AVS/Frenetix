@@ -10,7 +10,7 @@ list(FILTER FP_HDR_FILES EXCLUDE REGEX "pybind11Bindings/")
 list(FILTER FP_PYTHON_SRC_FILES INCLUDE REGEX "pybind11Bindings/")
 list(FILTER FP_PYTHON_HDR_FILES INCLUDE REGEX "pybind11Bindings/")
 
-add_library(fp_core ${FP_SRC_FILES} ${FP_HDR_FILES})
+add_library(fp_core ${FP_SRC_FILES} ${FP_HDR_FILES} mvndst.f)
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23.0)
     target_sources(fp_core
