@@ -13,6 +13,35 @@ CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string
     std::cerr << "WARNING: This version of CalculateCollisionProbabilityFast is not yet complete! Check results carefully." << std::endl;
 }
 
+extern "C" double bvnmvn_(
+    const double *lower,
+    const double *upper,
+    const int32_t *infin,
+    const double *correl
+);
+
+static inline double bvn_prob(
+    const Eigen::AlignedBox<double, 2>& box,
+    const Eigen::Matrix<double, 2, 1>& means,
+    const Eigen::Matrix<double, 2, 2>& covar
+) {
+    Eigen::Vector2d stddev = covar.diagonal().array().sqrt();
+    
+    Eigen::Vector2d norm_lower = (box.min() - means).array() / stddev.array();
+    Eigen::Vector2d norm_upper = (box.max() - means).array() / stddev.array();
+
+    Eigen::AlignedBox2d norm_box { norm_lower, norm_upper };
+
+    double rho = covar(0, 1) / std::sqrt(covar(0, 0) * covar(1, 1));
+
+    assert(rho >= -1.0 && rho <= 1.0);
+
+    const int32_t infin[2] = { 2, 2 };
+    double result = bvnmvn_(norm_box.min().data(), norm_box.max().data(), &infin[0], &rho);
+
+    return std::abs(result);
+}
+
 extern "C" void mvnun_(
     const int32_t *d, const int32_t *n,
     const double *lower, const double *upper,
@@ -101,10 +130,10 @@ void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& tra
             Eigen::Vector2d v = pose.position.head<2>();
             Eigen::Matrix2d cov = pose.covariance.topLeftCorner<2,2>();
 
-            Eigen::AlignedBox2d box { v - offset, v + offset };
+            Eigen::AlignedBox2d box { u - offset, u + offset };
 
-            double xcost = mvn_prob(box, u, cov);
-            cost += std::abs(xcost);
+            double bvcost = bvn_prob(box, v, cov);
+            cost += std::abs(bvcost);
         }
     }
 
