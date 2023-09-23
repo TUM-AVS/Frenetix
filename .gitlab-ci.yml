@@ -13,6 +13,7 @@ default:
     - python -m pip install --upgrade pip
     - python -m pip install build==1.0.0
     - python -m pip install cibuildwheel==2.15.0
+    - python -m pip install twine
     - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lrz.de/".insteadOf "git@gitlab.lrz.de:"
 
 ### static test ###
