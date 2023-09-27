@@ -21,6 +21,17 @@ private:
     std::map<int, PredictedObject> m_predictions; /**< A map holding the predicted states of other agents. */
     double m_vehicleLength; /**< The length of the vehicle. */
     double m_vehicleWidth; /**< The width of the vehicle. */
+
+    /**
+     * @brief Calculate the collision probability
+     *
+     * @param pose Obstacle pose
+     * @param ego_pos Ego vehicle position
+     * @param offset Ego vehicle extents (length/2, width/2)
+     * @param orientation Ego vehicle orientation
+     */
+    static double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& ego_pos, const Eigen::Vector2d& offset, double orientation);
+
 public:
 
     /**
