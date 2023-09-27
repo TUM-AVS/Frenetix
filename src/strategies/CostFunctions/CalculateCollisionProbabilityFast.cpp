@@ -32,7 +32,7 @@ double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& po
     Eigen::Matrix2d cov_rot_mat { inv_ego_rot.toRotationMatrix() };
     Eigen::Matrix2d cov = cov_rot_mat * pose.covariance.topLeftCorner<2,2>() * cov_rot_mat.transpose();
 
-    return bvn_prob(box, Eigen::Vector2d::Zero(), cov);
+    return std::abs(bvn_prob(box, Eigen::Vector2d::Zero(), cov));
 }
 
 void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& trajectory)
