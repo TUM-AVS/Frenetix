@@ -42,7 +42,7 @@ public:
 
     void print(std::ostream& os) const;
 
-    bool isInitialized;                  ///< If the curvilinear coordinates are filled
+    bool isInitialized = false;                  ///< If the curvilinear coordinates are filled
     Eigen::VectorXd s;
     Eigen::VectorXd d;
     Eigen::VectorXd theta;
