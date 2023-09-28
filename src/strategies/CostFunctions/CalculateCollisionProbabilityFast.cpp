@@ -19,17 +19,13 @@ double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& po
     Eigen::Vector2d v = pose.position.head<2>();
 
     Eigen::Rotation2D ego_rot(orientation);
-    Eigen::Rotation2D inv_ego_rot { ego_rot.inverse() };
 
-    Eigen::Vector2d mpos = pos - v;
-    Eigen::Vector2d min = mpos + ego_rot * offset;
-    Eigen::Vector2d max = mpos - ego_rot * offset;
+    Eigen::Vector2d mpos = ego_rot.inverse() * (pos - v);
 
-    Eigen::AlignedBox2d box { inv_ego_rot * min, inv_ego_rot * max };
+    Eigen::AlignedBox2d box { mpos - offset, mpos + offset };
 
     // Rotate covariance matrix to account for ego vehicle orientation
-    Eigen::Matrix2d cov_rot_mat { inv_ego_rot.toRotationMatrix() };
-    Eigen::Matrix2d cov = cov_rot_mat * pose.covariance.topLeftCorner<2,2>() * cov_rot_mat.transpose();
+    Eigen::Matrix2d cov = ego_rot.inverse() * pose.covariance.topLeftCorner<2,2>() * ego_rot.toRotationMatrix();
 
     return std::abs(bvn_prob(box, Eigen::Vector2d::Zero(), cov));
 }
