@@ -24,7 +24,7 @@ double bvn_prob(
 
     assert(!std::isnan(rho));
     if (rho < -1.0 || rho > 1.0) {
-        std::cerr << "WARNING: rho=" << rho << std::endl;
+        throw std::domain_error { "invalid correlation coefficient" };
     }
     assert(rho >= -1.0 && rho <= 1.0);
 
