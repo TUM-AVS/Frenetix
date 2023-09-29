@@ -1,3 +1,8 @@
+
+[![DOI](https://zenodo.org/badge/676952944.svg)](https://zenodo.org/badge/latestdoi/676952944)
+
+
+
 # Frenetix: C++-accelerated Trajectory Planning in a Frenét Frame
 
 A Python library to sample polynomial trajectories in a curvilinear
