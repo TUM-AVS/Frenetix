@@ -12,7 +12,6 @@ CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string
     , m_vehicleLength(vehicleLength)
     , m_vehicleWidth(vehicleWidth)
 {
-    std::cerr << "WARNING: This version of CalculateCollisionProbabilityFast is not yet complete! Check results carefully." << std::endl;
 }
 
 double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& pos, const Eigen::Vector2d& offset, double orientation)
