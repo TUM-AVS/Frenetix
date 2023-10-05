@@ -31,6 +31,8 @@ namespace plannerCPP
             .def_readwrite("dt", &TrajectorySample::m_dT)
             .def_readwrite("cost", &TrajectorySample::m_cost)
             .def_readwrite("_cost", &TrajectorySample::m_cost)
+            .def_readwrite("harm_occ_module", &TrajectorySample::m_harm_occ_module)
+            .def_readwrite("_harm_occ_module", &TrajectorySample::m_harm_occ_module)
             .def_readwrite("_coll_detected", &TrajectorySample::m_collisionDetected)
             .def_readwrite("uniqueId", &TrajectorySample::m_uniqueId)
             .def_readwrite("trajectory_long", &TrajectorySample::m_trajectoryLongitudinal)

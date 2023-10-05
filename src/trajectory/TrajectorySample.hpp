@@ -20,6 +20,7 @@ public:
     size_t m_acutualSize;
     double m_dT;
     double m_cost;
+    double m_harm_occ_module;
     std::optional<double> m_boundaryHarm;
 
     std::optional<int> m_currentTimeStep;
