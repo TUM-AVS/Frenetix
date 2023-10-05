@@ -128,7 +128,8 @@ if(SKBUILD)
 
         # Globally set visibility preset
         set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
-        set(CMAKE_CXX_VISIBILITY_PRESET default)
+        set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+        set(CMAKE_Fortran_VISIBILITY_PRESET hidden)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
