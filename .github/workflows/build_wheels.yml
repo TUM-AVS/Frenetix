@@ -20,12 +20,11 @@ jobs:
           # Increase build verbosity
           CIBW_BUILD_VERBOSITY: 1
 
-          CIBW_SKIP: "pp* cp39-* cp310-* cp312-*"
+          CIBW_SKIP: "pp* cp38-* cp39-* cp310-* cp312-*"
 
-          # Apparently libomp is already installed on macos-12, so this is unnecessary
-          # CIBW_BEFORE_ALL_MACOS: brew install libomp
+          # gcc is required for gfortran
           CIBW_BEFORE_ALL_MACOS: >
-            brew install boost eigen libomp
+            brew install boost eigen libomp gcc
 
       - uses: actions/upload-artifact@v3
         with:
