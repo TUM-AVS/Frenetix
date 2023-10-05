@@ -29,6 +29,8 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: >
             brew install boost eigen libomp gcc
 
+          CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix gcc)/bin/gfortran"
+
       - uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
