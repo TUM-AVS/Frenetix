@@ -18,18 +18,16 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.16.2
         env:
-          CIBW_SKIP: "pp* cp38-* cp39-* cp310-* cp312-*"
-
           # gcc is required for gfortran
           CIBW_BEFORE_ALL_MACOS: >
             brew install boost eigen libomp gcc
+
+          CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix gcc)/bin/gfortran"
 
       - name: Build wheels (macOS arm64)
         uses: pypa/cibuildwheel@v2.16.2
         if: ${{ startsWith(matrix.os, 'macos-12') }}
         env:
-          CIBW_SKIP: "pp* cp38-* cp39-* cp310-* cp312-*"
-
           CIBW_ARCHS: arm64
 
           CIBW_BEFORE_ALL_MACOS: >
