@@ -45,8 +45,7 @@ build-dir = "build/{wheel_tag}"
 
 [tool.cibuildwheel]
 # Skip building PyPy and musllinux wheels
-#skip = "pp* *-musllinux*"
-skip = "pp* *-musllinux* cp38-* cp39-* cp310-* cp312-*"
+skip = "pp* *-musllinux*"
 
 archs = ["auto"]
 environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }

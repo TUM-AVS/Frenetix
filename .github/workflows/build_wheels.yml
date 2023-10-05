@@ -27,18 +27,20 @@ jobs:
 
           CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix gcc)/bin/gfortran"
 
-      - name: Build wheels (macOS arm64)
-        uses: pypa/cibuildwheel@v2.16.2
-        if: ${{ startsWith(matrix.os, 'macos-12') }}
-        env:
-          CIBW_ARCHS: arm64
+      # macOS arm64: Disabled due to missing Fortran compiler
+      #
+      #- name: Build wheels (macOS arm64)
+      #  uses: pypa/cibuildwheel@v2.16.2
+      #  if: ${{ startsWith(matrix.os, 'macos-12') }}
+      #  env:
+      #    CIBW_ARCHS: arm64
 
-          CIBW_BEFORE_ALL_MACOS: >
-            brew install boost eigen gcc &&
-            brew fetch --force --bottle-tag=arm64_monterey libomp &&
-            brew reinstall $(brew --cache --bottle-tag=arm64_monterey libomp)
+      #    CIBW_BEFORE_ALL_MACOS: >
+      #      brew install boost eigen aarch64-elf-gcc &&
+      #      brew fetch --force --bottle-tag=arm64_monterey libomp &&
+      #      brew reinstall $(brew --cache --bottle-tag=arm64_monterey libomp)
 
-          CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix gcc)/bin/gfortran"
+      #    CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix aarch64-elf-gcc)/bin/gfortran"
 
       - uses: actions/upload-artifact@v3
         with:
