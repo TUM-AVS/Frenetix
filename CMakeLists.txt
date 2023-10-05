@@ -135,6 +135,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# macOS 10.14 is required for full C++17 support
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
+
 # Some extra debugging for project developers - safe to disable, but read on why they might be useful:
 
 # By enabling CMAKE_LINK_LIBRARIES_ONLY_TARGETS, CMake will report errors whenever
