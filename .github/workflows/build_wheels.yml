@@ -1,0 +1,32 @@
+name: Build wheels
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ["ubuntu-22.04", "windows-2022", "macos-12"]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.16.2
+        env:
+          # Increase build verbosity
+          CIBW_BUILD_VERBOSITY: 1
+
+          CIBW_SKIP: "pp* cp39-* cp310-* cp312-*"
+
+          # Apparently libomp is already installed on macos-12, so this is unnecessary
+          # CIBW_BEFORE_ALL_MACOS: brew install libomp
+          CIBW_BEFORE_ALL_MACOS: >
+            brew install boost eigen libomp
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
