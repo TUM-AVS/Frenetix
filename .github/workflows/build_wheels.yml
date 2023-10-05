@@ -12,22 +12,30 @@ jobs:
         # TODO: Windows build needs a Fortran compiler
         os: ["ubuntu-22.04", "macos-12"]
 
-      fail-fast: false
-
     steps:
       - uses: actions/checkout@v4
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.16.2
         env:
-          # Increase build verbosity
-          CIBW_BUILD_VERBOSITY: 1
-
           CIBW_SKIP: "pp* cp38-* cp39-* cp310-* cp312-*"
 
           # gcc is required for gfortran
           CIBW_BEFORE_ALL_MACOS: >
             brew install boost eigen libomp gcc
+
+      - name: Build wheels (macOS arm64)
+        uses: pypa/cibuildwheel@v2.16.2
+        if: ${{ startsWith(matrix.os, 'macos-12') }}
+        env:
+          CIBW_SKIP: "pp* cp38-* cp39-* cp310-* cp312-*"
+
+          CIBW_ARCHS: arm64
+
+          CIBW_BEFORE_ALL_MACOS: >
+            brew install boost eigen gcc &&
+            brew fetch --force --bottle-tag=arm64_monterey libomp &&
+            brew reinstall $(brew --cache --bottle-tag=arm64_monterey libomp)
 
           CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix gcc)/bin/gfortran"
 
