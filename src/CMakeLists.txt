@@ -44,6 +44,8 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23.0)
             FILES ${FP_HDR_FILES})
 endif()
 
+target_link_libraries(fp_core PUBLIC mathutil)
+
 set_property(TARGET fp_core PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(fp_core
