@@ -37,6 +37,8 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
         //Iterate over all costFunctions and evaluate it for the given trajectory
         for(auto& [funName, function] : m_feasabilityFunctions)
         {
+            if (!trajectory.m_valid) continue;
+
             function->evaluateTrajectory(trajectory);
         }
         
