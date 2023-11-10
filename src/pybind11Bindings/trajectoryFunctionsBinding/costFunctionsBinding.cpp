@@ -149,15 +149,6 @@ namespace plannerCPP
                 &CalculateCollisionProbabilityFast::evaluateTrajectory,
                 py::arg("trajectory")
             )
-            .def_static
-            (
-                "integrate",
-                &CalculateCollisionProbabilityFast::integrate,
-                py::arg("pose"),
-                py::arg("pos"),
-                py::arg("offset"),
-                py::arg("orientation")
-            )
             .def("printPredictions", &CalculateCollisionProbabilityFast::printPredictions);
 
         py::class_<CalculateCollisionProbabilityMahalanobis, CostStrategy, std::shared_ptr<CalculateCollisionProbabilityMahalanobis>>(m, "CalculateCollisionProbabilityMahalanobis")
