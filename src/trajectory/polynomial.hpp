@@ -227,7 +227,6 @@ double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
     {
         double t2 = t * t;
         double t3 = t2 * t;
-        double t4 = t3 * t;
 
         double integral_squared_jerk = (36 * coeffs[3] * coeffs[3] * t +
                                         144 * coeffs[3] * coeffs[4] * t2 +
