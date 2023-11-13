@@ -7,6 +7,7 @@
 #include "strategies/Functions/FillCoordinates.hpp"
 #include "strategies/Functions/ComputeInitalState.hpp"
 #include "CoordinateSystemWrapper.hpp"
+#include "TrajectorySample.hpp"
 
 namespace py = pybind11;
 

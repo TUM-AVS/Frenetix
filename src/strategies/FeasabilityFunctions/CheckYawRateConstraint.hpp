@@ -1,10 +1,9 @@
 #ifndef CHECKYAWRATECONSTRAINT_HPP
 #define CHECKYAWRATECONSTRAINT_HPP
 
-#include <cmath>
-
 #include "FeasabilityStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 /**
  * @class CheckYawRateConstraint

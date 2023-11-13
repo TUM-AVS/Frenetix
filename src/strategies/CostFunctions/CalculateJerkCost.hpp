@@ -1,9 +1,11 @@
 #ifndef CALCULATEJERKCOST_HPP
 #define CALCULATEJERKCOST_HPP
 
+#include <string>
+
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
-#include "util.hpp"
+
+class TrajectorySample;
 
 class CalculateJerkCost : public CostStrategy
 {

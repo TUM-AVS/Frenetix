@@ -1,5 +1,11 @@
 #include "CalculateVelocityOffsetCost.hpp"
 
+#include <Eigen/Core>
+#include <cmath>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+
 CalculateVelocityOffsetCost::CalculateVelocityOffsetCost(std::string funName, double costWeight, double desiredSpeed)
     : CostStrategy(funName, costWeight)
     , m_desiredSpeed(desiredSpeed)

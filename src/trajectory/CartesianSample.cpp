@@ -1,5 +1,7 @@
 #include "CartesianSample.hpp"
 
+#include <iomanip>
+
 
 
 CartesianSample::CartesianSample() = default;

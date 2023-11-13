@@ -1,5 +1,7 @@
 #include "CurvilinearSample.hpp"
 
+#include <iomanip>
+
 CurviLinearSample::CurviLinearSample()
     : s ()
     , d ()

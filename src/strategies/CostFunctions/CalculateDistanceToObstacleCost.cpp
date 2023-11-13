@@ -1,5 +1,8 @@
 #include "CalculateDistanceToObstacleCost.hpp"
 
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+
 CalculateDistanceToObstacleCost::CalculateDistanceToObstacleCost(std::string funName, double costWeight, Eigen::Ref<RowMatrixXd> obstacles)
     : CostStrategy(funName, costWeight)
     , m_obstacles(obstacles)

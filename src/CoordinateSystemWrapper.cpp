@@ -1,5 +1,12 @@
 #include "CoordinateSystemWrapper.hpp"
 
+#include <stddef.h>
+#include <cassert>
+#include <cmath>
+#include <iostream>
+
+#include "geometry/curvilinear_coordinate_system.h"
+
 CoordinateSystemWrapper::CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> refPath)
     : m_refPath (refPath)
     , m_refPolyline (util::matrixToVector2d(m_refPath))

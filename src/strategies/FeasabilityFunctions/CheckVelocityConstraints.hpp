@@ -2,6 +2,9 @@
 #define CHECKVELOCITYCONSTRAINT_HPP
 
 #include "FeasabilityStrategy.hpp"
+
+class TrajectorySample;
+
 //not implemented
 class CheckVelocityConstraint : public FeasabilityStrategy
 {

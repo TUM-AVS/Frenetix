@@ -1,5 +1,10 @@
 #include "CheckVelocityConstraints.hpp"
 
+#include <iostream>
+#include <string>
+
+class TrajectorySample;
+
 CheckVelocityConstraint::CheckVelocityConstraint(bool wholeTrajectory)
     : FeasabilityStrategy("Velocity Constraint", wholeTrajectory)
 

@@ -1,8 +1,11 @@
 #ifndef CALCULATEYAWCOST_HPP
 #define CALCULATEYAWCOST_HPP
 
+#include <string>
+
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 class CalculateYawCost : public CostStrategy
 {

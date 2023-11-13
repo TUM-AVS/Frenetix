@@ -1,8 +1,11 @@
 #ifndef CALCULATELONGITUDINALJERKCOST_HPP
 #define CALCULATELONGITUDINALJERKCOST_HPP
 
+#include <string>
+
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 class CalculateLongitudinalJerkCost : public CostStrategy
 {

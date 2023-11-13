@@ -1,9 +1,9 @@
 #ifndef CHECKCURVATURECONSTRAINT_HPP
 #define CHECKCURVATURECONSTRAINT_HPP
 
-#include <cmath>
-
 #include "FeasabilityStrategy.hpp"
+
+class TrajectorySample;
 
 /**
  * @class CheckCurvatureConstraint

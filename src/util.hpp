@@ -2,10 +2,10 @@
 #define UTIL_HPP
 
 #include <math.h>
-#include <Eigen/Dense>
-#include <iostream>
-#include "geometry/util.h"
+#include <Eigen/Core>
 #include <array>
+
+#include "geometry/util.h"
 
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using SamplingMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, 13, Eigen::RowMajor>;

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "TrajectorySample.hpp"
+class TrajectorySample;
 
 class TrajectoryStrategy
 {

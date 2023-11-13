@@ -1,19 +1,15 @@
 #ifndef COORDINATESYSTEMWRAPPER_H
 #define COORDINATESYSTEMWRAPPER_H
 
-#include <cmath>
-#include <algorithm>
-#include <iterator>
-#include <Eigen/Dense>
-#include <iostream>
-#include <vector>
-#include <cassert>
+#include <Eigen/Core>
 #include <memory>
 
-#include "TrajectorySample.hpp"
-#include "util.hpp"
-#include "geometry/curvilinear_coordinate_system.h"
 #include "geometry/util.h"
+#include "util.hpp"
+
+namespace geometry {
+class CurvilinearCoordinateSystem;
+}  // namespace geometry
 
 
 class CoordinateSystemWrapper

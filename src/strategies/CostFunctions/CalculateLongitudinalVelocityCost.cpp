@@ -1,5 +1,9 @@
 #include "CalculateLongitudinalVelocityCost.hpp"
 
+#include <iostream>
+
+#include "TrajectorySample.hpp"
+
 CalculateLongitudinalVelocityCost::CalculateLongitudinalVelocityCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

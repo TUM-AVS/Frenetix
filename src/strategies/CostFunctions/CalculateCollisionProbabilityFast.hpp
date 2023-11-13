@@ -1,10 +1,14 @@
 #ifndef CALCULATE_COLLISION_PROBABILITY_FAST_HPP
 #define CALCULATE_COLLISION_PROBABILITY_FAST_HPP
 
-#include "geometryMsgs.hpp"
-#include "CostStrategy.hpp"
-#include "util.hpp"
+#include <Eigen/Core>
 #include <map>
+#include <string>
+
+#include "CostStrategy.hpp"
+#include "geometryMsgs.hpp"
+
+class TrajectorySample;
 
 /**
  * @class CalculateCollisionProbabilityFast

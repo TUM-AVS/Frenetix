@@ -1,5 +1,14 @@
 #include "TrajectoryHandler.hpp"
 
+#include <Eigen/Core>
+#include <algorithm>
+
+#include "CostStrategy.hpp"
+#include "FeasabilityStrategy.hpp"
+#include "TrajectorySample.hpp"
+#include "TrajectoryStrategy.hpp"
+#include "polynomial.hpp"
+
 TrajectoryHandler::TrajectoryHandler(double dt)
     : m_dt(dt)
 {

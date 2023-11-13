@@ -1,11 +1,16 @@
 #pragma once
 
-#include <Eigen/Dense>
-
-#include <limits>
+#include <stdint.h>
+#include <Eigen/Core>
 #include <iostream>
+#include <limits>
+#include <stdexcept>
 
 #include "mvndst.hpp"
+
+namespace Eigen {
+template <typename _Scalar, int _AmbientDim> class AlignedBox;
+}  // namespace Eigen
 
 double bvn_prob(
     const Eigen::AlignedBox<double, 2>& box,

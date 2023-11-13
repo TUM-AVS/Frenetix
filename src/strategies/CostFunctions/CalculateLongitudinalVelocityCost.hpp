@@ -1,8 +1,11 @@
 #ifndef CALCULATELONGITUDINALVELOCITYCOST_HPP
 #define CALCULATELONGITUDINALVELOCITYCOST_HPP
 
+#include <string>
+
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 class CalculateLongitudinalVelocityCost : public CostStrategy
 {

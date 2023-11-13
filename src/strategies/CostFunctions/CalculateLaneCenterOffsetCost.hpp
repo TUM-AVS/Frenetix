@@ -1,10 +1,11 @@
 #ifndef CALCULATELANECENTEROFFSETCOST_HPP
 #define CALCULATELANECENTEROFFSETCOST_HPP
 
-#include <iostream>
+#include <string>
 
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 class CalculateLaneCenterOffsetCost : public CostStrategy
 {

@@ -9,7 +9,7 @@
 #include "strategies/FeasabilityFunctions/CheckCurvatureRateConstrains.hpp"
 #include "strategies/FeasabilityFunctions/CheckVelocityConstraints.hpp"
 #include "strategies/FeasabilityFunctions/CheckYawRateConstraint.hpp"
-
+#include "TrajectorySample.hpp"
 
 namespace py = pybind11;
 

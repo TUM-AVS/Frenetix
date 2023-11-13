@@ -20,6 +20,8 @@
 #include "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.hpp"
 #include "strategies/CostFunctions/CalculateDistanceToObstacleCost.hpp"
 
+#include "TrajectorySample.hpp"
+
 namespace py = pybind11;
 
 namespace plannerCPP

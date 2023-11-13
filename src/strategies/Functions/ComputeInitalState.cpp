@@ -1,5 +1,17 @@
 #include "ComputeInitalState.hpp"
 
+#include <assert.h>
+#include <Eigen/Core>
+#include <cmath>
+#include <stdexcept>
+
+#include "CartesianSample.hpp"
+#include "CoordinateSystemWrapper.hpp"
+#include "CurvilinearSample.hpp"
+#include "TrajectorySample.hpp"
+#include "geometry/curvilinear_coordinate_system.h"
+#include "util.hpp"
+
 ComputeInitialState::ComputeInitialState(std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
                                          double wheelBase,
                                          double steeringAngle,

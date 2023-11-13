@@ -1,5 +1,10 @@
 #include "CalculateLongitudinalJerkCost.hpp"
 
+#include <cmath>
+
+#include "TrajectorySample.hpp"
+#include "polynomial.hpp"
+
 CalculateLongitudinalJerkCost::CalculateLongitudinalJerkCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

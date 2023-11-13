@@ -1,4 +1,5 @@
 #include "geometryMsgs.hpp"
+
 PoseWithCovariance::PoseWithCovariance()
     : position(0,0,0)
     , orientation(0,0,0,0)

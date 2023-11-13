@@ -1,9 +1,9 @@
 #pragma once
 
-#include <array>
-#include <vector>
-#include <Eigen/Dense>
+#include <stddef.h>
+#include <Eigen/Core>
 #include <iostream>
+#include <vector>
 
 struct PoseWithCovariance
 {

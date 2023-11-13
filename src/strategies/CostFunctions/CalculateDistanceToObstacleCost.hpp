@@ -1,8 +1,13 @@
 #ifndef CALCULATEDISTANCETOOBSTACLECOST_HPP
 #define CALCULATEDISTANCETOOBSTACLECOST_HPP
 
+#include <Eigen/Core>
+#include <string>
+
 #include "CostStrategy.hpp"
 #include "util.hpp"
+
+class TrajectorySample;
 
 /**
  * @class CalculateDistanceToObstacleCost

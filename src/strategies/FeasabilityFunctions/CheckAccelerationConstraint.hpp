@@ -2,7 +2,8 @@
 #define CHECKACCELERATIONCONSTRAINT_HPP
 
 #include "FeasabilityStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 /**
  * @class CheckAccelerationConstraint

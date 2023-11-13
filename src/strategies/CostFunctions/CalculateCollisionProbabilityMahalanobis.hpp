@@ -1,14 +1,13 @@
 #ifndef CALCULATECOLLISIONPROBABILITYMAHALANOBIS_HPP
 #define CALCULATECOLLISIONPROBABILITYMAHALANOBIS_HPP
 
-#include <Eigen/Dense>
-#include <vector>
 #include <map>
-#include <numeric>
+#include <string>
 
-#include "geometryMsgs.hpp"
 #include "CostStrategy.hpp"
-#include "util.hpp"
+#include "geometryMsgs.hpp"
+
+class TrajectorySample;
 
 
 /**

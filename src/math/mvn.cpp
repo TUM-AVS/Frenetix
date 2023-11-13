@@ -1,10 +1,12 @@
 // #undef NDEBUG
 
 #include "mvn.hpp"
-#include "covariance.hpp"
 
-#include <algorithm>
-#include <limits>
+#include <assert.h>
+#include <Eigen/Geometry>
+#include <cmath>
+
+#include "covariance.hpp"
 
 double bvn_prob(
     const Eigen::AlignedBox<double, 2>& box,

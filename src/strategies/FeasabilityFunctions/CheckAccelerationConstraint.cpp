@@ -1,5 +1,12 @@
 #include "CheckAccelerationConstraint.hpp"
 
+#include <stddef.h>
+#include <Eigen/Core>
+#include <memory>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+
 CheckAccelerationConstraint::CheckAccelerationConstraint(double switchingVelocity, double maxAcceleration, bool wholeTrajectory)
     : FeasabilityStrategy("Acceleration Constraint", wholeTrajectory)
     , m_switchingVelocity(switchingVelocity)

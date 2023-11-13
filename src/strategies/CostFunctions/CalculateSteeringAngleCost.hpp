@@ -1,8 +1,11 @@
 #ifndef CALCULATESTEERINGANGLECOST_HPP
 #define CALCULATESTEERINGANGLECOST_HPP
 
+#include <string>
+
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 class CalculateSteeringAngleCost : public CostStrategy
 {

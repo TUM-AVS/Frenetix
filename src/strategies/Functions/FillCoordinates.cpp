@@ -1,5 +1,20 @@
 #include "FillCoordinates.hpp"
 
+#include <stddef.h>
+#include <Eigen/Core>
+#include <cmath>
+#include <exception>
+#include <iostream>
+#include <optional>
+
+#include "CartesianSample.hpp"
+#include "CoordinateSystemWrapper.hpp"
+#include "CurvilinearSample.hpp"
+#include "TrajectorySample.hpp"
+#include "geometry/curvilinear_coordinate_system.h"
+#include "polynomial.hpp"
+#include "util.hpp"
+
 FillCoordinates::FillCoordinates(bool lowVelocityMode, 
                                  double initialOrienation, 
                                  std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,

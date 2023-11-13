@@ -1,5 +1,12 @@
 #include "CalculateJerkCost.hpp"
 
+#include <stddef.h>
+#include <Eigen/Core>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+#include "util.hpp"
+
 CalculateJerkCost::CalculateJerkCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

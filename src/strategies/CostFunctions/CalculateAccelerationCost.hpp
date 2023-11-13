@@ -1,11 +1,11 @@
 #ifndef CALCULATEACCELERATIONCOST_HPP
 #define CALCULATEACCELERATIONCOST_HPP
 
-#include <cmath>
+#include <string>
 
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
-#include "util.hpp"
+
+class TrajectorySample;
 
 /**
  * @class CalculateAccelerationCost

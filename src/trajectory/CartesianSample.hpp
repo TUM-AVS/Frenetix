@@ -2,10 +2,8 @@
 #define CARTESIANSAMPLE_HPP
 
 
-#include <Eigen/Dense>
-#include <iomanip>
+#include <Eigen/Core>
 #include <iostream>
-#include <vector>
 
 
 class CartesianSample

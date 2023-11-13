@@ -2,10 +2,11 @@
 #define POLYNOMIAL_HPP
 
 
-#include <iostream>
-#include <cmath>
-#include <Eigen/Dense>
+#include <Eigen/Core>
+#include <Eigen/QR>
 #include <cassert>
+#include <cmath>
+#include <stdexcept>
 
 /**
  * @brief A class representing a polynomial trajectory of a given degree.

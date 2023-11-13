@@ -1,12 +1,12 @@
 #ifndef COMPUTEINITIALSTATE_HPP
 #define COMPUTEINITIALSTATE_HPP
 
-#include "TrajectoryStrategy.hpp"
-#include "TrajectorySample.hpp"
-#include "CoordinateSystemWrapper.hpp"
-
 #include <memory>
-#include <Eigen/Dense>
+
+#include "TrajectoryStrategy.hpp"
+
+class CoordinateSystemWrapper;
+class TrajectorySample;
 
 class ComputeInitialState: public TrajectoryStrategy
 {

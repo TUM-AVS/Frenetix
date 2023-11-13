@@ -1,5 +1,14 @@
 #include "CalculateCollisionProbabilityMahalanobis.hpp"
 
+#include <Eigen/Core>
+#include <Eigen/LU>
+#include <cmath>
+#include <numeric>
+#include <vector>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+
 CalculateCollisionProbabilityMahalanobis::CalculateCollisionProbabilityMahalanobis(std::string funName, double costWeight, std::map<int, PredictedObject> predictions)
     : CostStrategy(funName, costWeight)
     , m_predictions(predictions)

@@ -1,18 +1,18 @@
 #ifndef TRAJECTORYHANDLER_HPP
 #define TRAJECTORYHANDLER_HPP
 
-#include <Eigen/Dense>
-#include <vector>
+#include <taskflow/taskflow.hpp>
+#include <map>
 #include <memory>
-#include <taskflow/taskflow.hpp>  // include the Taskflow library
+#include <string>
+#include <vector>
 
 #include "trajectory/TrajectorySample.hpp"
 #include "util.hpp"
 
-//Including the Strategy classes
-#include "strategies/CostStrategy.hpp"
-#include "strategies/FeasabilityStrategy.hpp"
-#include "strategies/TrajectoryStrategy.hpp"
+class CostStrategy;
+class FeasabilityStrategy;
+class TrajectoryStrategy;
 
 
 class TrajectoryHandler

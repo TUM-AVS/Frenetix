@@ -1,12 +1,12 @@
 #ifndef FILLCOORDINATES_HPP
 #define FILLCOORDINATES_HPP
 
-#include "TrajectoryStrategy.hpp"
-#include "TrajectorySample.hpp"
-#include "CoordinateSystemWrapper.hpp"
-
 #include <memory>
-#include <Eigen/Dense>
+
+#include "TrajectoryStrategy.hpp"
+
+class CoordinateSystemWrapper;
+class TrajectorySample;
 
 class FillCoordinates: public TrajectoryStrategy
 {

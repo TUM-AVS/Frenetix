@@ -1,5 +1,9 @@
 #include "CalculateYawCost.hpp"
 
+#include <iostream>
+
+#include "TrajectorySample.hpp"
+
 CalculateYawCost::CalculateYawCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

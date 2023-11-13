@@ -1,6 +1,9 @@
 #include "util.hpp"
+
+#include <stddef.h>
 #include <cmath>
 #include <limits>
+#include <stdexcept>
 
 namespace util
 {    

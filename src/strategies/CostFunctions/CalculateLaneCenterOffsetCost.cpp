@@ -1,5 +1,9 @@
 #include "CalculateLaneCenterOffsetCost.hpp"
 
+#include <iostream>
+
+#include "TrajectorySample.hpp"
+
 CalculateLaneCenterOffsetCost::CalculateLaneCenterOffsetCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

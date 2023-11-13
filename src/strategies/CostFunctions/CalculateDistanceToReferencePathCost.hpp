@@ -1,10 +1,11 @@
 #ifndef CALCULATEDISTANCETOREFERENCEPATHCOST_HPP
 #define CALCULATEDISTANCETOREFERENCEPATHCOST_HPP
 
-#include <iostream>
+#include <string>
 
 #include "CostStrategy.hpp"
-#include "TrajectorySample.hpp"
+
+class TrajectorySample;
 
 class CalculateDistanceToReferencePathCost : public CostStrategy
 {

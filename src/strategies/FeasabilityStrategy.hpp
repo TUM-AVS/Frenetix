@@ -1,7 +1,11 @@
 #ifndef FEASABILITYSTRATEGY_HPP
 #define FEASABILITYSTRATEGY_HPP
 
+#include <string>
+
 #include "TrajectoryStrategy.hpp"
+
+class TrajectorySample;
 
 class FeasabilityStrategy: public TrajectoryStrategy
 {

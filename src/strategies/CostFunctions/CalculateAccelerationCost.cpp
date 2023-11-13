@@ -1,5 +1,11 @@
 #include "CalculateAccelerationCost.hpp"
 
+#include <Eigen/Core>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+#include "util.hpp"
+
 CalculateAccelerationCost::CalculateAccelerationCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

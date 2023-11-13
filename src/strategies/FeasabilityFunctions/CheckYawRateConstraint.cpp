@@ -1,5 +1,13 @@
 #include "CheckYawRateConstraint.hpp"
 
+#include <stddef.h>
+#include <Eigen/Core>
+#include <cmath>
+#include <memory>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+
 CheckYawRateConstraint::CheckYawRateConstraint(double deltaMax, double wheelbase, bool wholeTrajectory)
     : FeasabilityStrategy("Yaw rate Constraint", wholeTrajectory)
     , m_deltaMax(deltaMax)

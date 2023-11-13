@@ -1,12 +1,12 @@
 #ifndef TRAJECTORYSAMPLE_HPP
 #define TRAJECTORYSAMPLE_HPP
 
+#include <stddef.h>
+#include <Eigen/Core>
 #include <map>
-#include <string>
-#include <Eigen/Dense>
-#include <omp.h>
-#include <memory>
 #include <optional>
+#include <string>
+#include <utility>
 
 #include "CartesianSample.hpp"
 #include "CurvilinearSample.hpp"

@@ -1,7 +1,11 @@
 #ifndef COSTSTRATEGY_HPP
 #define COSTSTRATEGY_HPP
 
+#include <string>
+
 #include "TrajectoryStrategy.hpp"
+
+class TrajectorySample;
 
 class CostStrategy: public TrajectoryStrategy
 {

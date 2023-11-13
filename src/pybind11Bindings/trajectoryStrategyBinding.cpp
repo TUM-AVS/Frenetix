@@ -5,6 +5,7 @@
 #include <pybind11/eigen.h>
 
 #include "strategies/TrajectoryStrategy.hpp"
+#include "TrajectorySample.hpp"
 
 //Submodule includes
 #include "costStrategyBinding.hpp"

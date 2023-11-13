@@ -1,5 +1,9 @@
 #include "CalculateSteeringRateCost.hpp"
 
+#include <iostream>
+
+#include "TrajectorySample.hpp"
+
 CalculateSteeringRateCost::CalculateSteeringRateCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {

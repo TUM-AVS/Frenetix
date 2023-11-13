@@ -5,6 +5,9 @@
 #include <pybind11/eigen.h>
 
 #include "TrajectoryHandler.hpp"
+#include "TrajectoryStrategy.hpp"
+#include "FeasabilityStrategy.hpp"
+#include "CostStrategy.hpp"
 #include "util.hpp"
 
 namespace py = pybind11;

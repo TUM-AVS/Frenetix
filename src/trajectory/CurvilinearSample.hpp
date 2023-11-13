@@ -1,10 +1,8 @@
 #ifndef CURVILINEARSAMPLE_HPP
 #define CURVILINEARSAMPLE_HPP
 
-#include <vector>
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <iostream>
-#include <iomanip>
 
 
 

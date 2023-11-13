@@ -1,10 +1,14 @@
 #include "CalculateCollisionProbabilityFast.hpp"
 
-#include <algorithm>
-#include <limits>
-#include <stdexcept>
-
+#include <assert.h>
 #include <math/mvn.hpp>
+#include <Eigen/Geometry>
+#include <cmath>
+#include <vector>
+
+#include <math/covariance.hpp>
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
 
 CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth)
     : CostStrategy(funName, costWeight)

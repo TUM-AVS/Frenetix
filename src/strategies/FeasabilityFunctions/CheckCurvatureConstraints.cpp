@@ -1,5 +1,13 @@
 #include "CheckCurvatureConstraints.hpp"
 
+#include <Eigen/Core>
+#include <cmath>
+#include <memory>
+#include <stdexcept>
+
+#include "CartesianSample.hpp"
+#include "TrajectorySample.hpp"
+
 CheckCurvatureConstraint::CheckCurvatureConstraint(double deltaMax, double wheelbase, bool wholeTrajectory)
     : FeasabilityStrategy("Curvature Constraint", wholeTrajectory)
     , m_deltaMax(deltaMax)

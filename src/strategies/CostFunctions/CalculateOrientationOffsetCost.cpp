@@ -1,5 +1,7 @@
 #include "CalculateOrientationOffsetCost.hpp"
 
+#include "TrajectorySample.hpp"
+
 
 CalculateOrientationOffsetCost::CalculateOrientationOffsetCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)

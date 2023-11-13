@@ -1,5 +1,10 @@
 #include "CalculateDistanceToReferencePathCost.hpp"
 
+#include <Eigen/Core>
+
+#include "CurvilinearSample.hpp"
+#include "TrajectorySample.hpp"
+
 CalculateDistanceToReferencePathCost::CalculateDistanceToReferencePathCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {
