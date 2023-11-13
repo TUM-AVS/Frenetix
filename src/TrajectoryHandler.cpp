@@ -42,16 +42,16 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
         {
             function->evaluateTrajectory(trajectory);
         }
-        
+
+        if (!trajectory.m_valid) continue;
+
         //Iterate over all costFunctions and evaluate it for the given trajectory
         for(auto& [funName, function] : m_feasabilityFunctions)
         {
-            if (!trajectory.m_valid) continue;
-
             function->evaluateTrajectory(trajectory);
         }
-        
-        if(trajectory.m_feasible || calculateAllCosts)
+
+        if (trajectory.m_feasible || calculateAllCosts)
         {
             //All costFunctions
             for(auto& [funName, function] : m_costFunctions)
@@ -81,7 +81,9 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
         tf::Task B = m_taskflow.emplace
         (
             [this, &trajectory]()
-            { 
+            {
+                if (!trajectory.m_valid) return;
+
                 for(auto& [funName, function] : m_feasabilityFunctions) 
                 {
                     function->evaluateTrajectory(trajectory);
@@ -92,7 +94,9 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
         tf::Task C = m_taskflow.emplace
         (
             [this, &trajectory, calculateAllCosts]
-            {   
+            {
+                if (!trajectory.m_valid) return;
+
                 if (trajectory.m_feasible || calculateAllCosts) 
                 {
                     for(auto& [funName, function] : m_costFunctions) 
