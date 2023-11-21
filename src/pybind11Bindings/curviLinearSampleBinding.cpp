@@ -57,7 +57,37 @@ namespace plannerCPP
             .def("__str__", [](const CurviLinearSample &cls) {
                                 std::ostringstream oss;
                                 cls.print(oss);
-                                return oss.str();});
+                                return oss.str();})
+            .def(py::pickle(
+                [](const CurviLinearSample &curv) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+
+                    py::dict d(
+                        "s"_a=curv.s,
+                        "d"_a=curv.d,
+                        "theta"_a=curv.theta,
+                        "d_dot"_a=curv.dd,
+                        "d_ddot"_a=curv.ddd,
+                        "s_dot"_a=curv.ss,
+                        "s_ddot"_a=curv.sss
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    CurviLinearSample cart {
+                        d["s"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["d"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["theta"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["d_dot"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["d_ddot"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["s_dot"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["s_ddot"].cast<Eigen::Ref<Eigen::VectorXd>>()
+                    };
+
+                    return cart;
+                }
+            ));
 
     }
 

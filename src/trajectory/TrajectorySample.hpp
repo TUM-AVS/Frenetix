@@ -20,17 +20,18 @@ public:
     size_t m_acutualSize;
     double m_dT;
     double m_cost;
-    double m_harm_occ_module;
+
+    std::optional<double> m_harm_occ_module;
     std::optional<double> m_boundaryHarm;
+
+    std::optional<bool> m_collisionDetected;
+    std::optional<double> m_egoRisk;
+    std::optional<double> m_obstRisk;
 
     std::optional<int> m_currentTimeStep;
     std::optional<int> m_uniqueId;
 
     bool m_feasible;
-
-    std::optional<bool> m_collisionDetected;
-    std::optional<double> m_egoRisk;
-    std::optional<double> m_obstRisk;
 
     Eigen::VectorXd m_samplingParameters;
 

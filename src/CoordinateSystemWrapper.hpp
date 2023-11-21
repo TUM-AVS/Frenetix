@@ -42,6 +42,7 @@ public:
     int getS_idx(double s) const;
     double getSLambda(double s, int s_idx) const;
 
+    const RowMatrixXd& getRefPath() const { return m_refPath; }
 };
 
 

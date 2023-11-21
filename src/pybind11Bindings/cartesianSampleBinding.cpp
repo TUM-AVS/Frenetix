@@ -55,7 +55,38 @@ namespace plannerCPP
             .def("__str__", [](const CartesianSample &cs) {
                             std::ostringstream oss;
                             cs.print(oss);
-                            return oss.str();});
+                            return oss.str();}
+	        )
+            .def(py::pickle(
+                [](const CartesianSample &cart) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+
+                    py::dict d(
+                        "x"_a=cart.x,
+                        "y"_a=cart.y,
+                        "theta"_a=cart.theta,
+                        "v"_a=cart.velocity,
+                        "a"_a=cart.acceleration,
+                        "kappa"_a=cart.kappa,
+                        "kappa_dot"_a=cart.kappaDot
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    CartesianSample cart {
+                        d["x"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["y"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["theta"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["v"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["a"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["kappa"].cast<Eigen::Ref<Eigen::VectorXd>>(),
+                        d["kappa_dot"].cast<Eigen::Ref<Eigen::VectorXd>>()
+                    };
+
+                    return cart;
+                }
+            ));
 
     }
 

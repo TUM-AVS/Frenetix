@@ -54,6 +54,70 @@ namespace plannerCPP
             .def_property("sampling_parameters",
                 [](TrajectorySample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_samplingParameters;},
                 [](TrajectorySample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_samplingParameters = arr;})
+
+        
+            .def(py::pickle(
+                [](const TrajectorySample &traj) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+                    py::dict d(
+                        "dt"_a=traj.m_dT,
+
+                        "cost"_a=traj.m_cost,
+                        "feasible"_a=traj.m_feasible,
+                        "valid"_a=traj.m_valid,
+
+                        "harm_occ_module"_a=traj.m_harm_occ_module,
+                        "boundary_harm"_a=traj.m_boundaryHarm,
+                        "ego_risk"_a=traj.m_egoRisk,
+                        "obst_risk"_a=traj.m_obstRisk,
+                        "coll_detected"_a=traj.m_collisionDetected,
+
+                        "feasabilityMap"_a=traj.m_feasabilityMap,
+                        "costMap"_a=traj.m_costMap,
+
+                        "uniqueId"_a=traj.m_uniqueId,
+
+                        "sampling_parameters"_a=traj.m_samplingParameters,
+
+                        "trajectory_long"_a=traj.m_trajectoryLongitudinal,
+                        "trajectory_lat"_a=traj.m_trajectoryLateral,
+
+                        "cartesian"_a=traj.m_cartesianSample,
+                        "curvilinear"_a=traj.m_curvilinearSample
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    auto traj_long = d["trajectory_long"].cast<PolynomialTrajectory<4>>();
+                    auto traj_lat = d["trajectory_lat"].cast<PolynomialTrajectory<5>>();
+
+                    TrajectorySample traj {
+                        d["dt"].cast<double>(),
+                        traj_long,
+                        traj_lat,
+                        d["uniqueId"].cast<int>(),
+                        d["sampling_parameters"].cast<Eigen::VectorXd>()
+                    };
+                    traj.m_cartesianSample = d["cartesian"].cast<CartesianSample>();
+                    traj.m_curvilinearSample = d["curvilinear"].cast<CurviLinearSample>();
+
+                    traj.m_feasabilityMap = d["feasabilityMap"].cast<std::map<std::string, double>>();
+                    traj.m_costMap = d["costMap"].cast<std::map<std::string, std::pair<double, double>>>();
+
+                    traj.m_cost = d["cost"].cast<double>();
+                    traj.m_feasible = d["feasible"].cast<bool>();
+                    traj.m_valid = d["valid"].cast<bool>();
+
+                    traj.m_harm_occ_module = d["harm_occ_module"].cast<std::optional<double>>();
+                    traj.m_boundaryHarm = d["boundary_harm"].cast<std::optional<double>>();
+                    traj.m_egoRisk = d["ego_risk"].cast<std::optional<double>>();
+                    traj.m_obstRisk = d["obst_risk"].cast<std::optional<double>>();
+                    traj.m_collisionDetected = d["coll_detected"].cast<std::optional<bool>>();
+
+                    return traj;
+                }
+            ))
             .def("add_cost_value_to_list", 
                 (void (TrajectorySample::*)(std::string, double, double)) &TrajectorySample::addCostValueToList, 
                 py::arg("cost_function_name"), 

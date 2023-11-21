@@ -39,7 +39,24 @@ namespace plannerCPP
             .def_property("ref_curv_dd",
                           [](CoordinateSystemWrapper &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_refCurvDD;},
                           [](CoordinateSystemWrapper &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_refCurvDD = arr;})
-            .def_readwrite("ref_line", &CoordinateSystemWrapper::m_refPolyLineFromCoordSys);
+            .def_readwrite("ref_line", &CoordinateSystemWrapper::m_refPolyLineFromCoordSys)
+            .def(py::pickle(
+                [](const CoordinateSystemWrapper &ccs) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+
+                    py::dict d(
+                        "ref_path"_a=ccs.getRefPath()
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    RowMatrixXd refPath = d["ref_path"].cast<RowMatrixXd>();
+                    CoordinateSystemWrapper ccs { refPath };
+
+                    return ccs;
+                }
+            ));
 
     }
 } //plannerCPP

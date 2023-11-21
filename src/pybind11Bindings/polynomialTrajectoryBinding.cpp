@@ -41,8 +41,26 @@ namespace plannerCPP
             .def_property_readonly("coeffs", &PolynomialTrajectory<Degree>::getCoeffs)
             .def("__call__", py::vectorize(&PolynomialTrajectory<Degree>::operator()))
             .def("squared_jerk_integral", &PolynomialTrajectory<Degree>::squaredJerkIntegral)
-            .def_property_readonly("delta_tau",
-                        &PolynomialTrajectory<Degree>::get_t1);
+            .def_property_readonly("delta_tau", &PolynomialTrajectory<Degree>::get_t1)
+            .def(py::pickle(
+                [](const PolynomialTrajectory<Degree> &traj) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+                    const auto coeffs = traj.getCoeffs();
+
+                    py::dict d(
+                        "coeffs"_a=coeffs
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    py::object obj = d["coeffs"];
+                    typename Eigen::Vector<double, Degree + 1> coeffs = obj.cast<Eigen::Vector<double, Degree + 1>>();
+                    PolynomialTrajectory<Degree> traj { coeffs };
+
+                    return traj;
+                }
+            ));
     }
 
     void initBindPolynomialTrajectory(pybind11::module &m) 

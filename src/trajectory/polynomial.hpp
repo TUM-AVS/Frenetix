@@ -41,6 +41,9 @@ public:
                          Eigen::VectorXd x_0_order = Eigen::VectorXd(),
                          Eigen::VectorXd x_d_order = Eigen::VectorXd());
 
+    explicit PolynomialTrajectory(const Eigen::Vector<double, Degree + 1>& coeffs) 
+        : coeffs{coeffs} { }
+
     PolynomialTrajectory() = default;
     /**
      * @brief Calculates the polynomial coefficients.
@@ -53,7 +56,7 @@ public:
      *
      * @return The coefficients as an Eigen::Vector of size Degree + 1.
      */
-    Eigen::Vector<double,Degree+1> getCoeffs();
+    Eigen::Vector<double,Degree+1> getCoeffs() const;
 
     /**
      * @brief Evaluates the polynomial trajectory at a given time and derivative.
@@ -168,7 +171,7 @@ void PolynomialTrajectory<Degree>::calc_coeffs(double& t0, double& t1)
 }
 
 template<int Degree>
-Eigen::Vector<double,Degree+1> PolynomialTrajectory<Degree>::getCoeffs()
+Eigen::Vector<double,Degree+1> PolynomialTrajectory<Degree>::getCoeffs() const
 {
     return coeffs;
 }
