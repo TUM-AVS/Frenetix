@@ -31,6 +31,8 @@ namespace plannerCPP
         initBindTrajectoryStrategy(m);
         initBindTrajectorySample(m);
         initBindGeometryMsg(m);
+
+        py::register_exception<invalid_covariance_matrix_error>(m, "InvalidCovarianceMatrixError", PyExc_ValueError);
     }
 } //plannerCPP
 
