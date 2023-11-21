@@ -1,11 +1,13 @@
 //pybind includes
-#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <memory>
 
 #include "strategies/CostStrategy.hpp"
 #include "trajectoryFunctionsBinding/costFunctionsBinding.hpp"
+
+#include "costStrategyBinding.hpp"
+
+class TrajectoryStrategy;
 
 namespace py = pybind11;
 

@@ -1,15 +1,17 @@
 //pybind includes
-#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <memory>
 
 #include "strategies/FeasabilityFunctions/CheckAccelerationConstraint.hpp"
 #include "strategies/FeasabilityFunctions/CheckCurvatureConstraints.hpp"
 #include "strategies/FeasabilityFunctions/CheckCurvatureRateConstrains.hpp"
 #include "strategies/FeasabilityFunctions/CheckVelocityConstraints.hpp"
 #include "strategies/FeasabilityFunctions/CheckYawRateConstraint.hpp"
-#include "TrajectorySample.hpp"
+
+#include "feasabilityFunctionsBinding.hpp"
+#include "trajectory/TrajectorySample.hpp"
+
+class FeasabilityStrategy;
 
 namespace py = pybind11;
 

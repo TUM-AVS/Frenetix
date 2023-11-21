@@ -1,22 +1,16 @@
-#include <Eigen/Dense>
-#include <vector>
-#include <memory>
-
-//pybind includes
-#include <pybind11/numpy.h>
+#include <math/covariance.hpp>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <pyerrors.h>
 
-//Other Bindings
-#include "handlerBinding.hpp"
 #include "cartesianSampleBinding.hpp"
 #include "coordinateSystemWrapperBinding.hpp"
 #include "curviLinearSampleBinding.hpp"
-#include "polynomialTrajectoryBinding.hpp"
-#include "trajectoryStrategyBinding.hpp"
-#include "trajectorySampleBinding.hpp"
 #include "geometryMsgsBinding.hpp"
+//Other Bindings
+#include "handlerBinding.hpp"
+#include "polynomialTrajectoryBinding.hpp"
+#include "trajectorySampleBinding.hpp"
+#include "trajectoryStrategyBinding.hpp"
 
 namespace py = pybind11;
 namespace plannerCPP

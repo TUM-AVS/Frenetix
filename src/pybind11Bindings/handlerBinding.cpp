@@ -1,14 +1,20 @@
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 #include <pybind11/eigen.h> // IWYU pragma: keep
+#include <pybind11/pybind11.h>
+#include <Eigen/Core>
+#include <map>
+#include <memory>
+#include <vector>
 
 #include "TrajectoryHandler.hpp"
+#include "TrajectorySample.hpp"
+#include "util.hpp"
+
+#include "handlerBinding.hpp"
+
 #include "TrajectoryStrategy.hpp"
 #include "FeasabilityStrategy.hpp"
 #include "CostStrategy.hpp"
-#include "util.hpp"
 
 namespace py = pybind11;
 

@@ -1,9 +1,14 @@
 //pybind includes
+#include <pybind11/eigen.h> // IWYU pragma: keep
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h> // IWYU pragma: keep
-#include <pybind11/eigen.h> // IWYU pragma: keep
+#include <Eigen/Core>
+#include <iosfwd>
+#include <vector>
 
 #include "geometryMsgs.hpp"
+
+#include "geometryMsgsBinding.hpp"
 
 namespace py = pybind11;
 

@@ -1,10 +1,16 @@
 //pybind includes
-#include <pybind11/numpy.h>
+#include <pybind11/eigen.h> // IWYU pragma: keep
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h> // IWYU pragma: keep
-#include <pybind11/eigen.h> // IWYU pragma: keep
+#include <Eigen/Core>
+#include <map>
+#include <memory>
+#include <string>
 
 #include "strategies/CostFunctions/CalculateAccelerationCost.hpp"
+#include "strategies/CostFunctions/CalculateCollisionProbabilityFast.hpp"
+#include "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.hpp"
+#include "strategies/CostFunctions/CalculateDistanceToObstacleCost.hpp"
 #include "strategies/CostFunctions/CalculateDistanceToReferencePathCost.hpp"
 #include "strategies/CostFunctions/CalculateJerkCost.hpp"
 #include "strategies/CostFunctions/CalculateLaneCenterOffsetCost.hpp"
@@ -16,11 +22,13 @@
 #include "strategies/CostFunctions/CalculateSteeringRateCost.hpp"
 #include "strategies/CostFunctions/CalculateVelocityOffsetCost.hpp"
 #include "strategies/CostFunctions/CalculateYawCost.hpp"
-#include "strategies/CostFunctions/CalculateCollisionProbabilityFast.hpp"
-#include "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.hpp"
-#include "strategies/CostFunctions/CalculateDistanceToObstacleCost.hpp"
+#include "util.hpp"
+#include "trajectory/TrajectorySample.hpp"
 
-#include "TrajectorySample.hpp"
+#include "costFunctionsBinding.hpp"
+
+class CostStrategy;
+struct PredictedObject;
 
 namespace py = pybind11;
 

@@ -1,13 +1,16 @@
 //pybind includes
-#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <memory>
 
-#include "strategies/Functions/FillCoordinates.hpp"
 #include "strategies/Functions/ComputeInitalState.hpp"
+#include "strategies/Functions/FillCoordinates.hpp"
+
 #include "CoordinateSystemWrapper.hpp"
-#include "TrajectorySample.hpp"
+#include "otherFunctionsBinding.hpp"
+#include "trajectory/TrajectorySample.hpp"
+
+class CoordinateSystemWrapper;
+class TrajectoryStrategy;
 
 namespace py = pybind11;
 

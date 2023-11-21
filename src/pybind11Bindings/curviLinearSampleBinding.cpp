@@ -1,10 +1,12 @@
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 #include <pybind11/eigen.h> // IWYU pragma: keep
+#include <pybind11/pybind11.h>
+#include <Eigen/Core>
+#include <iosfwd>
 
 #include "trajectory/CurvilinearSample.hpp"
+
+#include "curviLinearSampleBinding.hpp"
 
 namespace py = pybind11;
 

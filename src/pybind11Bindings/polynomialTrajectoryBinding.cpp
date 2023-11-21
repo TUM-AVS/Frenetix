@@ -1,10 +1,13 @@
 //pybind includes
+#include <pybind11/eigen.h> // IWYU pragma: keep
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h> // IWYU pragma: keep
+#include <Eigen/Core>
+#include <string>
 
 #include "polynomial.hpp"
+
+#include "polynomialTrajectoryBinding.hpp"
 
 namespace py = pybind11;
 

@@ -1,16 +1,15 @@
 //pybind includes
-#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
-
-#include "strategies/TrajectoryStrategy.hpp"
-#include "TrajectorySample.hpp"
+#include <memory>
 
 //Submodule includes
 #include "costStrategyBinding.hpp"
 #include "feasabilityStrategyBinding.hpp"
+#include "strategies/TrajectoryStrategy.hpp"
 #include "trajectoryFunctionsBinding/otherFunctionsBinding.hpp"
+#include "trajectory/TrajectorySample.hpp"
+
+#include "trajectoryStrategyBinding.hpp"
 
 namespace py = pybind11;
 
