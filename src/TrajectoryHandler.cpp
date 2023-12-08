@@ -15,6 +15,22 @@ TrajectoryHandler::TrajectoryHandler(double dt)
 
 }
 
+void TrajectoryHandler::setAllCostWeightsToZero()
+{
+    for(auto& [functionName, costStrategy] : m_costFunctions)
+    {
+        if(costStrategy)
+        {
+            costStrategy->updateCostWeight(0.0);
+        }
+    }
+}
+
+void TrajectoryHandler::clearCostFunctions()
+{
+    m_costFunctions.clear();
+}
+
 void TrajectoryHandler::addCostFunction(std::shared_ptr<CostStrategy> function)
 {
 
