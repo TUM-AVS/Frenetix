@@ -15,7 +15,8 @@ void CalculateDistanceToReferencePathCost::evaluateTrajectory(TrajectorySample& 
     double cost {0};
     const Eigen::VectorXd& d = trajectory.m_curvilinearSample.d;
 
-    cost = (d.cwiseAbs().sum() + 5 * std::abs(d(d.size() - 1))) / (d.size() + 4);
+    // cost = (d.cwiseAbs().sum() + 5 * std::abs(d(d.size() - 1))) / (d.size() + 4);
+    cost = d.tail(d.size() / 2).norm();
 
     trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }
