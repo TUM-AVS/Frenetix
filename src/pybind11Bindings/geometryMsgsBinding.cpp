@@ -27,7 +27,27 @@ namespace plannerCPP
             })
             .def_readonly("position", &PoseWithCovariance::position)
             .def_readonly("orientation", &PoseWithCovariance::orientation)
-            .def_readonly("covariance", &PoseWithCovariance::covariance);
+            .def_readonly("covariance", &PoseWithCovariance::covariance)
+            .def(py::pickle(
+                [](const PoseWithCovariance &pose) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+
+                    py::dict d(
+                        "position"_a=pose.position,
+                        "orientation"_a=pose.orientation,
+                        "covariance"_a=pose.covariance
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    auto position = d["position"].cast<Eigen::Vector3d>();
+                    auto orientation = d["orientation"].cast<Eigen::Vector4d>();
+                    auto covariance = d["covariance"].cast<Eigen::Matrix<double,6,6>>();
+
+                    return PoseWithCovariance(position, orientation, covariance);
+                }
+            ));
 
         py::class_<PredictedObject>(m, "PredictedObject")
             //.def(py::init<size_t>())
@@ -40,6 +60,24 @@ namespace plannerCPP
             .def_readonly("object_id", &PredictedObject::object_id)
             //.def_readonly("length", &PredictedObject::length)
             //.def_readonly("width", &PredictedObject::width)
-            .def_readonly("predictedPath", &PredictedObject::predictedPath);
+            .def_readonly("predictedPath", &PredictedObject::predictedPath)
+            .def(py::pickle(
+                [](const PredictedObject &p) { // __getstate__
+                    using namespace pybind11::literals; // to bring in the `_a` literal
+
+                    py::dict d(
+                        "object_id"_a=p.object_id,
+                        "predicted_path"_a=p.predictedPath
+                    );
+
+                    return d;
+                },
+                [](py::dict d) { // __setstate__
+                    auto object_id = d["object_id"].cast<int>();
+                    auto predictedPath = d["predicted_path"].cast<std::vector<PoseWithCovariance>>();
+
+                    return PredictedObject(object_id, predictedPath);
+                }
+            ));
     }
 }
