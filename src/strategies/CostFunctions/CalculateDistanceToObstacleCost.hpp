@@ -22,6 +22,8 @@ class CalculateDistanceToObstacleCost : public CostStrategy
 {
 private:
     Eigen::Ref<RowMatrixXd> m_obstacles; /**< A matrix holding the positions of the obstacles. */
+    bool isVectorValid(const Eigen::VectorXd& vec);
+    bool isMatrixValid(const Eigen::MatrixXd& mat);
 public:
     CalculateDistanceToObstacleCost(std::string funName, double costWeight, Eigen::Ref<RowMatrixXd> obstacles);
     

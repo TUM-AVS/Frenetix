@@ -54,6 +54,8 @@ namespace plannerCPP
                 }, 
                 py::arg().noconvert()
             )
+            .def("clear_cost_functions", &TrajectoryHandler::clearCostFunctions, "Clears all cost functions.")
+            .def("set_all_cost_weights_to_zero", &TrajectoryHandler::setAllCostWeightsToZero, "Sets all cost function weights to zero.")
             .def
             (
                 "add_function", 

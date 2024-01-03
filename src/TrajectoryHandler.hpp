@@ -54,7 +54,8 @@ public:
     void addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function);
     void addFunction(std::shared_ptr<TrajectoryStrategy> function);
     void addCostFunction(std::shared_ptr<CostStrategy> function);
-
+    void clearCostFunctions();
+    void setAllCostWeightsToZero();
     /**
      * @brief Evaluates all current functions for each trajectory in the container.
      * 

@@ -91,7 +91,23 @@ Eigen::VectorXd CoordinateSystemWrapper::computeOrientationFromPolyline(geometry
     const Eigen::Vector2d& pt2 = polyline[i];
     Eigen::Vector2d tmp = pt2 - pt1;
     orientation(i) = std::atan2(tmp(1), tmp(0));
-    
+
+    double PI = std::atan(1.0) * 4;
+    double threshold = PI;
+
+    for (size_t i = 1; i < orientation.size(); ++i) {
+        double delta = orientation[i] - orientation[i - 1];
+        if (delta > threshold) {
+            for (size_t j = i; j < orientation.size(); ++j) {
+                orientation[j] -= 2 * PI;
+            }
+        } else if (delta < -threshold) {
+            for (size_t j = i; j < orientation.size(); ++j) {
+                orientation[j] += 2 * PI;
+            }
+        }
+    }
+
     return orientation;
 }
 
