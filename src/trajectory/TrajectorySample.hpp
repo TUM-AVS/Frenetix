@@ -38,30 +38,30 @@ public:
     std::map<std::string, std::pair<double,double>> m_costMap;
     std::map<std::string, double> m_feasabilityMap;
 
-    PolynomialTrajectory<4> m_trajectoryLongitudinal;
-    PolynomialTrajectory<5> m_trajectoryLateral;
+    using LongitudinalTrajectory = PolynomialTrajectory<4, 3, 2>;
+    using LateralTrajectory = PolynomialTrajectory<5, 3, 3>;
+    LongitudinalTrajectory m_trajectoryLongitudinal;
+    LateralTrajectory m_trajectoryLateral;
     CartesianSample m_cartesianSample;
     CurviLinearSample m_curvilinearSample;
     bool m_valid = true;
-    
+
     TrajectorySample(double dt,
-                     PolynomialTrajectory<4>& trajectoryLongitudinal, 
-                     PolynomialTrajectory<5>& trajectoryLateral, 
+                     LongitudinalTrajectory trajectoryLongitudinal,
+                     LateralTrajectory trajectoryLateral,
                      int uniqueId);
 
     TrajectorySample(double dt,
-                     PolynomialTrajectory<4>& trajectoryLongitudinal, 
-                     PolynomialTrajectory<5>& trajectoryLateral, 
+                     LongitudinalTrajectory trajectoryLongitudinal,
+                     LateralTrajectory trajectoryLateral,
                      int uniqueId,
                      Eigen::VectorXd samplingParameters);
 
-                    
-
     /**
      * @brief Construct a new Trajectory Sample object just with the initial position.
-     * 
-     * @param x0 
-     * @param y0 
+     *
+     * @param x0
+     * @param y0
      * @param orientation0
      */
     TrajectorySample(double x0,
@@ -85,12 +85,12 @@ public:
     void setCurrentTimeStep(int currentTimeStep);
 
     /**
-     * @brief Add a cost value to the list of cost values. The weight must therefore be speicified 
-     * in the costWeightMap. Add a costWeight to the map if it is not specified yet by 
+     * @brief Add a cost value to the list of cost values. The weight must therefore be speicified
+     * in the costWeightMap. Add a costWeight to the map if it is not specified yet by
      * handler.addCostWeight(std::string functionName, double weight).
-     * 
-     * @param costFunctionName 
-     * @param cost 
+     *
+     * @param costFunctionName
+     * @param cost
      * @param costWeighted
      */
     void addCostValueToList(std::string costFunctionName, double cost, double costWeighted);
