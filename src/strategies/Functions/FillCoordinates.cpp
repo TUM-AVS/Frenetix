@@ -62,7 +62,6 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         
         if(iii >= actualLength)
         {
-
             trajectory.m_curvilinearSample.s[iii] = trajectory.m_curvilinearSample.s[iii-1] + trajectory.m_dT*trajectory.m_curvilinearSample.ss[iii-1];
             trajectory.m_curvilinearSample.ss[iii] =  trajectory.m_curvilinearSample.ss[iii-1];
             trajectory.m_curvilinearSample.sss[iii] = 0;
@@ -73,9 +72,10 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         }
         else
         {
-            trajectory.m_curvilinearSample.s[iii] = trajectory.m_trajectoryLongitudinal(t, 0);
-            trajectory.m_curvilinearSample.ss[iii] = trajectory.m_trajectoryLongitudinal(t, 1);
-            trajectory.m_curvilinearSample.sss[iii] = trajectory.m_trajectoryLongitudinal(t, 2);
+            const auto sv = trajectory.m_trajectoryLongitudinal.horner_eval(t);
+            trajectory.m_curvilinearSample.s[iii] = sv.x;
+            trajectory.m_curvilinearSample.ss[iii] = sv.xx; 
+            trajectory.m_curvilinearSample.sss[iii] = sv.xxx;
 
             double ttt {t};
 
@@ -83,9 +83,11 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
             {
                 ttt = trajectory.m_curvilinearSample.s[iii] -  trajectory.m_curvilinearSample.s[0];
             }
-            trajectory.m_curvilinearSample.d[iii] = trajectory.m_trajectoryLateral(ttt, 0);
-            trajectory.m_curvilinearSample.dd[iii] = trajectory.m_trajectoryLateral(ttt, 1);
-            trajectory.m_curvilinearSample.ddd[iii] = trajectory.m_trajectoryLateral(ttt, 2);
+
+            const auto dv = trajectory.m_trajectoryLateral.horner_eval(ttt);
+            trajectory.m_curvilinearSample.d[iii] = dv.x;
+            trajectory.m_curvilinearSample.dd[iii] = dv.xx;
+            trajectory.m_curvilinearSample.ddd[iii] = dv.xxx;
         }
 
 
@@ -128,10 +130,10 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
                                                            refPos[s_idx + 1],
                                                            refTheta[s_idx],
                                                            refTheta[s_idx + 1]);
-        
+
 
         if(trajectory.m_curvilinearSample.ss[iii] > 0.001)
-        {   
+        {
             trajectory.m_curvilinearSample.theta[iii] = std::atan2(dp, 1.0);
             trajectory.m_cartesianSample.theta[iii] = trajectory.m_curvilinearSample.theta[iii] + interPolatedAngle;
         }
@@ -159,25 +161,25 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         double tanTheta = std::tan(trajectory.m_curvilinearSample.theta[iii]);
 
         trajectory.m_cartesianSample.kappa[iii] = (dpp + (k_r * dp + k_r_d * trajectory.m_curvilinearSample.d[iii]) * tanTheta)
-                                                   * cosTheta * std::pow(cosTheta / oneKrD, 2) 
+                                                   * cosTheta * std::pow(cosTheta / oneKrD, 2)
                                                    + (cosTheta / oneKrD) * k_r;
-                                                   
+
         trajectory.m_cartesianSample.kappaDot[iii] = (iii == 0) ? 0 : (trajectory.m_cartesianSample.kappa[iii]- trajectory.m_cartesianSample.kappa[iii-1]);
 
         trajectory.m_cartesianSample.velocity[iii] = std::abs(trajectory.m_curvilinearSample.ss[iii] * (oneKrD / cosTheta));
 
         trajectory.m_cartesianSample.acceleration[iii] = trajectory.m_curvilinearSample.sss[iii] * oneKrD / cosTheta +
-                                                         std::pow(trajectory.m_curvilinearSample.ss[iii], 2) / cosTheta 
-                                                         * (oneKrD * tanTheta * (trajectory.m_cartesianSample.kappa[iii] * oneKrD / cosTheta - k_r) 
-                                                         - (k_r_d * trajectory.m_curvilinearSample.d[iii] + k_r * dp));   
-        
+                                                         std::pow(trajectory.m_curvilinearSample.ss[iii], 2) / cosTheta
+                                                         * (oneKrD * tanTheta * (trajectory.m_cartesianSample.kappa[iii] * oneKrD / cosTheta - k_r)
+                                                         - (k_r_d * trajectory.m_curvilinearSample.d[iii] + k_r * dp));
+
         try
         {
             Eigen::Vector2d cartesianPoints = m_coordinateSystem->getSystem()->convertToCartesianCoords(trajectory.m_curvilinearSample.s[iii],trajectory.m_curvilinearSample.d[iii]);
             trajectory.m_cartesianSample.x[iii] = cartesianPoints[0];
             trajectory.m_cartesianSample.y[iii] = cartesianPoints[1];
-        }  
-        catch(const std::exception& e) 
+        }
+        catch(const std::exception& e)
         {
             trajectory.m_valid = false;
             trajectory.m_feasible = false;
@@ -186,7 +188,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         catch(...)
         {
             std::cout << "Caught unknown exception" << std::endl;
-        } 
+        }
     }
 }
 

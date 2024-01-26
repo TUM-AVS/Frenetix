@@ -22,7 +22,7 @@ namespace plannerCPP
     void initBindTrajectorySample(pybind11::module &m) 
     {
         py::class_<TrajectorySample>(m, "TrajectorySample")
-            .def(py::init<double, PolynomialTrajectory<4>&, PolynomialTrajectory<5>&, int>(),
+            .def(py::init<double, TrajectorySample::LongitudinalTrajectory, TrajectorySample::LateralTrajectory, int>(),
                  py::arg("dt"),
                  py::arg("trajectoryLongitudinal"), 
                  py::arg("trajectoryLateral"), 
@@ -89,8 +89,8 @@ namespace plannerCPP
                     return d;
                 },
                 [](py::dict d) { // __setstate__
-                    auto traj_long = d["trajectory_long"].cast<PolynomialTrajectory<4>>();
-                    auto traj_lat = d["trajectory_lat"].cast<PolynomialTrajectory<5>>();
+                    auto traj_long = d["trajectory_long"].cast<TrajectorySample::LongitudinalTrajectory>();
+                    auto traj_lat = d["trajectory_lat"].cast<TrajectorySample::LateralTrajectory>();
 
                     TrajectorySample traj {
                         d["dt"].cast<double>(),

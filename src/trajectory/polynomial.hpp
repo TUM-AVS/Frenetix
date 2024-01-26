@@ -1,6 +1,4 @@
-#ifndef POLYNOMIAL_HPP
-#define POLYNOMIAL_HPP
-
+#pragma once
 
 #include <Eigen/Core>
 #include <Eigen/QR>
@@ -8,47 +6,87 @@
 #include <cmath>
 #include <stdexcept>
 
+#include <iostream>
+
 /**
  * @brief A class representing a polynomial trajectory of a given degree.
  *
  * The PolynomialTrajectory class is a template class, with the Degree template parameter
  * representing the degree of the polynomial trajectory. It is designed to create
- * a polynomial trajectory that satisfies a set of initial and final point conditions. 
- * 
+ * a polynomial trajectory that satisfies a set of initial and final point conditions.
+ *
  * The number of initial condions must euqal to the Degree + 1.
  *
- * The class solves a system of linear equations to determine the coefficients of the monom 
- * basis of the polynomial trajectory. The trajectory can be evaluated at a given time 
+ * The class solves a system of linear equations to determine the coefficients of the monom
+ * basis of the polynomial trajectory. The trajectory can be evaluated at a given time
  * using the overloaded call operator with an optional derivative parameter.
- * 
+ *
  * @tparam Degree Degree of the polynomial trajectory.
  */
-template <int Degree>
-class PolynomialTrajectory 
+template <int Degree, int X0 = Eigen::Dynamic, int XD = Eigen::Dynamic>
+class PolynomialTrajectory
 {
+    static_assert(X0 == Eigen::Dynamic || XD == Eigen::Dynamic || X0 + XD == Degree + 1, "dimensions error");
+
 public:
+    using VectorX0 = Eigen::Vector<double, X0>;
+    using VectorXD = Eigen::Vector<double, XD>;
+
+    explicit PolynomialTrajectory(const Eigen::Vector<double, Degree + 1>& coeffs) 
+        : coeffs{coeffs} { }
+
     /**
      * @brief Constructs a new polynomial trajectory.
-     * 
+     *
      * @param t0 The first time.
      * @param t1 The second time.
      * @param x_0 The first point conditions.
      * @param x_d The second point conditions.
      */
     PolynomialTrajectory(double t0, double t1,
-                         Eigen::VectorXd x_0,
-                         Eigen::VectorXd x_d,
-                         Eigen::VectorXd x_0_order = Eigen::VectorXd(),
-                         Eigen::VectorXd x_d_order = Eigen::VectorXd());
+                         const VectorX0& x_0,
+                         const VectorXD& x_d,
+                         const VectorX0& x_0_order,
+                         const VectorXD& x_d_order)
+        : m_t0(t0)
+        , m_t1(t1)
+    {
+        assert(((x_0.size()+x_d.size()-1)==Degree) && "To many or to less equations for the choosen degree");
 
-    explicit PolynomialTrajectory(const Eigen::Vector<double, Degree + 1>& coeffs) 
-        : coeffs{coeffs} { }
+        assert((x_0.size() == x_0_order.size()) && "Order size not correct");
+        assert((x_d.size() == x_d_order.size()) && "Order size not correct");
+
+        calc_coeffs(t0, t1, x_0, x_d, x_0_order, x_d_order);
+    }
+
+    /**
+     * @brief Constructs a new polynomial trajectory.
+     *
+     * @param t0 The first time.
+     * @param t1 The second time.
+     * @param x_0 The first point conditions.
+     * @param x_d The second point conditions.
+     */
+    PolynomialTrajectory(double t0, double t1,
+                         const VectorX0& x_0,
+                         const VectorXD& x_d)
+        : m_t0(t0)
+        , m_t1(t1)
+    {
+        VectorX0 x_0_order = VectorX0::LinSpaced(x_0.size(), 0, x_0.size() - 1);
+        VectorXD x_d_order = VectorXD::LinSpaced(x_d.size(), 0, x_d.size() - 1);
+
+        calc_coeffs(t0, t1, x_0, x_d, x_0_order, x_d_order);
+    }
 
     PolynomialTrajectory() = default;
+
     /**
      * @brief Calculates the polynomial coefficients.
      */
-    void calc_coeffs(double& t0, double& t1);
+    void calc_coeffs(double t0, double t1,
+        VectorX0 x_0, VectorXD x_d,
+        VectorX0 x_0_order, VectorXD x_d_order);
 
 
     /**
@@ -67,9 +105,20 @@ public:
      */
     double operator()(double t, double derivative = 0) const;
 
-    double get_t0() const;
+    template<int Order>
+    constexpr double const_eval(double t) const;
 
-    double get_t1() const;
+    struct VVV {
+        double x;
+        double xx;
+        double xxx;
+    };
+
+    constexpr VVV horner_eval(double t) const;
+
+    double get_t0() const { return m_t0; }
+
+    double get_t1() const { return m_t1; }
 
     /**
     * @brief Computes the integral of the squared jerk over the trajectory for a given time \p t.
@@ -84,62 +133,27 @@ public:
     *
     * @throw std::invalid_argument If the Degree is not 4 or 5.
     */
-    double squaredJerkIntegral(double t) const;
+    constexpr double squaredJerkIntegral(double t) const;
 
 private:
-    double m_t0, m_t1;
-    Eigen::VectorXd x_0, x_d, x_0_order, x_d_order;
     Eigen::Vector<double, Degree+1> coeffs;
-    void initialize_orders();
+    double m_t0, m_t1;
 };
 
-template<int Degree>
-PolynomialTrajectory<Degree>::PolynomialTrajectory(double t0, double t1,
-                                                   Eigen::VectorXd x_0,
-                                                   Eigen::VectorXd x_d,
-                                                   Eigen::VectorXd x_0_order,
-                                                   Eigen::VectorXd x_d_order)
-    : m_t0(t0)
-    , m_t1(t1)
-    , x_0(x_0)
-    , x_d(x_d)
-    , x_0_order(x_0_order)
-    , x_d_order(x_d_order)
+template<int Degree, int X0, int XD>
+void PolynomialTrajectory<Degree, X0, XD>::calc_coeffs(double t0, double t1,
+    VectorX0 x_0, VectorXD x_d,
+    VectorX0 x_0_order, VectorXD x_d_order)
 {
-    assert(((x_0.size()+x_d.size()-1)==Degree) && "To many or to less equations for the choosen degree");
+    constexpr int n = Degree + 1;
 
-    initialize_orders();
-    calc_coeffs(t0, t1);
-}
+    ////cache a if it stays the same
+    //static double lastT0 = 0;
+    //static double lastT1 = 0;
 
-template<int Degree>
-void PolynomialTrajectory<Degree>::initialize_orders()
-{
-    if (x_0_order.size() == 0) 
-    {
-        x_0_order = Eigen::VectorXd::LinSpaced(x_0.size(), 0, x_0.size() - 1);
-    }
-    else
-    {
-        assert((x_0.size() == x_0_order.size()) && "Order size not correct");
-    }
+    Eigen::Matrix<double, n, n> a;
+    Eigen::Vector<double, n> b;
 
-    if (x_d_order.size() == 0) 
-    {
-        x_d_order = Eigen::VectorXd::LinSpaced(x_d.size(), 0, x_d.size() - 1);
-    }
-    else
-    {
-        assert((x_d.size() == x_d_order.size()) && "Order size not correct");
-    }
-}
-
-template<int Degree>
-void PolynomialTrajectory<Degree>::calc_coeffs(double& t0, double& t1) 
-{
-    int n = Degree + 1;
-    static Eigen::MatrixXd a(n, n);
-    Eigen::VectorXd b(n);
 
     for(int iii = 0; iii < n; iii++)
     {
@@ -170,55 +184,69 @@ void PolynomialTrajectory<Degree>::calc_coeffs(double& t0, double& t1)
     coeffs = a.colPivHouseholderQr().solve(b);
 }
 
-template<int Degree>
-Eigen::Vector<double,Degree+1> PolynomialTrajectory<Degree>::getCoeffs() const
+template<int Degree, int X0, int XD>
+Eigen::Vector<double,Degree+1> PolynomialTrajectory<Degree, X0, XD>::getCoeffs() const
 {
     return coeffs;
 }
 
-template<int Degree>
-double PolynomialTrajectory<Degree>::operator()(double t, double derivative) const 
+template<int Degree, int X0, int XD>
+inline constexpr
+typename PolynomialTrajectory<Degree, X0, XD>::VVV
+PolynomialTrajectory<Degree, X0, XD>::horner_eval(double t) const
+{
+    static_assert(Degree > 2, "invalid Degree: must greater than 2");
+
+    double f = coeffs[Degree];
+    double fp = f;
+    double fpp = fp;
+
+    for (int i = Degree - 1; i >= 2; i--) {
+        f = std::fma(t, f, coeffs[i]);
+        fp = std::fma(t, fp, f);
+        fpp = std::fma(t, fpp, fp);
+    }
+    f = std::fma(t, f, coeffs[1]);
+    fp = std::fma(t, fp, f);
+    f = std::fma(t, f, coeffs[0]);
+
+    return VVV {f, fp, fpp};
+}
+
+template<int Degree, int X0, int XD>
+inline double PolynomialTrajectory<Degree, X0, XD>::operator()(double t, double derivative) const
 {
     double res {0};
 
-    for (int iii = 0; iii < coeffs.size(); ++iii) 
+    if (std::trunc(derivative) != derivative) { std::abort(); }
+
+    #pragma clang loop unroll(full)
+    for (int iii = 0; iii < coeffs.size(); ++iii)
     {
         if(iii >= derivative)
         {
             double coeff {1};
-            
+
             for(int uuu = derivative; uuu > 0; uuu--)
             {
                 coeff *= (iii-uuu+1);
             }
-            res += coeffs[iii] * coeff *  std::pow(t, iii-derivative);
-        }   
+            res += coeffs[iii] * coeff *  std::pow(t, iii-(int)derivative);
+        }
     }
     return res;
 }
 
-template<int Degree>
-double PolynomialTrajectory<Degree>::get_t0() const
+template<int Degree, int X0, int XD>
+constexpr double PolynomialTrajectory<Degree, X0, XD>::squaredJerkIntegral(double t) const
 {
-    return m_t0;
-}
+    static_assert(Degree == 5 || Degree == 4, "squared_jerk_integral() is only implemented for Degree 4 and 5");
 
-template<int Degree>
-double PolynomialTrajectory<Degree>::get_t1() const
-{
-    return m_t1;
-}
-
-template<int Degree>
-double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
-{
-    if constexpr(Degree == 5)
-    {
+    if (Degree == 5) {
         double t2 = t * t;
         double t3 = t2 * t;
         double t4 = t3 * t;
         double t5 = t4 * t;
-
         double integral_squared_jerk = (36 * coeffs[3] * coeffs[3] * t +
                                         144 * coeffs[3] * coeffs[4] * t2 +
                                         240 * coeffs[3] * coeffs[5] * t3 +
@@ -226,9 +254,7 @@ double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
                                         720 * coeffs[4] * coeffs[5] * t4 +
                                         720 * coeffs[5] * coeffs[5] * t5);
         return integral_squared_jerk;
-    }
-    else if constexpr(Degree == 4)
-    {
+    } else if constexpr(Degree == 4) {
         double t2 = t * t;
         double t3 = t2 * t;
 
@@ -237,11 +263,5 @@ double PolynomialTrajectory<Degree>::squaredJerkIntegral(double t) const
                                         192 * coeffs[4] * coeffs[4] * t3);
         return integral_squared_jerk;
     }
-    else
-    {
-        throw std::invalid_argument("squared_jerk_integral() is only implemented for Degree 4 and 5");
-    }
 }
 
-
-#endif //POLYNOMIAL_HPP

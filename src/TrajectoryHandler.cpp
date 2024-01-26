@@ -1,4 +1,5 @@
 #include "TrajectoryHandler.hpp"
+#include "TrajectorySample.hpp"
 
 #include <Eigen/Core>
 #include <algorithm>
@@ -59,8 +60,6 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
             function->evaluateTrajectory(trajectory);
         }
 
-        if (!trajectory.m_valid) continue;
-
         //Iterate over all costFunctions and evaluate it for the given trajectory
         for(auto& [funName, function] : m_feasabilityFunctions)
         {
@@ -86,7 +85,7 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
         tf::Task A = m_taskflow.emplace
         (
             [this, &trajectory]()
-            { 
+            {
                 for(auto& [funName, function] : m_otherFunctions)
                 {
                     function->evaluateTrajectory(trajectory);
@@ -115,7 +114,7 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
 
                 if (trajectory.m_feasible || calculateAllCosts) 
                 {
-                    for(auto& [funName, function] : m_costFunctions) 
+                    for(auto& [funName, function] : m_costFunctions)
                     {
                         function->evaluateTrajectory(trajectory);
                     }
@@ -134,9 +133,9 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
 }
 
 void TrajectoryHandler::sort()
-{   
+{
     std::sort(
-        m_trajectories.begin(), 
+        m_trajectories.begin(),
         m_trajectories.end(),
         [](const TrajectorySample& a, const TrajectorySample& b) {
             // Feasible trajectories come first
@@ -152,36 +151,44 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
 {
     Eigen::Vector3d x0_lonOrder {0,1,2};
     Eigen::Vector2d x1_lonOrder {1,2};
-    
+
+    m_trajectories.reserve(samplingMatrix.rows());
+
     for(Eigen::Index iii = 0; iii < samplingMatrix.rows(); iii++)
     {
         Eigen::Vector3d x0_lon {samplingMatrix.row(iii)[2], samplingMatrix.row(iii)[3], samplingMatrix.row(iii)[4]};
         Eigen::Vector2d x1_lon {samplingMatrix.row(iii)[5], samplingMatrix.row(iii)[6]};
 
-        PolynomialTrajectory<4> longitudinalTrajectory (samplingMatrix.row(iii)[0]
-                                                       ,samplingMatrix.row(iii)[1]
-                                                       ,x0_lon
-                                                       ,x1_lon
-                                                       ,x0_lonOrder
-                                                       ,x1_lonOrder);
+        TrajectorySample::LongitudinalTrajectory longitudinalTrajectory (
+            samplingMatrix.row(iii)[0],
+            samplingMatrix.row(iii)[1],
+            x0_lon,
+            x1_lon,
+            x0_lonOrder,
+            x1_lonOrder
+            );
 
-        double t1 = lowVelocityMode 
+        double t1 = lowVelocityMode
                   ? longitudinalTrajectory(samplingMatrix.row(iii)[1]) - x0_lon[0]
                   : samplingMatrix.row(iii)[1];
 
         Eigen::Vector3d x0_lat {samplingMatrix.row(iii)[7], samplingMatrix.row(iii)[8], samplingMatrix.row(iii)[9]};
         Eigen::Vector3d x1_lat {samplingMatrix.row(iii)[10], samplingMatrix.row(iii)[11], samplingMatrix.row(iii)[12]};
 
-        PolynomialTrajectory<5> lateralTrajectory(samplingMatrix.row(iii)[0],
-                                                 t1,
-                                                 x0_lat,
-                                                 x1_lat);
+        TrajectorySample::LateralTrajectory lateralTrajectory(
+            samplingMatrix.row(iii)[0],
+            t1,
+            x0_lat,
+            x1_lat
+            );
 
-        m_trajectories.push_back(TrajectorySample(m_dt,
-                                                 longitudinalTrajectory,
-                                                 lateralTrajectory,
-                                                 iii,
-                                                 samplingMatrix.row(iii)));
+        m_trajectories.emplace_back(
+            m_dt,
+            longitudinalTrajectory,
+            lateralTrajectory,
+            iii,
+            samplingMatrix.row(iii)
+            );
     }
 }
 

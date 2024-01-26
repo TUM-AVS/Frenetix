@@ -1,8 +1,8 @@
 #include "TrajectorySample.hpp"
 
-TrajectorySample::TrajectorySample(double dT,          
-                                   PolynomialTrajectory<4>& trajectoryLongitudinal,                     
-                                   PolynomialTrajectory<5>& trajectoryLateral,                     
+TrajectorySample::TrajectorySample(double dT,
+                                   TrajectorySample::LongitudinalTrajectory trajectoryLongitudinal,
+                                   TrajectorySample::LateralTrajectory trajectoryLateral,
                                    int uniqueId)
     : m_dT (dT)
     , m_cost (0)
@@ -18,9 +18,9 @@ TrajectorySample::TrajectorySample(double dT,
 
 }
 
-TrajectorySample::TrajectorySample(double dT,          
-                                   PolynomialTrajectory<4>& trajectoryLongitudinal,                     
-                                   PolynomialTrajectory<5>& trajectoryLateral,                     
+TrajectorySample::TrajectorySample(double dT,
+                                   TrajectorySample::LongitudinalTrajectory trajectoryLongitudinal,
+                                   TrajectorySample::LateralTrajectory trajectoryLateral,
                                    int uniqueId,
                                    Eigen::VectorXd samplingParameters)
     : m_dT (dT)
