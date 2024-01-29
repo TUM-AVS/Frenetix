@@ -6,10 +6,12 @@
 #include <cmath>
 #include <deque>
 #include <limits>
+#include <list>
 #include <memory>
 #include <numeric>
 #include <vector>
 #include <list>
+#include <optional>
 
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
@@ -17,6 +19,8 @@
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/index/rtree.hpp>
+#include <boost/geometry/geometries/register/box.hpp>
 
 #include "geometry/application_settings.h"
 
@@ -26,6 +30,42 @@
 #include "geometry/util.h"
 
 
+/*
+ * Note:
+ * The point_type_alias definition below is required because Boost.Geometry
+ * already defines a point_type, but we also want to define a point_type.
+ * Our point_type is going to shadow Boost's, however that doesn't work with
+ * the BOOST_GEOMETRY_REGISTER_BOX macro, so we need to jump through a few hoops
+ * here. Same for box_type vs box.
+ *
+ * TODO Use non-conflicting names or introduce namespace for our geometry types
+ */
+using point_type_alias = boost::geometry::model::d2::point_xy<double>;
+
+/**
+ * Box type (used for bounding boxes)
+ *
+ * Note: We don't use Boost's box model because the include is quite heavy and
+ * boxes are (in)directly used almost everywhere.
+ */
+struct box_type {
+    point_type_alias ll; //**< lower left corner */
+    point_type_alias ur; //**< upper right corner */
+
+    /**
+     * Getter for lower left corner
+     */
+    point_type_alias min_corner() const noexcept { return ll; }
+
+    /**
+     * Getter for upper right corner
+     */
+    point_type_alias max_corner() const noexcept { return ur; }
+};
+
+// Register the box type for Boost
+
+BOOST_GEOMETRY_REGISTER_BOX(box_type, point_type_alias, ll, ur)
 
 namespace geometry {
 
@@ -38,15 +78,82 @@ typedef std::shared_ptr<const CurvilinearCoordinateSystem>
 
 namespace geometry {
 
-typedef boost::geometry::model::d2::point_xy<double> point_type;
+
+using point_type = point_type_alias;
+
 typedef boost::geometry::model::polygon<point_type> polygon_type;
 typedef boost::geometry::model::multi_polygon<polygon_type> mpolygon_type;
+
+/**
+ * Quadrilateral used internally for representing the projection domain.
+ */
+struct quad {
+    Eigen::Vector2d p1;
+    Eigen::Vector2d p2;
+    Eigen::Vector2d p3;
+    Eigen::Vector2d p4;
+
+    polygon_type polygon() const {
+      polygon_type temp_poly;
+      for (const auto &p : {p1, p2, p3, p4, p1}) {
+        boost::geometry::append(temp_poly, point_type(p.x(), p.y()));
+      }
+      return temp_poly;
+    }
+
+    box_type box() const {
+      polygon_type temp_poly = polygon();
+      return boost::geometry::return_envelope<box_type>(temp_poly);
+    }
+};
 
 enum class ProjectionAxis {
   X_AXIS = 0,
   Y_AXIS = 1,
   X_AXIS_ROTATED = 2,
   Y_AXIS_ROTATED = 3
+};
+
+/**
+ * Projection domain errors are thrown when trying to convert coordinates
+ * outside the projection domain.
+ */
+class ProjectionDomainError : public std::invalid_argument {
+protected:
+    explicit ProjectionDomainError(const std::string& message)
+        : std::invalid_argument(message) {}
+};
+
+/**
+ * Error for curvilinear coordinates outside the projection domain, either laterally or longitudinally.
+ */
+class CurvilinearProjectionDomainError : public ProjectionDomainError {
+protected:
+    explicit CurvilinearProjectionDomainError(const std::string& message)
+        : ProjectionDomainError(message) {}
+
+public:
+   static CurvilinearProjectionDomainError longitudinal() {
+       return CurvilinearProjectionDomainError("Longitudinal coordinate outside of projection domain");
+   }
+
+   static CurvilinearProjectionDomainError general() {
+       return CurvilinearProjectionDomainError("Longitudinal and/or lateral coordinate outside of projection domain");
+   }
+};
+
+/**
+ * Error for cartesian coordinates outside the projection domain.
+ */
+class CartesianProjectionDomainError : public ProjectionDomainError {
+protected:
+    explicit CartesianProjectionDomainError(const std::string& message)
+        : ProjectionDomainError(message) {}
+
+public:
+   static CartesianProjectionDomainError general() {
+       return CartesianProjectionDomainError("x and/or y coordinate outside of projection domain");
+   }
 };
 
 class CurvilinearCoordinateSystem
@@ -620,9 +727,22 @@ class CurvilinearCoordinateSystem
    */
   int findSegmentIndex(double s) const;
 
+  /**
+   * Finds the corresponding segment for a given longitudinal coordinate of a
+   * point.
+   *
+   * @param s longitudinal coordinate
+   * @return segment index, or std::nullopt if not found
+   */
+  std::optional<int> tryFindSegmentIndex(double s) const;
+
+
   void removeSegment(int ind);
 
  private:
+  std::optional<int> findSegmentIndex_Fast(double s) const;
+  std::optional<int> findSegmentIndex_Slow(double s) const;
+
   EigenPolyline reference_path_original_;
   EigenPolyline reference_path_;
 
@@ -630,6 +750,14 @@ class CurvilinearCoordinateSystem
   std::vector<double> segment_longitudinal_coord_;
   polygon_type projection_domain_;
   polygon_type curvilinear_projection_domain_;
+
+  // R*-tree is better here: slow insertion, but fast lookup
+  using index_params = boost::geometry::index::rstar<8>;
+  using quadtree_value_type = std::pair<box_type, quad>;
+  using quadtree_type = boost::geometry::index::rtree<quadtree_value_type, index_params>;
+  quadtree_type projection_domain_quads_;
+  quadtree_type curvilinear_projection_domain_quads_;
+  bool curvilinear_projection_domain_quads_valid_ = false;
 
   EigenPolyline upper_projection_domain_border_;
   EigenPolyline lower_projection_domain_border_;
