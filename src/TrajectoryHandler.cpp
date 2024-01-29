@@ -168,9 +168,15 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
             x1_lonOrder
             );
 
-        double t1 = lowVelocityMode
-                  ? longitudinalTrajectory(samplingMatrix.row(iii)[1]) - x0_lon[0]
-                  : samplingMatrix.row(iii)[1];
+        double t1 = 0.0;
+        if (lowVelocityMode) {
+            t1 = longitudinalTrajectory(samplingMatrix.row(iii)[1]) - x0_lon[0];
+            if (t1 <= 0.0) {
+                t1 = samplingMatrix.row(iii)[1];
+            }
+        } else {
+            t1 = samplingMatrix.row(iii)[1];
+        }
 
         Eigen::Vector3d x0_lat {samplingMatrix.row(iii)[7], samplingMatrix.row(iii)[8], samplingMatrix.row(iii)[9]};
         Eigen::Vector3d x1_lat {samplingMatrix.row(iii)[10], samplingMatrix.row(iii)[11], samplingMatrix.row(iii)[12]};
