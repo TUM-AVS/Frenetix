@@ -18,8 +18,9 @@ namespace plannerCPP
     {
 
         py::class_<PoseWithCovariance>(m, "PoseWithCovariance")
-            // .def(py::init<>())
-            .def(py::init<const Eigen::Vector3d&, const Eigen::Vector4d&, const Eigen::Matrix<double,6,6>&>())
+            .def(py::init([] (const Eigen::Vector3d& position, const Eigen::Vector4d& orientation, const Eigen::Matrix<double,6,6>& covariance) {
+                return std::make_unique<PoseWithCovariance>(position, Eigen::Quaterniond(orientation), covariance);
+            }))
             .def("__repr__", [](const PoseWithCovariance &p) {
                 std::ostringstream oss;
                 oss << p;
@@ -31,15 +32,15 @@ namespace plannerCPP
 
         py::class_<PredictedObject>(m, "PredictedObject")
             //.def(py::init<size_t>())
-            .def(py::init<int, const std::vector<PoseWithCovariance>&>())
+            .def(py::init<int, const std::vector<PoseWithCovariance>&, double, double>())
             .def("__repr__", [](const PredictedObject &p) {
                 std::ostringstream oss;
                 oss << p;
                 return oss.str();
             })
             .def_readonly("object_id", &PredictedObject::object_id)
-            //.def_readonly("length", &PredictedObject::length)
-            //.def_readonly("width", &PredictedObject::width)
+            .def_readonly("length", &PredictedObject::length)
+            .def_readonly("width", &PredictedObject::width)
             .def_readonly("predictedPath", &PredictedObject::predictedPath);
     }
 }

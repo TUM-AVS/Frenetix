@@ -10,7 +10,7 @@ PoseWithCovariance::PoseWithCovariance()
 
 PoseWithCovariance::PoseWithCovariance(
         const Eigen::Vector3d& position,
-        const Eigen::Vector4d& orientation,
+        const Eigen::Quaterniond& orientation,
         const Eigen::Matrix<double,6,6>& covariance
         )
     : position(position)
@@ -24,7 +24,7 @@ std::ostream& operator<<(std::ostream& os, const PoseWithCovariance& pose)
 {
     os << "PoseWithCovariance {" << std::endl;
     os << "  position: " << pose.position.transpose() << std::endl;
-    os << "  orientation: " << pose.orientation.transpose() << std::endl;
+    os << "  orientation: " << pose.orientation << std::endl;
     os << "  covariance: " << std::endl << pose.covariance << std::endl;
     os << "}";
     return os;
@@ -38,10 +38,14 @@ PredictedObject::PredictedObject(size_t length)
 
 PredictedObject::PredictedObject(
         int object_id,
-        std::vector<PoseWithCovariance> predictedPath
+        std::vector<PoseWithCovariance> predictedPath,
+        double length,
+        double width
 )
-    : predictedPath(predictedPath)
-    , object_id(object_id)
+    : object_id(object_id)
+    , length(length)
+    , width(width)
+    , predictedPath(predictedPath)
 {
 }
 
