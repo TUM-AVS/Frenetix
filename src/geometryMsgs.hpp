@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <iostream>
 #include <vector>
 
@@ -10,12 +11,12 @@ struct PoseWithCovariance
     PoseWithCovariance();
     PoseWithCovariance(
         const Eigen::Vector3d& position,
-        const Eigen::Vector4d& orientation,
+        const Eigen::Quaterniond& orientation,
         const Eigen::Matrix<double,6,6>& covariance
     );
 
     Eigen::Vector3d position;
-    Eigen::Vector4d orientation;
+    Eigen::Quaterniond orientation;
 
     Eigen::Matrix<double,6,6> covariance;
 
@@ -28,13 +29,14 @@ struct PredictedObject
     PredictedObject(size_t length);
     PredictedObject(
         int object_id,
-        std::vector<PoseWithCovariance> predictedPath
+        std::vector<PoseWithCovariance> predictedPath,
+        double length,
+        double width
     );
 
-
-
-
     int object_id;
+    double length;
+    double width;
     std::vector<PoseWithCovariance> predictedPath;
 
     friend std::ostream& operator<<(std::ostream& os, const PredictedObject& obj);

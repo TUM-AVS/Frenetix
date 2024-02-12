@@ -25,6 +25,7 @@ private:
     std::map<int, PredictedObject> m_predictions; /**< A map holding the predicted states of other agents. */
     double m_vehicleLength; /**< The length of the vehicle. */
     double m_vehicleWidth; /**< The width of the vehicle. */
+    double m_wheelbaseRear; /**< The rear wheelbase of the vehicle. */
 
     /**
      * @brief Calculate the collision probability
@@ -34,9 +35,22 @@ private:
      * @param offset Ego vehicle extents (length/2, width/2)
      * @param orientation Ego vehicle orientation
      */
-    static double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& ego_pos, const Eigen::Vector2d& offset, double orientation);
+    static double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& ego_pos, const Eigen::Vector2d& offset, double orientation, double obsLength);
 
 public:
+
+    /**
+     * @brief Constructor for the CalculateCollisionProbabilityFast class.
+     *
+     * This initializes the cost function name to "Prediction Cost", and takes in a map of
+     * predictions and the dimensions of the vehicle as parameters.
+     *
+     * @param predictions A map holding the predicted states of other agents.
+     * @param vehicleLength The length of the vehicle.
+     * @param vehicleWidth The width of the vehicle.
+     * @param wheelbaseRear The rear wheelbase of the vehicle.
+     */
+    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear);
 
     /**
      * @brief Constructor for the CalculateCollisionProbabilityFast class.
