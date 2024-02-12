@@ -13,7 +13,7 @@ double bvn_prob(
     const Eigen::Matrix<double, 2, 1>& means,
     const Eigen::Matrix<double, 2, 2>& covar
 ) {
-    check_covariance_matrix(covar);
+    // check_covariance_matrix(covar);
 
     Eigen::Vector2d stddev = covar.diagonal().array().sqrt();
 
