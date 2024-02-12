@@ -236,7 +236,7 @@ class PoseWithCovariance():
         """
     pass
 class PredictedObject():
-    def __init__(self, arg0: int, arg1: typing.List[PoseWithCovariance]) -> None: ...
+    def __init__(self, arg0: int, arg1: typing.List[PoseWithCovariance], arg3: float, arg4: float) -> None: ...
     def __repr__(self) -> str: ...
     @property
     def object_id(self) -> int:
@@ -247,6 +247,16 @@ class PredictedObject():
     def predictedPath(self) -> typing.List[PoseWithCovariance]:
         """
         :type: typing.List[PoseWithCovariance]
+        """
+    @property
+    def length(self) -> float:
+        """
+        :type: float
+        """
+    @property
+    def width(self) -> float:
+        """
+        :type: float
         """
     pass
 class QuarticTrajectory():

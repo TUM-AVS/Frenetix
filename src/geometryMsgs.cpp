@@ -53,6 +53,8 @@ std::ostream& operator<<(std::ostream& os, const PredictedObject& obj)
 {
     os << "PredictedObject {" << std::endl;
     os << "  object_id: " << obj.object_id << std::endl;
+    os << "  length: " << obj.length << std::endl;
+    os << "  width: " << obj.width << std::endl;
     os << "  predictedPath: [" << std::endl;
     for (const auto& pose : obj.predictedPath)
     {
