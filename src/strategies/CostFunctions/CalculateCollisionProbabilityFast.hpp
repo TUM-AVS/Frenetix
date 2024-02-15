@@ -10,6 +10,29 @@
 
 class TrajectorySample;
 
+
+struct Dimensions {
+    double length;
+    double width;
+
+    Dimensions(double length_, double width_) : length(length_), width(width_) {
+        if (length_ <= 0.0 || width_ <= 0.0) {
+            throw std::domain_error { "Dimensions: length and width can't be negative" };
+        }
+    }
+
+    Eigen::Vector2d corner() const noexcept {
+        return Eigen::Vector2d { length / 2.0, width / 2.0 };
+    }
+
+    Eigen::AlignedBox2d centeredBox() const noexcept { 
+        auto offset = corner();
+
+        return Eigen::AlignedBox2d { -offset, offset };
+    }
+
+};
+
 /**
  * @class CalculateCollisionProbabilityFast
  * @brief A class to quickly calculate the collision probability for a trajectory.
@@ -35,7 +58,7 @@ private:
      * @param offset Ego vehicle extents (length/2, width/2)
      * @param orientation Ego vehicle orientation
      */
-    static double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& ego_pos, const Eigen::Vector2d& offset, double orientation, double obsLength);
+    static double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& ego_pos, const Dimensions& egoDimensions, const Dimensions& obsDimensions, const Eigen::Rotation2Dd& orientation);
 
 public:
 

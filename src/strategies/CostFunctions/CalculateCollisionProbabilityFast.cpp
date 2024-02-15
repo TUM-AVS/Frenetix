@@ -24,21 +24,9 @@ CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string
 {
 }
 
-struct Dimensions {
-    double length;
-    double width;
-
-    Eigen::AlignedBox2d centeredBox() const { 
-        Eigen::Vector2d offset(length / 2.0, width / 2.0);
-
-        return Eigen::AlignedBox2d { -offset, offset };
-    }
-
-};
-
-double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& pos, const Eigen::Vector2d& offset, double orientation, double obsLength)
+double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& egoPos, const Dimensions& egoDimensions, const Dimensions& obsDimensions, const Eigen::Rotation2Dd& egoOrientation)
 {
-    const Eigen::AlignedBox2d dimbox { -offset, offset };
+    const Eigen::AlignedBox2d dimbox = egoDimensions.centeredBox();
 
     if (std::abs(pose.position.z()) >= 1e-9) {
         throw std::runtime_error { "Predicted obstacle position has non-zero Z component, but 3D predictions are not supported" };
@@ -46,21 +34,17 @@ double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& po
 
     // Predicted obstacle driving direction
     Eigen::Vector2d obsDir = (pose.orientation * Eigen::Vector3d::UnitX()).head<2>();
-    Eigen::Vector2d obsMov = (obsLength / 2.0) * obsDir;
+    Eigen::Vector2d obsMov = (obsDimensions.length / 2.0) * obsDir;
 
     Eigen::Vector2d vCenter = pose.position.head<2>();
     Eigen::Vector2d vRear = vCenter - obsMov;
     Eigen::Vector2d vFront = vCenter + obsMov;
 
-    const Eigen::AlignedBox2d obsdimbox { -offset, offset };
-
-    Eigen::Rotation2D ego_rot(orientation);
-
     // Rotate covariance matrix to account for ego vehicle orientation
-    Eigen::Matrix2d cov = ego_rot.inverse() * pose.covariance.topLeftCorner<2,2>() * ego_rot.toRotationMatrix();
+    Eigen::Matrix2d cov = egoOrientation.inverse() * pose.covariance.topLeftCorner<2,2>() * egoOrientation.toRotationMatrix();
 
     auto evalAt = [&] (Eigen::Vector2d obsPos) {
-        Eigen::Vector2d mpos = ego_rot.inverse() * (pos - obsPos);
+        Eigen::Vector2d mpos = egoOrientation.inverse() * (egoPos - obsPos);
 
         Eigen::AlignedBox2d box = dimbox.translated(mpos);
 
@@ -72,16 +56,20 @@ double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& po
     return probCenter + probRear + probFront;
 }
 
+
 void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& trajectory)
 {
     double cost = 0.0;
 
-    const Eigen::Vector2d offset(m_vehicleLength / 2.0, m_vehicleWidth / 2.0);
-    const Eigen::AlignedBox2d dimbox { -offset, offset };
+    const Dimensions egoDimensions { m_vehicleLength, m_vehicleWidth };
+
+    const Eigen::AlignedBox2d dimbox = egoDimensions.centeredBox();
+    const Eigen::Vector2d wheelbase(m_wheelbaseRear, 0.0);
 
     for (const auto& [obstacle_id, prediction] : m_predictions) {
-
         std::vector<double> inv_dist;
+
+        const Dimensions obsDimensions { prediction.length, prediction.width };
 
         for (int i = 1; i < trajectory.m_cartesianSample.x.size(); ++i)
         {
@@ -89,11 +77,10 @@ void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& tra
 
             Eigen::Vector2d u(trajectory.m_cartesianSample.x[i], trajectory.m_cartesianSample.y[i]);
 
-            Eigen::Rotation2D ego_rot(trajectory.m_cartesianSample.theta[i]);
+            Eigen::Rotation2D egoOrientation(trajectory.m_cartesianSample.theta[i]);
 
-            Eigen::Vector2d wheelbase(m_wheelbaseRear, 0.0);
-
-            u += ego_rot * wheelbase;
+            // Move rear axle position to center positoin
+            u += egoOrientation * wheelbase;
 
             Eigen::AlignedBox2d box = dimbox.translated(u);
 
@@ -110,7 +97,8 @@ void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& tra
                 continue;
             }
 
-            double bvcost = integrate(pose, u, offset, trajectory.m_cartesianSample.theta[i], prediction.length);
+
+            double bvcost = integrate(pose, u, egoDimensions, obsDimensions, egoOrientation);
 
             cost += bvcost;
             assert(!std::isnan(cost));
