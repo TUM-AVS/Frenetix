@@ -12,7 +12,8 @@ bool is_symmetric(
 ) {
     static_assert(Rows == Cols, "matrix needs to be square");
 
-    return mat.isApprox(mat.transpose());
+    const Scalar symmetric_epsilon = 1e-12;
+    return mat.isApprox(mat.transpose(), symmetric_epsilon);
 }
 
 template<typename Scalar, int Rows, int Cols>
