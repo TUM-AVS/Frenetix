@@ -10,6 +10,44 @@
 
 class TrajectorySample;
 
+
+/**
+ * Vehicle dimensions (length/width)
+ */
+struct Dimensions {
+    double length; /**< Length of the vehicle */
+    double width; /**< Width of the vehicle */
+
+    /**
+     * @brief Constructor for dimensions
+     *
+     * @param length_ Length of the vehicle
+     * @param width_ Width of the vehicle
+     */
+    Dimensions(double length_, double width_) : length(length_), width(width_) {
+        if (length_ <= 0.0 || width_ <= 0.0) {
+            throw std::domain_error { "Dimensions: length and width can't be negative" };
+        }
+    }
+
+    /**
+     * @brief Returns the distance from the center to any corner of the vehicle
+     */
+    Eigen::Vector2d corner() const noexcept {
+        return Eigen::Vector2d { length / 2.0, width / 2.0 };
+    }
+
+    /**
+     * @brief Returns an axis-aligned box around the vehicle center
+     */
+    Eigen::AlignedBox2d centeredBox() const noexcept { 
+        auto offset = corner();
+
+        return Eigen::AlignedBox2d { -offset, offset };
+    }
+
+};
+
 /**
  * @class CalculateCollisionProbabilityFast
  * @brief A class to quickly calculate the collision probability for a trajectory.
@@ -23,19 +61,20 @@ class CalculateCollisionProbabilityFast : public CostStrategy
 {
 private:
     std::map<int, PredictedObject> m_predictions; /**< A map holding the predicted states of other agents. */
-    double m_vehicleLength; /**< The length of the vehicle. */
-    double m_vehicleWidth; /**< The width of the vehicle. */
+    Dimensions m_dimensions; /**< The dimensions of the vehicle. */
     double m_wheelbaseRear; /**< The rear wheelbase of the vehicle. */
+    double m_offCenterWeight = 0.5; /**< The weight for off-center points */
 
     /**
      * @brief Calculate the collision probability
      *
      * @param pose Obstacle pose
-     * @param ego_pos Ego vehicle position
-     * @param offset Ego vehicle extents (length/2, width/2)
-     * @param orientation Ego vehicle orientation
+     * @param egoPos Ego vehicle position
+     * @param egoDimensions Ego vehicle dimensions
+     * @param obsDimensions Obstacle dimensions 
+     * @param egoOorientation Ego vehicle orientation
      */
-    static double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& ego_pos, const Eigen::Vector2d& offset, double orientation, double obsLength);
+    double integrate(const PoseWithCovariance& pose, const Eigen::Vector2d& egoPos, const Dimensions& egoDimensions, const Dimensions& obsDimensions, const Eigen::Rotation2Dd& egoOrientation);
 
 public:
 
@@ -49,8 +88,9 @@ public:
      * @param vehicleLength The length of the vehicle.
      * @param vehicleWidth The width of the vehicle.
      * @param wheelbaseRear The rear wheelbase of the vehicle.
+     * @param offCenterWeight Weight for off-center sampled points.
      */
-    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear);
+    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear, double offCenterWeight = 0.5);
 
     /**
      * @brief Constructor for the CalculateCollisionProbabilityFast class.

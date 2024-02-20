@@ -154,13 +154,14 @@ namespace plannerCPP
                 py::arg("vehicleWidth")
             )
             .def(
-                py::init<std::string, double, std::map<int, PredictedObject>, double, double, double>(),
+                py::init<std::string, double, std::map<int, PredictedObject>, double, double, double, double>(),
                 py::arg("function_name"),
                 py::arg("cost_weight"),
                 py::arg("predictions"),
-                py::arg("vehicleLength"),
-                py::arg("vehicleWidth"),
-                py::arg("wheelbaseRear")
+                py::arg("vehicle_length"),
+                py::arg("vehicle_width"),
+                py::arg("wheelbase_rear"),
+                py::arg("off_center_weight") = 0.5
             )
             .def
             (
