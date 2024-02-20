@@ -52,6 +52,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: dist-wheels-${{ matrix.runs-on }}
           path: ./wheelhouse/*.whl
 
   make_sdist:
@@ -68,6 +69,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: dist-sdist
           path: dist/*.tar.gz
 
   upload_all:
@@ -80,7 +82,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: artifact
           path: dist
+          pattern: dist-*
+          merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@release/v1
