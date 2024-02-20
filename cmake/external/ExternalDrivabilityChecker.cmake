@@ -5,7 +5,7 @@ find_package(Threads REQUIRED)
 # Required for LINK_LIBRARIES_ONLY_TARGETS (gtest links directly to pthread)
 add_library(pthread ALIAS Threads::Threads)
 
-set(_crdc_local OFF)
+set(_crdc_local ON)
 
 if(DEFINED ENV{CIBUILDWHEEL})
     set(_crdc_local ON)
