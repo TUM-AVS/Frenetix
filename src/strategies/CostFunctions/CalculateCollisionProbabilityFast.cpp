@@ -10,12 +10,12 @@
 #include "CartesianSample.hpp"
 #include "TrajectorySample.hpp"
 
-CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear)
+CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear, double offCenterWeight)
     : CostStrategy(funName, costWeight)
     , m_predictions(predictions)
-    , m_vehicleLength(vehicleLength)
-    , m_vehicleWidth(vehicleWidth)
+    , m_dimensions(vehicleLength, vehicleWidth)
     , m_wheelbaseRear(wheelbaseRear)
+    , m_offCenterWeight(offCenterWeight)
 {
 }
 
@@ -33,37 +33,65 @@ double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& po
     }
 
     // Predicted obstacle driving direction
-    Eigen::Vector2d obsDir = (pose.orientation * Eigen::Vector3d::UnitX()).head<2>();
+    Eigen::Vector2d obsDir = (pose.orientation * Eigen::Vector3d::UnitX()).head<2>().normalized();
+    Eigen::Vector2d obsSideDir = obsDir.unitOrthogonal();
+
     Eigen::Vector2d obsMov = (obsDimensions.length / 2.0) * obsDir;
+    Eigen::Vector2d obsSideMov = (obsDimensions.width / 2.0) * obsSideDir;
 
     Eigen::Vector2d vCenter = pose.position.head<2>();
     Eigen::Vector2d vRear = vCenter - obsMov;
     Eigen::Vector2d vFront = vCenter + obsMov;
 
+    Eigen::Vector2d vRearLeft = vRear - obsSideMov;
+    Eigen::Vector2d vRearRight = vRear + obsSideMov;
+
+    Eigen::Vector2d vFrontLeft = vFront - obsSideMov;
+    Eigen::Vector2d vFrontRight = vFront + obsSideMov;
+
+    Eigen::Matrix2d egoRot = egoOrientation.toRotationMatrix();
+    Eigen::Matrix2d egoInvRot = egoOrientation.inverse().toRotationMatrix();
+
     // Rotate covariance matrix to account for ego vehicle orientation
-    Eigen::Matrix2d cov = egoOrientation.inverse() * pose.covariance.topLeftCorner<2,2>() * egoOrientation.toRotationMatrix();
+    check_covariance_matrix(pose.covariance);
+    Eigen::Matrix2d cov = egoInvRot * pose.covariance.topLeftCorner<2,2>() * egoRot;
 
     auto evalAt = [&] (Eigen::Vector2d obsPos) {
-        Eigen::Vector2d mpos = egoOrientation.inverse() * (egoPos - obsPos);
+        // Position of ego vehicle relative to obstacle
+        Eigen::Vector2d relativePos = egoInvRot * (egoPos - obsPos);
 
-        Eigen::AlignedBox2d box = dimbox.translated(mpos);
+        // Rotate relative position to cancel ego vehicle orientation
+        Eigen::Vector2d axisAlignedPos = egoInvRot * relativePos;
 
+        // Create box around axis aligned ego vehicle position
+        Eigen::AlignedBox2d box = dimbox.translated(axisAlignedPos);
+
+        // Note: Means is zero since we already subtracted obsPos above
         return 1e3 * std::abs(bvn_prob(box, Eigen::Vector2d::Zero(), cov));
     };
 
-    const auto probCenter = evalAt(vCenter), probRear = evalAt(vRear), probFront = evalAt(vFront);
+    const auto probCenter = evalAt(vCenter),
+        probRearLeft = evalAt(vRearLeft),
+        probRearRight = evalAt(vRearRight),
+        probFrontLeft = evalAt(vFrontLeft),
+        probFrontRight = evalAt(vFrontRight);
 
-    return probCenter + probRear + probFront;
+    return probCenter +
+        m_offCenterWeight * (probRearLeft + probRearRight + probRearLeft + probFrontLeft + probFrontRight);
 }
 
 
 void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& trajectory)
 {
+    if (!trajectory.m_valid) {
+        // Check for unlikely internal logic error
+        // (happened too often in the past, causing mysterious bugs...)
+        throw std::logic_error { "tried to calculate cost of invalid trajectory" };
+    }
+
     double cost = 0.0;
 
-    const Dimensions egoDimensions { m_vehicleLength, m_vehicleWidth };
-
-    const Eigen::AlignedBox2d dimbox = egoDimensions.centeredBox();
+    const Eigen::AlignedBox2d dimbox = m_dimensions.centeredBox();
     const Eigen::Vector2d wheelbase(m_wheelbaseRear, 0.0);
 
     for (const auto& [obstacle_id, prediction] : m_predictions) {
@@ -98,7 +126,7 @@ void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& tra
             }
 
 
-            double bvcost = integrate(pose, u, egoDimensions, obsDimensions, egoOrientation);
+            double bvcost = integrate(pose, u, m_dimensions, obsDimensions, egoOrientation);
 
             cost += bvcost;
             assert(!std::isnan(cost));
