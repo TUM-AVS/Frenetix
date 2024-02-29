@@ -52,7 +52,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: dist-wheels-${{ matrix.runs-on }}
+          name: dist-wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   make_sdist:
