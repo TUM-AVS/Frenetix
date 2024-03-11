@@ -2,10 +2,9 @@ from __future__ import annotations
 import frenetix._frenetix
 import frenetix._frenetix.trajectory_functions
 import numpy
+import pybind11_stubgen.typing_ext
 import typing
 __all__ = ['CalculateAccelerationCost', 'CalculateCollisionProbabilityFast', 'CalculateCollisionProbabilityMahalanobis', 'CalculateDistanceToObstacleCost', 'CalculateDistanceToReferencePathCost', 'CalculateJerkCost', 'CalculateLaneCenterOffsetCost', 'CalculateLateralJerkCost', 'CalculateLongitudinalJerkCost', 'CalculateLongitudinalVelocityCost', 'CalculateOrientationOffsetCost', 'CalculateSteeringAngleCost', 'CalculateSteeringRateCost', 'CalculateVelocityOffsetCost', 'CalculateYawCost']
-M = typing.TypeVar("M", bound=int)
-N = typing.TypeVar("N", bound=int)
 class CalculateAccelerationCost(frenetix._frenetix.trajectory_functions.CostStrategy):
     def __init__(self, function_name: str, cost_weight: float) -> None:
         ...
@@ -28,7 +27,7 @@ class CalculateCollisionProbabilityMahalanobis(frenetix._frenetix.trajectory_fun
     def evaluate_trajectory(self, trajectory: frenetix._frenetix.TrajectorySample) -> None:
         ...
 class CalculateDistanceToObstacleCost(frenetix._frenetix.trajectory_functions.CostStrategy):
-    def __init__(self, function_name: str, cost_weight: float, obstacles: numpy.ndarray[tuple[M, N], numpy.dtype[numpy.float64]]) -> None:
+    def __init__(self, function_name: str, cost_weight: float, obstacles: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 'n'), numpy.ndarray.flags.writeable, numpy.ndarray.flags.c_contiguous]) -> None:
         ...
     def evaluate_trajectory(self, trajectory: frenetix._frenetix.TrajectorySample) -> None:
         ...

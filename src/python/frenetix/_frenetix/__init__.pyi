@@ -1,79 +1,174 @@
 from __future__ import annotations
 import numpy
+import pybind11_stubgen.typing_ext
 import typing
 from . import trajectory_functions
 __all__ = ['CartesianSample', 'CoordinateSystemWrapper', 'CurviLinearSample', 'InvalidCovarianceMatrixError', 'PoseWithCovariance', 'PredictedObject', 'QuarticTrajectory', 'QuinticTrajectory', 'TrajectoryHandler', 'TrajectorySample', 'trajectory_functions']
 class CartesianSample:
-    a: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
     is_initialized: bool
-    kappa: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    kappa_dot: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    theta: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    v: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    x: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    y: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
     def __getstate__(self) -> dict:
         ...
     @typing.overload
     def __init__(self) -> None:
         ...
     @typing.overload
-    def __init__(self, x: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], y: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], theta_gl: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], v: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], a: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], kappa_gl: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], kappa_dot: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]) -> None:
+    def __init__(self, x: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], y: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], theta_gl: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], v: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], a: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], kappa_gl: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], kappa_dot: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]) -> None:
         ...
     def __setstate__(self, arg0: dict) -> None:
         ...
     def __str__(self) -> str:
+        ...
+    @property
+    def a(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @a.setter
+    def a(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def kappa(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @kappa.setter
+    def kappa(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def kappa_dot(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @kappa_dot.setter
+    def kappa_dot(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def theta(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @theta.setter
+    def theta(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def v(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @v.setter
+    def v(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def x(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @x.setter
+    def x(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def y(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @y.setter
+    def y(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
         ...
 class CoordinateSystemWrapper:
-    ref_curv: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    ref_curv_d: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    ref_curv_dd: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    ref_line: list[numpy.ndarray[tuple[typing.Literal[2], typing.Literal[1]], numpy.dtype[numpy.float64]]]
-    ref_pos: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    ref_theta: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    system: ...
+    ref_line: list[typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(2, 1)]]
     def __getstate__(self) -> dict:
         ...
-    def __init__(self, ref_path: numpy.ndarray[tuple[M, N], numpy.dtype[numpy.float64]]) -> None:
+    def __init__(self, ref_path: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 'n'), numpy.ndarray.flags.writeable, numpy.ndarray.flags.c_contiguous]) -> None:
         ...
     def __setstate__(self, arg0: dict) -> None:
         ...
+    @property
+    def ref_curv(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @ref_curv.setter
+    def ref_curv(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def ref_curv_d(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @ref_curv_d.setter
+    def ref_curv_d(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def ref_curv_dd(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @ref_curv_dd.setter
+    def ref_curv_dd(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def ref_pos(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @ref_pos.setter
+    def ref_pos(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def ref_theta(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @ref_theta.setter
+    def ref_theta(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
 class CurviLinearSample:
-    d: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    d_ddot: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    d_dot: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
     is_initialized: bool
-    s: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    s_ddot: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    s_dot: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
-    theta: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
     def __getstate__(self) -> dict:
         ...
     @typing.overload
     def __init__(self) -> None:
         ...
     @typing.overload
-    def __init__(self, s: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], d: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], theta_gl: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], dd: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], ddd: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], ss: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], sss: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]) -> None:
+    def __init__(self, s: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], d: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], theta_gl: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], dd: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], ddd: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], ss: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable], sss: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]) -> None:
         ...
     def __setstate__(self, arg0: dict) -> None:
         ...
     def __str__(self) -> str:
+        ...
+    @property
+    def d(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @d.setter
+    def d(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def d_ddot(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @d_ddot.setter
+    def d_ddot(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def d_dot(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @d_dot.setter
+    def d_dot(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def s(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @s.setter
+    def s(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def s_ddot(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @s_ddot.setter
+    def s_ddot(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def s_dot(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @s_dot.setter
+    def s_dot(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
+    @property
+    def theta(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @theta.setter
+    def theta(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
         ...
 class InvalidCovarianceMatrixError(ValueError):
     pass
 class PoseWithCovariance:
-    def __init__(self, arg0: numpy.ndarray[tuple[typing.Literal[3], typing.Literal[1]], numpy.dtype[numpy.float64]], arg1: numpy.ndarray[tuple[typing.Literal[4], typing.Literal[1]], numpy.dtype[numpy.float64]], arg2: numpy.ndarray[tuple[typing.Literal[6], typing.Literal[6]], numpy.dtype[numpy.float64]]) -> None:
+    def __init__(self, arg0: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)], arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(4, 1)], arg2: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(6, 6)]) -> None:
         ...
     def __repr__(self) -> str:
         ...
     @property
-    def covariance(self) -> numpy.ndarray[tuple[typing.Literal[6], typing.Literal[6]], numpy.dtype[numpy.float64]]:
+    def covariance(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(6, 6)]:
         ...
     @property
-    def orientation(self) -> numpy.ndarray[tuple[typing.Literal[4], typing.Literal[1]], numpy.dtype[numpy.float64]]:
+    def orientation(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(4, 1), numpy.ndarray.flags.writeable]:
         ...
     @property
-    def position(self) -> numpy.ndarray[tuple[typing.Literal[3], typing.Literal[1]], numpy.dtype[numpy.float64]]:
+    def position(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)]:
         ...
 class PredictedObject:
     def __init__(self, arg0: int, arg1: list[PoseWithCovariance], arg2: float, arg3: float) -> None:
@@ -93,35 +188,35 @@ class PredictedObject:
     def width(self) -> float:
         ...
 class QuarticTrajectory:
-    def __call__(self, arg0: numpy.ndarray[typing.Any, numpy.dtype[numpy.float64]], arg1: numpy.ndarray[typing.Any, numpy.dtype[numpy.float64]]) -> typing.Any:
+    def __call__(self, arg0: typing.Annotated[numpy.ndarray, numpy.float64], arg1: typing.Annotated[numpy.ndarray, numpy.float64]) -> typing.Any:
         ...
     def __getstate__(self) -> dict:
         ...
-    def __init__(self, tau_0: float, delta_tau: float, x_0: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], x_d: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], x_0_order: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]] = ..., x_d_order: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]] = ...) -> None:
+    def __init__(self, tau_0: float, delta_tau: float, x_0: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)], x_d: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(2, 1)], x_0_order: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)] = ..., x_d_order: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(2, 1)] = ...) -> None:
         ...
     def __setstate__(self, arg0: dict) -> None:
         ...
     def squared_jerk_integral(self, arg0: float) -> float:
         ...
     @property
-    def coeffs(self) -> numpy.ndarray[tuple[typing.Literal[5], typing.Literal[1]], numpy.dtype[numpy.float64]]:
+    def coeffs(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(5, 1)]:
         ...
     @property
     def delta_tau(self) -> float:
         ...
 class QuinticTrajectory:
-    def __call__(self, arg0: numpy.ndarray[typing.Any, numpy.dtype[numpy.float64]], arg1: numpy.ndarray[typing.Any, numpy.dtype[numpy.float64]]) -> typing.Any:
+    def __call__(self, arg0: typing.Annotated[numpy.ndarray, numpy.float64], arg1: typing.Annotated[numpy.ndarray, numpy.float64]) -> typing.Any:
         ...
     def __getstate__(self) -> dict:
         ...
-    def __init__(self, tau_0: float, delta_tau: float, x_0: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], x_d: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]], x_0_order: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]] = ..., x_d_order: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]] = ...) -> None:
+    def __init__(self, tau_0: float, delta_tau: float, x_0: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)], x_d: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)], x_0_order: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)] = ..., x_d_order: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(3, 1)] = ...) -> None:
         ...
     def __setstate__(self, arg0: dict) -> None:
         ...
     def squared_jerk_integral(self, arg0: float) -> float:
         ...
     @property
-    def coeffs(self) -> numpy.ndarray[tuple[typing.Literal[6], typing.Literal[1]], numpy.dtype[numpy.float64]]:
+    def coeffs(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.FixedSize(6, 1)]:
         ...
     @property
     def delta_tau(self) -> float:
@@ -143,7 +238,7 @@ class TrajectoryHandler:
         ...
     def evaluate_all_current_functions_concurrent(self, calculateAllCosts: bool = False) -> None:
         ...
-    def generate_trajectories(self, samplingMatrix: numpy.ndarray[tuple[M, N], numpy.dtype[numpy.float64]], lowVelocityMode: bool) -> None:
+    def generate_trajectories(self, samplingMatrix: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 'n'), numpy.ndarray.flags.writeable, numpy.ndarray.flags.c_contiguous], lowVelocityMode: bool) -> None:
         ...
     def get_cost_functions(self) -> typing.Iterator:
         ...
@@ -178,7 +273,6 @@ class TrajectorySample:
     feasabilityMap: dict[str, float]
     feasible: bool
     harm_occ_module: float | None
-    sampling_parameters: numpy.ndarray[tuple[M, typing.Literal[1]], numpy.dtype[numpy.float64]]
     trajectory_lat: QuinticTrajectory
     trajectory_long: QuarticTrajectory
     uniqueId: int | None
@@ -197,3 +291,9 @@ class TrajectorySample:
         """
         Add a cost value to the list of cost values. This includes the weighted and unweighted cost.
         """
+    @property
+    def sampling_parameters(self) -> typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1), numpy.ndarray.flags.writeable]:
+        ...
+    @sampling_parameters.setter
+    def sampling_parameters(self, arg1: typing.Annotated[numpy.ndarray, numpy.float64, pybind11_stubgen.typing_ext.DynamicSize('m', 1)]) -> None:
+        ...
