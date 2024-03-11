@@ -1,37 +1,20 @@
-from __future__ import annotations
-import frenetix._frenetix.trajectory_functions
-import typing
-import frenetix._frenetix
-from frenetix._frenetix import TrajectorySample
+import frenetix._frenetix.trajectory_functions as trajectory_functions
+import frenetix._frenetix.trajectory_functions.cost_functions as cost_functions
+import frenetix._frenetix.trajectory_functions.feasability_functions as feasability_functions
+from frenetix._frenetix.trajectory_functions import ComputeInitialState as ComputeInitialState, CostStrategy as CostStrategy, FeasabilityStrategy as FeasabilityStrategy, FillCoordinates as FillCoordinates, TrajectoryStrategy as TrajectoryStrategy
 
-__all__ = [
-    "ComputeInitialState",
-    "CostStrategy",
-    "FeasabilityStrategy",
-    "FillCoordinates",
-    "TrajectoryStrategy",
-    "cost_functions",
-    "feasability_functions"
-]
+__all__ = ['ComputeInitialState', 'CostStrategy', 'FeasabilityStrategy', 'FillCoordinates', 'TrajectoryStrategy', '__doc__', '__loader__', '__name__', '__package__', '__spec__', 'cost_functions', 'feasability_functions']
 
-
-class TrajectoryStrategy():
-    def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
-    @property
-    def name(self) -> str:
-        """
-        :type: str
-        """
-    pass
-class CostStrategy(TrajectoryStrategy):
-    pass
-class FeasabilityStrategy(TrajectoryStrategy):
-    pass
-class FillCoordinates(TrajectoryStrategy):
-    def __init__(self, lowVelocityMode: bool, initialOrientation: float, coordinateSystem: frenetix._frenetix.CoordinateSystemWrapper, horizon: float) -> None: ...
-    def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
-    pass
-class ComputeInitialState(TrajectoryStrategy):
-    def __init__(self, coordinateSystem: frenetix._frenetix.CoordinateSystemWrapper, wheelBase: float, steeringAngle: float, lowVelocityMode: bool) -> None: ...
-    def evaluate_trajectory(self, trajectory: TrajectorySample) -> None: ...
-    pass
+# Names in __all__ with no definition:
+#   ComputeInitialState
+#   CostStrategy
+#   FeasabilityStrategy
+#   FillCoordinates
+#   TrajectoryStrategy
+#   __doc__
+#   __loader__
+#   __name__
+#   __package__
+#   __spec__
+#   cost_functions
+#   feasability_functions
