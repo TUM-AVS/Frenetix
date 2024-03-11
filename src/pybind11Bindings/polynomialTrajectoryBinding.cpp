@@ -26,28 +26,30 @@ namespace plannerCPP
     template <int Degree, int X0, int XD, typename RefType>
     void bindPolynomialtrajectory(py::module &m, const std::string &pre) 
     {
-        static_assert(std::is_same<RefType, PolynomialTrajectory<Degree, X0, XD>>::value, "RefType mismatch");
+        using Traj = PolynomialTrajectory<Degree, X0, XD>;
 
-        py::class_<PolynomialTrajectory<Degree, X0, XD>>(m, (pre + "Trajectory").c_str())
+        static_assert(std::is_same<RefType, Traj>::value, "RefType mismatch");
+
+        py::class_<Traj>(m, (pre + "Trajectory").c_str())
             .def(py::init([](double t0, 
                             double t1, 
-                            Eigen::VectorXd x_0, 
-                            Eigen::VectorXd x_d, 
-                            Eigen::VectorXd x_0_order, 
-                            Eigen::VectorXd x_d_order) 
-                            {return new PolynomialTrajectory<Degree, X0, XD>(t0, t1, x_0, x_d, x_0_order, x_d_order);}), 
+                            typename Traj::VectorX0 x_0, 
+                            typename Traj::VectorXD x_d, 
+                            typename Traj::VectorX0 x_0_order, 
+                            typename Traj::VectorXD x_d_order) 
+                            {return new Traj(t0, t1, x_0, x_d, x_0_order, x_d_order);}), 
                             py::arg("tau_0"), 
                             py::arg("delta_tau"), 
                             py::arg("x_0"), 
                             py::arg("x_d"),
-                            py::arg("x_0_order") = Eigen::VectorXd(), 
-                            py::arg("x_d_order") = Eigen::VectorXd())
-            .def_property_readonly("coeffs", &PolynomialTrajectory<Degree, X0, XD>::getCoeffs)
-            .def("__call__", py::vectorize(&PolynomialTrajectory<Degree, X0, XD>::operator()))
-            .def("squared_jerk_integral", &PolynomialTrajectory<Degree, X0, XD>::squaredJerkIntegral)
-            .def_property_readonly("delta_tau", &PolynomialTrajectory<Degree, X0, XD>::get_t1)
+                            py::arg("x_0_order") = typename Traj::VectorX0(), 
+                            py::arg("x_d_order") = typename Traj::VectorXD())
+            .def_property_readonly("coeffs", &Traj::getCoeffs)
+            .def("__call__", py::vectorize(&Traj::operator()))
+            .def("squared_jerk_integral", &Traj::squaredJerkIntegral)
+            .def_property_readonly("delta_tau", &Traj::get_t1)
             .def(py::pickle(
-                [](const PolynomialTrajectory<Degree, X0, XD> &traj) { // __getstate__
+                [](const Traj &traj) { // __getstate__
                     using namespace pybind11::literals; // to bring in the `_a` literal
                     const auto coeffs = traj.getCoeffs();
 
@@ -60,7 +62,7 @@ namespace plannerCPP
                 [](py::dict d) { // __setstate__
                     py::object obj = d["coeffs"];
                     typename Eigen::Vector<double, Degree + 1> coeffs = obj.cast<Eigen::Vector<double, Degree + 1>>();
-                    PolynomialTrajectory<Degree, X0, XD> traj { coeffs };
+                    Traj traj { coeffs };
 
                     return traj;
                 }
