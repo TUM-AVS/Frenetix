@@ -17,14 +17,19 @@ namespace plannerCPP
 {
     PYBIND11_MODULE(_frenetix, m)
     {
-        initBindHandler(m);
+        // NOTE: Order of these bindings is critical to ensure proper stubs generation
         initBindCoordinateSystemWrapper(m);
+
         initBindCartesianSample(m);
         initBindCurviLinearSample(m);
+
         initBindPolynomialTrajectory(m);
-        initBindTrajectoryStrategy(m);
         initBindTrajectorySample(m);
         initBindGeometryMsg(m);
+
+        initBindTrajectoryStrategy(m);
+
+        initBindHandler(m);
 
         py::register_exception<invalid_covariance_matrix_error>(m, "InvalidCovarianceMatrixError", PyExc_ValueError);
     }
