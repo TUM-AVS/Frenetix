@@ -4,6 +4,7 @@
 #include <pybind11/pybind11.h>
 #include <Eigen/Core>
 #include <string>
+#include <type_traits>
 
 #include "polynomial.hpp"
 #include "TrajectorySample.hpp"
