@@ -79,6 +79,16 @@ namespace plannerCPP
             )
             .def
             (
+                "get_feasible_count",
+                &TrajectoryHandler::getFeasibleCount
+            )
+            .def
+            (
+                "get_infeasible_count",
+                &TrajectoryHandler::getInfeasibleCount
+            )
+            .def
+            (
                 "get_sorted_trajectories", 
                 [](TrajectoryHandler &self) 
                 {

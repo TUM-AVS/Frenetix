@@ -77,6 +77,8 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
             }
         }
     }
+
+    removeInvalid();
 }
 
 void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllCosts)
@@ -132,6 +134,38 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
 
     m_taskflow.clear();
 
+    removeInvalid();
+}
+
+void TrajectoryHandler::removeInvalid() {
+    auto new_end = std::remove_if(
+        m_trajectories.cbegin(),
+        m_trajectories.cend(),
+        [](const TrajectorySample& traj) {
+            return !traj.m_valid;
+        }
+    );
+    m_trajectories.erase(new_end, m_trajectories.end());
+}
+
+size_t TrajectoryHandler::getFeasibleCount() const {
+    return std::count_if(
+        m_trajectories.cbegin(),
+        m_trajectories.cend(),
+        [](const TrajectorySample& traj) {
+            return traj.m_valid && traj.m_feasible;
+        }
+    );
+}
+
+size_t TrajectoryHandler::getInfeasibleCount() const {
+    return std::count_if(
+        m_trajectories.cbegin(),
+        m_trajectories.cend(),
+        [](const TrajectorySample& traj) {
+            return traj.m_valid && !traj.m_feasible;
+        }
+    );
 }
 
 void TrajectoryHandler::sort()
@@ -154,6 +188,7 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
     Eigen::Vector3d x0_lonOrder {0,1,2};
     Eigen::Vector2d x1_lonOrder {1,2};
 
+    m_trajectories.clear();
     m_trajectories.reserve(samplingMatrix.rows());
 
     for(Eigen::Index iii = 0; iii < samplingMatrix.rows(); iii++)

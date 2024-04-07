@@ -56,6 +56,17 @@ public:
     void addCostFunction(std::shared_ptr<CostStrategy> function);
     void clearCostFunctions();
     void setAllCostWeightsToZero();
+
+    /**
+     * Get number of feasible trajectories.
+     */
+    size_t getFeasibleCount() const;
+
+    /**
+     * Get number of infeasible trajectories.
+     */
+    size_t getInfeasibleCount() const;
+
     /**
      * @brief Evaluates all current functions for each trajectory in the container.
      * 
@@ -87,6 +98,8 @@ private:
     double m_dt;
     tf::Taskflow m_taskflow;
     tf::Executor m_executor;
+
+    void removeInvalid();
 };
 
 #endif
