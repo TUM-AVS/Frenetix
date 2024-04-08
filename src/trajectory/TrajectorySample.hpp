@@ -11,7 +11,7 @@
 #include "CartesianSample.hpp"
 #include "CurvilinearSample.hpp"
 #include "polynomial.hpp"
-
+#include "CoordinateSystemWrapper.hpp"
 
 class TrajectorySample
 {
@@ -40,10 +40,14 @@ public:
 
     using LongitudinalTrajectory = PolynomialTrajectory<4, 3, 2>;
     using LateralTrajectory = PolynomialTrajectory<5, 3, 3>;
+    static const LongitudinalTrajectory::OrderVectorX0 LongitudinalX0Order;
+    static const LongitudinalTrajectory::OrderVectorXD LongitudinalXDOrder;
     LongitudinalTrajectory m_trajectoryLongitudinal;
     LateralTrajectory m_trajectoryLateral;
+
     CartesianSample m_cartesianSample;
     CurviLinearSample m_curvilinearSample;
+
     bool m_valid = true;
 
     TrajectorySample(double dt,

@@ -27,10 +27,10 @@ namespace plannerCPP
         py::class_<PolynomialTrajectory<Degree>>(m, (pre + "Trajectory").c_str())
             .def(py::init([](double t0, 
                             double t1, 
-                            Eigen::VectorXd x_0, 
-                            Eigen::VectorXd x_d, 
-                            Eigen::VectorXd x_0_order, 
-                            Eigen::VectorXd x_d_order) 
+                            typename PolynomialTrajectory<Degree>::VectorX0 x_0, 
+                            typename PolynomialTrajectory<Degree>::VectorXD x_d, 
+                            typename PolynomialTrajectory<Degree>::OrderVectorX0 x_0_order, 
+                            typename PolynomialTrajectory<Degree>::OrderVectorXD x_d_order) 
                             {return new PolynomialTrajectory<Degree>(t0, t1, x_0, x_d, x_0_order, x_d_order);}), 
                             py::arg("tau_0"), 
                             py::arg("delta_tau"), 

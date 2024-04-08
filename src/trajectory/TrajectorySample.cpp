@@ -1,5 +1,11 @@
 #include "TrajectorySample.hpp"
 
+const TrajectorySample::LongitudinalTrajectory::OrderVectorX0 TrajectorySample::LongitudinalX0Order {0,1,2};
+const TrajectorySample::LongitudinalTrajectory::OrderVectorXD TrajectorySample::LongitudinalXDOrder {1,2};
+
+template class PolynomialTrajectory<4, 3, 2>;
+template class PolynomialTrajectory<5, 3, 3>;
+
 TrajectorySample::TrajectorySample(double dT,
                                    TrajectorySample::LongitudinalTrajectory trajectoryLongitudinal,
                                    TrajectorySample::LateralTrajectory trajectoryLateral,

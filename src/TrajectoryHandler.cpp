@@ -185,9 +185,6 @@ void TrajectoryHandler::sort()
 
 void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMatrix, bool lowVelocityMode)
 {
-    Eigen::Vector3d x0_lonOrder {0,1,2};
-    Eigen::Vector2d x1_lonOrder {1,2};
-
     m_trajectories.clear();
     m_trajectories.reserve(samplingMatrix.rows());
 
@@ -201,9 +198,9 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
             samplingMatrix.row(iii)[1],
             x0_lon,
             x1_lon,
-            x0_lonOrder,
-            x1_lonOrder
-            );
+            TrajectorySample::LongitudinalX0Order,
+            TrajectorySample::LongitudinalXDOrder
+        );
 
         double t1 = 0.0;
         if (lowVelocityMode) {
@@ -234,7 +231,6 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
             );
     }
 }
-
 
 void TrajectoryHandler::resetTrajectories()
 {
