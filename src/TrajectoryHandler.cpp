@@ -139,8 +139,8 @@ void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllC
 
 void TrajectoryHandler::removeInvalid() {
     auto new_end = std::remove_if(
-        m_trajectories.cbegin(),
-        m_trajectories.cend(),
+        m_trajectories.begin(),
+        m_trajectories.end(),
         [](const TrajectorySample& traj) {
             return !traj.m_valid;
         }
