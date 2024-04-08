@@ -82,12 +82,7 @@ void TrajectorySample::initArraysWithSize(size_t size)
 
 TrajectorySample TrajectorySample::standstillTrajectory(
         std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-        Eigen::Vector2d x0_cart,
-        double orientation,
-        double steering_angle,
-        double wheelbase,
-        Eigen::Vector3d x0_lon,
-        Eigen::Vector3d x0_lat,
+        PlannerState state,
         double dt,
         double horizon
 ) {
@@ -97,18 +92,18 @@ TrajectorySample TrajectorySample::standstillTrajectory(
     TrajectorySample::LongitudinalTrajectory longitudinalTrajectory (
         0.0,
         horizon,
-        x0_lon,
+        state.x_cl.x0_lon,
         x1_lon,
         TrajectorySample::LongitudinalX0Order,
         TrajectorySample::LongitudinalXDOrder
         );
 
-    Eigen::Vector3d x1_lat {x0_lat[0], 0.0, 0.0};
+    Eigen::Vector3d x1_lat {state.x_cl.x0_lat[0], 0.0, 0.0};
 
     TrajectorySample::LateralTrajectory lateralTrajectory(
         0.0,
         horizon,
-        x0_lat,
+        state.x_cl.x0_lat,
         x1_lat
         );
 
@@ -123,34 +118,35 @@ TrajectorySample TrajectorySample::standstillTrajectory(
     traj.m_acutualSize = length;
     traj.initArraysWithSize(length);
 
-    double kappa_0 = tan(steering_angle) / wheelbase; 
+    double kappa_0 = tan(state.steering_angle) / state.wheelbase; 
 
-    traj.m_cartesianSample.x.fill(x0_cart[0]);
-    traj.m_cartesianSample.y.fill(x0_cart[1]);
-    traj.m_cartesianSample.theta.fill(orientation);
+    traj.m_cartesianSample.x.fill(state.x_0.pos[0]);
+    traj.m_cartesianSample.y.fill(state.x_0.pos[1]);
+    traj.m_cartesianSample.theta.fill(state.x_0.orientation);
     traj.m_cartesianSample.velocity.fill(0.0);
-    // TODO: a[1]??
     traj.m_cartesianSample.acceleration.fill(0.0);
+    traj.m_cartesianSample.acceleration[1] = - state.x_0.velocity / dt;
+    
     traj.m_cartesianSample.kappa.fill(kappa_0);
     traj.m_cartesianSample.kappaDot.fill(0);
 
     const Eigen::VectorXd& refPos = coordinateSystem->m_refPos;
     const Eigen::VectorXd& refTheta = coordinateSystem->m_refTheta;
 
-    int s_idx = coordinateSystem->getS_idx(x0_lon[0]);
+    int s_idx = coordinateSystem->getS_idx(state.x_cl.x0_lon[0]);
 
-    double theta_cl = util::interpolate_angle(x0_lon[0],
+    double theta_cl = util::interpolate_angle(state.x_cl.x0_lon[0],
                                                        refPos[s_idx],
                                                        refPos[s_idx + 1],
                                                        refTheta[s_idx],
                                                        refTheta[s_idx + 1]);
 
-    traj.m_curvilinearSample.s.fill(x0_lon[0]);
-    traj.m_curvilinearSample.ss.fill(x0_lon[1]);
-    traj.m_curvilinearSample.sss.fill(x0_lon[2]);
-    traj.m_curvilinearSample.d.fill(x0_lat[0]);
-    traj.m_curvilinearSample.dd.fill(x0_lat[1]);
-    traj.m_curvilinearSample.ddd.fill(x0_lat[2]);
+    traj.m_curvilinearSample.s.fill(state.x_cl.x0_lon[0]);
+    traj.m_curvilinearSample.ss.fill(state.x_cl.x0_lon[1]);
+    traj.m_curvilinearSample.sss.fill(state.x_cl.x0_lon[2]);
+    traj.m_curvilinearSample.d.fill(state.x_cl.x0_lat[0]);
+    traj.m_curvilinearSample.dd.fill(state.x_cl.x0_lat[1]);
+    traj.m_curvilinearSample.ddd.fill(state.x_cl.x0_lat[2]);
     traj.m_curvilinearSample.theta.fill(theta_cl);
 
     return traj;

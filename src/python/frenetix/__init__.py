@@ -5,6 +5,9 @@ from ._frenetix import (
     PoseWithCovariance, PredictedObject,
     TrajectoryHandler,
     TrajectorySample,
+    PlannerState,
+    CartesianPlannerState,
+    CurvilinearPlannerState,
     trajectory_functions
 )
 
@@ -18,6 +21,9 @@ __all__ = (
     "QuinticTrajectory",
     "TrajectoryHandler",
     "TrajectorySample",
+    "PlannerState",
+    "CartesianPlannerState",
+    "CurvilinearPlannerState",
     "trajectory_functions"
 )
 

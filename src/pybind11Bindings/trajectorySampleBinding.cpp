@@ -21,6 +21,25 @@ namespace plannerCPP
 
     void initBindTrajectorySample(pybind11::module &m) 
     {
+        py::class_<PlannerState::Cartesian>(m, "CartesianPlannerState")
+            .def(py::init<Eigen::Vector2d, double, double>(),
+                 py::arg("pos"),
+                 py::arg("orientation"), 
+                 py::arg("velocity")
+            );
+        py::class_<PlannerState::Curvilinear>(m, "CurvilinearPlannerState")
+            .def(py::init<Eigen::Vector3d, Eigen::Vector3d>(),
+                 py::arg("x0_lon"),
+                 py::arg("x0_lat")
+            );
+        py::class_<PlannerState>(m, "PlannerState")
+            .def(py::init<PlannerState::Cartesian, PlannerState::Curvilinear, double, double>(),
+                 py::arg("x_0"),
+                 py::arg("x_cl"),
+                 py::arg("steering_angle"),
+                 py::arg("wheelbase")
+            );
+
         py::class_<TrajectorySample>(m, "TrajectorySample")
             .def(py::init<double, TrajectorySample::LongitudinalTrajectory, TrajectorySample::LateralTrajectory, int>(),
                  py::arg("dt"),
@@ -55,7 +74,15 @@ namespace plannerCPP
                 [](TrajectorySample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_samplingParameters;},
                 [](TrajectorySample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_samplingParameters = arr;})
 
-        
+            .def_static("compute_standstill_trajectory",
+                &TrajectorySample::standstillTrajectory,
+                py::arg("coordinate_system"),
+                py::arg("planner_state"),
+                py::arg("dt"),
+                py::arg("horizon")
+            )
+
+
             .def(py::pickle(
                 [](const TrajectorySample &traj) { // __getstate__
                     using namespace pybind11::literals; // to bring in the `_a` literal

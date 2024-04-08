@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cassert>
 #include <cmath>
 #include <stdexcept>
 
-#include <iostream>
 #include <numeric>
 
 #include <Eigen/Core>

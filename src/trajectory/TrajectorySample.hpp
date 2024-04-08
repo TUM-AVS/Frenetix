@@ -13,6 +13,20 @@
 #include "polynomial.hpp"
 #include "CoordinateSystemWrapper.hpp"
 
+struct PlannerState {
+    struct Cartesian {
+        Eigen::Vector2d pos;
+        double orientation;
+        double velocity;
+    } x_0;
+    struct Curvilinear {
+        Eigen::Vector3d x0_lon;
+        Eigen::Vector3d x0_lat;
+    } x_cl;
+    double steering_angle;
+    double wheelbase;
+};
+
 class TrajectorySample
 {
 public:
@@ -63,12 +77,7 @@ public:
 
     static TrajectorySample standstillTrajectory(
         std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-        Eigen::Vector2d x0_cart,
-        double orientation,
-        double steering_angle,
-        double wheelbase,
-        Eigen::Vector3d x0_lon,
-        Eigen::Vector3d x0_lat,
+        PlannerState state,
         double dt,
         double horizon
     );
