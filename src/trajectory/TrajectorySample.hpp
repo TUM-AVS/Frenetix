@@ -27,6 +27,13 @@ struct PlannerState {
     double wheelbase;
 };
 
+PlannerState::Curvilinear computeInitialState(
+        std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
+        PlannerState::Cartesian cps,
+        double wheelbase, 
+        bool lowVelocityMode
+);
+
 class TrajectorySample
 {
 public:

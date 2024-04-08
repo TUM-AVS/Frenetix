@@ -28,17 +28,37 @@ namespace plannerCPP
                  py::arg("velocity"),
                  py::arg("acceleration"),
                  py::arg("steering_angle")
-            );
+            )
+            .def_readwrite("pos", &PlannerState::Cartesian::pos)
+            .def_readwrite("orientation", &PlannerState::Cartesian::orientation)
+            .def_readwrite("velocity", &PlannerState::Cartesian::velocity)
+            .def_readwrite("acceleration", &PlannerState::Cartesian::acceleration)
+            .def_readwrite("steering_angle", &PlannerState::Cartesian::steering_angle);
+
         py::class_<PlannerState::Curvilinear>(m, "CurvilinearPlannerState")
             .def(py::init<Eigen::Vector3d, Eigen::Vector3d>(),
                  py::arg("x0_lon"),
                  py::arg("x0_lat")
-            );
+            )
+            .def_readwrite("x0_lon", &PlannerState::Curvilinear::x0_lon)
+            .def_readwrite("x0_lat", &PlannerState::Curvilinear::x0_lat);
+
         py::class_<PlannerState>(m, "PlannerState")
             .def(py::init<PlannerState::Cartesian, PlannerState::Curvilinear, double>(),
                  py::arg("x_0"),
                  py::arg("x_cl"),
                  py::arg("wheelbase")
+            )
+            .def_readwrite("x_0", &PlannerState::x_0)
+            .def_readwrite("x_cl", &PlannerState::x_cl)
+            .def_readwrite("wheelbase", &PlannerState::wheelbase);
+
+        m.def("compute_initial_state",
+                &computeInitialState,
+                py::arg("coordinate_system"),
+                py::arg("x_0"),
+                py::arg("wheelbase"),
+                py::arg("low_velocity_mode")
             );
 
         py::class_<TrajectorySample>(m, "TrajectorySample")
