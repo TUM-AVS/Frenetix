@@ -61,6 +61,18 @@ public:
                      int uniqueId,
                      Eigen::VectorXd samplingParameters);
 
+    static TrajectorySample standstillTrajectory(
+        std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
+        Eigen::Vector2d x0_cart,
+        double orientation,
+        double steering_angle,
+        double wheelbase,
+        Eigen::Vector3d x0_lon,
+        Eigen::Vector3d x0_lat,
+        double dt,
+        double horizon
+    );
+
     /**
      * @brief Construct a new Trajectory Sample object just with the initial position.
      *
