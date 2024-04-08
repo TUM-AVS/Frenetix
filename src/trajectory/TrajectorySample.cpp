@@ -118,7 +118,7 @@ TrajectorySample TrajectorySample::standstillTrajectory(
     traj.m_acutualSize = length;
     traj.initArraysWithSize(length);
 
-    double kappa_0 = tan(state.steering_angle) / state.wheelbase; 
+    double kappa_0 = tan(state.x_0.steering_angle) / state.wheelbase; 
 
     traj.m_cartesianSample.x.fill(state.x_0.pos[0]);
     traj.m_cartesianSample.y.fill(state.x_0.pos[1]);

@@ -1,5 +1,4 @@
-#ifndef TRAJECTORYSAMPLE_HPP
-#define TRAJECTORYSAMPLE_HPP
+#pragma once
 
 #include <stddef.h>
 #include <Eigen/Core>
@@ -18,12 +17,13 @@ struct PlannerState {
         Eigen::Vector2d pos;
         double orientation;
         double velocity;
+        double acceleration;
+        double steering_angle;
     } x_0;
     struct Curvilinear {
         Eigen::Vector3d x0_lon;
         Eigen::Vector3d x0_lat;
     } x_cl;
-    double steering_angle;
     double wheelbase;
 };
 
@@ -126,4 +126,3 @@ public:
     size_t size();
 };
 
-#endif //TRAJECTORYSAMPLE_HPP

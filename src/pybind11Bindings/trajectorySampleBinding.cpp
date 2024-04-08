@@ -22,10 +22,12 @@ namespace plannerCPP
     void initBindTrajectorySample(pybind11::module &m) 
     {
         py::class_<PlannerState::Cartesian>(m, "CartesianPlannerState")
-            .def(py::init<Eigen::Vector2d, double, double>(),
+            .def(py::init<Eigen::Vector2d, double, double, double, double>(),
                  py::arg("pos"),
                  py::arg("orientation"), 
-                 py::arg("velocity")
+                 py::arg("velocity"),
+                 py::arg("acceleration"),
+                 py::arg("steering_angle")
             );
         py::class_<PlannerState::Curvilinear>(m, "CurvilinearPlannerState")
             .def(py::init<Eigen::Vector3d, Eigen::Vector3d>(),
@@ -33,10 +35,9 @@ namespace plannerCPP
                  py::arg("x0_lat")
             );
         py::class_<PlannerState>(m, "PlannerState")
-            .def(py::init<PlannerState::Cartesian, PlannerState::Curvilinear, double, double>(),
+            .def(py::init<PlannerState::Cartesian, PlannerState::Curvilinear, double>(),
                  py::arg("x_0"),
                  py::arg("x_cl"),
-                 py::arg("steering_angle"),
                  py::arg("wheelbase")
             );
 
