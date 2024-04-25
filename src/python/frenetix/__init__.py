@@ -7,9 +7,11 @@ from ._frenetix import (
     TrajectorySample,
     PlannerState,
     CartesianPlannerState,
-    CurvilinearPlannerState,
-    trajectory_functions
+    CurvilinearPlannerState
+    # trajectory_functions
 )
+
+from ._frenetix import trajectory_functions as trajectory_functions
 
 __all__ = (
     "CartesianSample",

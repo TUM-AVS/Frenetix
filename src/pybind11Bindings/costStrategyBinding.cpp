@@ -1,5 +1,5 @@
 //pybind includes
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 #include <memory>
 
 #include "strategies/CostStrategy.hpp"
@@ -9,15 +9,15 @@
 
 class TrajectoryStrategy;
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindCostStrategy(pybind11::module &m) 
+    void initBindCostStrategy(nb::module_ &m) 
     {
-        py::class_<CostStrategy, TrajectoryStrategy, std::shared_ptr<CostStrategy>>(m, "CostStrategy");
-        py::module sub_m = m.def_submodule("cost_functions");
+        nb::class_<CostStrategy, TrajectoryStrategy>(m, "CostStrategy");
+        nb::module_ sub_m = m.def_submodule("cost_functions");
 
         initBindCostFunctions(sub_m);
     }

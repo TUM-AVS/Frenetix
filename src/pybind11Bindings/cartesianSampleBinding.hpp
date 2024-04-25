@@ -2,19 +2,19 @@
 #define CARTESIANSAMPLEBINDING_HPP
 
 //pybind includes
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/eigen.h>
+#include <nanobind/ndarray.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/vector.h>
+#include <nanobind/eigen/dense.h>
 
 #include "trajectory/CartesianSample.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindCartesianSample(pybind11::module &m);
+    void initBindCartesianSample(nb::module_ &m);
 
 } //plannerCPP
 

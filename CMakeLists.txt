@@ -70,40 +70,16 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(AppleOpenMP)
 
-include(FetchContent)
-FetchContent_Declare(
-  pybind11
-
-  URL            https://github.com/pybind/pybind11/archive/refs/tags/v2.10.4.tar.gz
-  URL_HASH       SHA256=832e2f309c57da9c1e6d4542dedd34b24e4192ecb4d62f6f4866a737454c9970
-
-  FIND_PACKAGE_ARGS
-)
-
-find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
-
-
 # IMPORTANT: DO NOT MOVE this section, in particular the calls to find_package(Python)
 # and find_package(pybind11), without careful consideration
 if(SKBUILD)
-        # Scikit-Build does not add your site-packages to the search path
-        # automatically, so we need to add it _or_ the pybind11 specific directory
-        # here.
-        if(FALSE)
+        find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+
         execute_process(
-            COMMAND "${PYTHON_EXECUTABLE}" -c
-                    "import pybind11; print(pybind11.get_cmake_dir())"
-            OUTPUT_VARIABLE _tmp_dir
-            OUTPUT_STRIP_TRAILING_WHITESPACE)
-        list(APPEND CMAKE_PREFIX_PATH "${_tmp_dir}")
-        endif()
-        # set(Python_FIND_VIRTUALENV ONLY)
-
-        set(PYBIND11_FINDPYTHON ON)
-        find_package(Python 3.7 REQUIRED COMPONENTS Development.Module)
-
-        # Now we can find pybind11
-        find_package(pybind11 2.7.0 CONFIG REQUIRED)
+          COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir
+          OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NB_DIR)
+        list(APPEND CMAKE_PREFIX_PATH "${NB_DIR}")
+        find_package(nanobind CONFIG REQUIRED)
 
         # SKBUILD_SELF_CONTAINED controls whether we try to build all dependencies
         # ourselves. This is used in order to build cross-platform wheels

@@ -1,5 +1,5 @@
 //pybind includes
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 #include <memory>
 
 #include "strategies/FeasabilityStrategy.hpp"
@@ -9,16 +9,16 @@
 
 class TrajectoryStrategy;
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindFeasabilityStrategy(pybind11::module &m) 
+    void initBindFeasabilityStrategy(nb::module_ &m) 
     {
-        py::class_<FeasabilityStrategy, TrajectoryStrategy, std::shared_ptr<FeasabilityStrategy>>(m, "FeasabilityStrategy");
+        nb::class_<FeasabilityStrategy, TrajectoryStrategy>(m, "FeasabilityStrategy");
 
-        py::module sub_m = m.def_submodule("feasability_functions");
+        nb::module_ sub_m = m.def_submodule("feasability_functions");
 
         initBindFeasabilityFunctions(sub_m);
     }

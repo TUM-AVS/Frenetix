@@ -1,63 +1,71 @@
 //pybind includes
-#include <pybind11/eigen.h> // IWYU pragma: keep
-#include <pybind11/pybind11.h>
+#include <nanobind/eigen/dense.h> // IWYU pragma: keep
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/unique_ptr.h>
+
+
 #include <Eigen/Core>
 #include <memory>
+
+#include <geometry/curvilinear_coordinate_system.h>
+#include <geometry/segment.h>
 
 #include "CoordinateSystemWrapper.hpp"
 #include "util.hpp"
 
 #include "coordinateSystemWrapperBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindCoordinateSystemWrapper(pybind11::module &m)
+    void initBindCoordinateSystemWrapper(nb::module_ &m)
     {
         // TODO: Registering the CCS class is required for correct type signatures,
         // but we can't register the class here since it is also exported by commonroad_dc.
         // Registering it multiple times would result in pybind11 errors.
-        // py::class_<geometry::CurvilinearCoordinateSystem, std::shared_ptr<geometry::CurvilinearCoordinateSystem>>(m, "_CurvilinearCoordinateSystem", py::module_local());
+        //nb::class_<geometry::CurvilinearCoordinateSystem>(m, "_CurvilinearCoordinateSystem")
+        //    .def(nb::init<const geometry::EigenPolyline&, double, double, double>()); //, nb::module_local());
 
-        py::class_<CoordinateSystemWrapper, std::shared_ptr<CoordinateSystemWrapper>>(m, "CoordinateSystemWrapper")
-            .def(py::init<Eigen::Ref<RowMatrixXd>>(), py::arg("ref_path"))
+        nb::class_<CoordinateSystemWrapper>(m, "CoordinateSystemWrapper")
+            .def(nb::init<Eigen::Ref<RowMatrixXd>>(), nb::arg("ref_path"))
             // CCS property is problematic...
-            // .def_property("system", &CoordinateSystemWrapper::getSystem, &CoordinateSystemWrapper::setSystem)
-            .def_property("ref_pos",
+            // .def_prop_rw("system", &CoordinateSystemWrapper::getSystem, &CoordinateSystemWrapper::setSystem)
+            .def_prop_rw("ref_pos",
                           [](CoordinateSystemWrapper &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_refPos;},
                           [](CoordinateSystemWrapper &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_refPos = arr;})
-            .def_property("ref_curv",
+            .def_prop_rw("ref_curv",
                           [](CoordinateSystemWrapper &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_refCurv;},
                           [](CoordinateSystemWrapper &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_refCurv = arr;})
-            .def_property("ref_theta",
+            .def_prop_rw("ref_theta",
                           [](CoordinateSystemWrapper &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_refTheta;},
                           [](CoordinateSystemWrapper &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_refTheta = arr;})
-            .def_property("ref_curv_d",
+            .def_prop_rw("ref_curv_d",
                           [](CoordinateSystemWrapper &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_refCurvD;},
                           [](CoordinateSystemWrapper &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_refCurvD = arr;})
-            .def_property("ref_curv_dd",
+            .def_prop_rw("ref_curv_dd",
                           [](CoordinateSystemWrapper &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_refCurvDD;},
                           [](CoordinateSystemWrapper &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_refCurvDD = arr;})
-            .def_readwrite("ref_line", &CoordinateSystemWrapper::m_refPolyLineFromCoordSys)
-            .def(py::pickle(
-                [](const CoordinateSystemWrapper &ccs) { // __getstate__
-                    using namespace pybind11::literals; // to bring in the `_a` literal
-
-                    py::dict d(
-                        "ref_path"_a=ccs.getRefPath()
-                    );
+            .def_rw("ref_line", &CoordinateSystemWrapper::m_refPolyLineFromCoordSys)
+            .def("__getstate__", 
+                [](const CoordinateSystemWrapper &ccs) {
+                    nb::dict d;
+                    d["ref_path"] = ccs.getRefPath();
 
                     return d;
-                },
-                [](py::dict d) { // __setstate__
-                    RowMatrixXd refPath = d["ref_path"].cast<RowMatrixXd>();
-                    CoordinateSystemWrapper ccs { refPath };
-
-                    return ccs;
                 }
-            ));
+                 )
+            .def("__setstate__",
+                [](CoordinateSystemWrapper &ccs, nb::dict d) {
+                    RowMatrixXd refPath = nb::cast<RowMatrixXd>(d["ref_path"]);
+
+                    new (&ccs) CoordinateSystemWrapper { refPath };
+                }
+            )
+        
+    ;
 
     }
 } //plannerCPP

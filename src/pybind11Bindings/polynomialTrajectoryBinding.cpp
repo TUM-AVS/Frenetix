@@ -1,8 +1,10 @@
 //pybind includes
-#include <pybind11/eigen.h> // IWYU pragma: keep
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/eigen/dense.h> // IWYU pragma: keep
+#include <nanobind/stl/optional.h>
+
 #include <Eigen/Core>
+
 #include <string>
 #include <type_traits>
 
@@ -11,7 +13,7 @@
 
 #include "polynomialTrajectoryBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
@@ -24,52 +26,53 @@ namespace plannerCPP
      * @param pre Pre Suffix for the class
      */
     template <int Degree, int X0, int XD, typename RefType>
-    void bindPolynomialtrajectory(py::module &m, const std::string &pre) 
+    void bindPolynomialtrajectory(nb::module_ &m, const std::string &pre) 
     {
         using Traj = PolynomialTrajectory<Degree, X0, XD>;
 
         static_assert(std::is_same<RefType, Traj>::value, "RefType mismatch");
 
-        py::class_<Traj>(m, (pre + "Trajectory").c_str())
-            .def(py::init([](double t0, 
-                            double t1, 
+        nb::class_<Traj>(m, (pre + "Trajectory").c_str())
+            .def("__init__", [](Traj *traj,
+                             double t0, 
+                            double t1,
                             typename Traj::VectorX0 x_0, 
                             typename Traj::VectorXD x_d, 
-                            typename Traj::OrderVectorX0 x_0_order, 
-                            typename Traj::OrderVectorXD x_d_order) 
-                            {return new Traj(t0, t1, x_0, x_d, x_0_order, x_d_order);}), 
-                            py::arg("tau_0"), 
-                            py::arg("delta_tau"), 
-                            py::arg("x_0"), 
-                            py::arg("x_d"),
-                            py::arg("x_0_order") = typename Traj::VectorX0(), 
-                            py::arg("x_d_order") = typename Traj::VectorXD())
-            .def_property_readonly("coeffs", &Traj::getCoeffs)
-            .def("__call__", py::vectorize(&Traj::operator()))
+                            std::optional<typename Traj::OrderVectorX0> x_0_order, 
+                            std::optional<typename Traj::OrderVectorXD> x_d_order) 
+                            {
+                    new (traj) Traj(t0, t1, x_0, x_d, x_0_order.value_or(Traj::defaultX0Order()), x_d_order.value_or(Traj::defaultXDOrder()));
+                 }, 
+                            nb::arg("tau_0"), 
+                            nb::arg("delta_tau"), 
+                            nb::arg("x_0"), 
+                            nb::arg("x_d"),
+                            nb::arg("x_0_order"), 
+                            nb::arg("x_d_order"))
+            .def_prop_ro("coeffs", &Traj::getCoeffs)
+            .def("__call__", [] (const Traj& traj, double t, double derivative) { return traj(t, derivative); }, nb::arg("t"), nb::arg("derivative") = 0.0)
             .def("squared_jerk_integral", &Traj::squaredJerkIntegral)
-            .def_property_readonly("delta_tau", &Traj::get_t1)
-            .def(py::pickle(
-                [](const Traj &traj) { // __getstate__
-                    using namespace pybind11::literals; // to bring in the `_a` literal
+            .def_prop_ro("delta_tau", &Traj::get_t1)
+            .def("__getstate__",
+                [](const Traj &traj) {
                     const auto coeffs = traj.getCoeffs();
 
-                    py::dict d(
-                        "coeffs"_a=coeffs
-                    );
+                    nb::dict d;
+                    d["coeffs"] = coeffs;
 
                     return d;
-                },
-                [](py::dict d) { // __setstate__
-                    py::object obj = d["coeffs"];
-                    typename Eigen::Vector<double, Degree + 1> coeffs = obj.cast<Eigen::Vector<double, Degree + 1>>();
-                    Traj traj { coeffs };
-
-                    return traj;
+                })
+            .def("__setstate__",
+                [](PolynomialTrajectory<Degree> &traj, nb::dict d) {
+                    nb::object obj = d["coeffs"];
+                    auto coeffs = nb::cast<typename Traj::Coeffs>(obj);
+                    new (&traj) Traj { coeffs };
                 }
-            ));
+            )
+    ;
     }
 
-    void initBindPolynomialTrajectory(pybind11::module &m) 
+    void initBindPolynomialTrajectory(nb::module_ &m) 
     {
         // Bind the PolynomialTrajectory class
         bindPolynomialtrajectory<4, 3, 2, TrajectorySample::LongitudinalTrajectory>(m, "Quartic");

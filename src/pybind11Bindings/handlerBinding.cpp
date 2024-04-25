@@ -1,6 +1,9 @@
 //pybind includes
-#include <pybind11/eigen.h> // IWYU pragma: keep
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/eigen/dense.h> // IWYU pragma: keep
+#include <nanobind/make_iterator.h>
+#include <nanobind/stl/shared_ptr.h>
+
 #include <Eigen/Core>
 #include <map>
 #include <memory>
@@ -16,15 +19,15 @@
 #include "FeasabilityStrategy.hpp"
 #include "CostStrategy.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindHandler(pybind11::module &m) 
+    void initBindHandler(nb::module_ &m) 
     {
-        py::class_<TrajectoryHandler>(m, "TrajectoryHandler")
-            .def(py::init<double>(), py::arg("dt"))
+        nb::class_<TrajectoryHandler>(m, "TrajectoryHandler")
+            .def(nb::init<double>(), nb::arg("dt"))
             .def
             (
                 "generate_trajectories", 
@@ -32,8 +35,8 @@ namespace plannerCPP
                 {
                     self.generateTrajectories(samplingMatrix, lowVelocityMode);
                 }, 
-                py::arg("samplingMatrix"), 
-                py::arg("lowVelocityMode")
+                nb::arg("samplingMatrix"), 
+                nb::arg("lowVelocityMode")
             )
             .def("sort", &TrajectoryHandler::sort)
             .def
@@ -43,7 +46,7 @@ namespace plannerCPP
                 {
                     self.addFeasabilityFunction(function);
                 }, 
-                py::arg().noconvert()
+                nb::arg().noconvert()
             )
             .def
             (
@@ -52,7 +55,7 @@ namespace plannerCPP
                 {
                     self.addCostFunction(function);
                 }, 
-                py::arg().noconvert()
+                nb::arg().noconvert()
             )
             .def("clear_cost_functions", &TrajectoryHandler::clearCostFunctions, "Clears all cost functions.")
             .def("set_all_cost_weights_to_zero", &TrajectoryHandler::setAllCostWeightsToZero, "Sets all cost function weights to zero.")
@@ -63,19 +66,19 @@ namespace plannerCPP
                 {
                     self.addFunction(function);
                 }, 
-                py::arg().noconvert()
+                nb::arg().noconvert()
             )
             .def
             (
                 "evaluate_all_current_functions", 
                 &TrajectoryHandler::evaluateAllCurrentFunctions, 
-                py::arg("calculateAllCosts") = false
+                nb::arg("calculateAllCosts") = false
             )
             .def
             (
                 "evaluate_all_current_functions_concurrent", 
                 &TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent, 
-                py::arg("calculateAllCosts") = false
+                nb::arg("calculateAllCosts") = false
             )
             .def
             (
@@ -93,36 +96,36 @@ namespace plannerCPP
                 [](TrajectoryHandler &self) 
                 {
                     self.sort();
-                    return py::make_iterator(self.m_trajectories.begin(), self.m_trajectories.end());
+                    return nb::make_iterator(nb::type<TrajectoryHandler>(), "trajectory_iterator", self.m_trajectories.begin(), self.m_trajectories.end());
                 }
-                , py::keep_alive<0, 1>() // Keep object alive while iterator is used
+                , nb::keep_alive<0, 1>() // Keep object alive while iterator is used
             ) 
             .def
             (
                 "get_cost_functions", 
                 [](TrajectoryHandler &self) 
                 {
-                    return py::make_iterator(self.m_costFunctions.begin(), self.m_costFunctions.end());
+                    return nb::make_iterator<nb::rv_policy::none>(nb::type<TrajectoryHandler>(), "cost_function_iterator", self.m_costFunctions.begin(), self.m_costFunctions.end());
                 },
-                py::keep_alive<0, 1>() // Keep object alive while iterator is used
+                nb::keep_alive<0, 1>() // Keep object alive while iterator is used
             )
             .def
             (
                 "get_feasability_functions", 
                 [](TrajectoryHandler &self) 
                 {
-                    return py::make_iterator(self.m_feasabilityFunctions.begin(), self.m_feasabilityFunctions.end());
+                    return nb::make_iterator<nb::rv_policy::none>(nb::type<TrajectoryHandler>(), "feasability_function_iterator", self.m_feasabilityFunctions.begin(), self.m_feasabilityFunctions.end());
                 },
-                py::keep_alive<0, 1>() // Keep object alive while iterator is used
+                nb::keep_alive<0, 1>() // Keep object alive while iterator is used
             )
             .def
             (
                 "get_other_functions", 
                 [](TrajectoryHandler &self) 
                 {
-                return py::make_iterator(self.m_otherFunctions.begin(), self.m_otherFunctions.end());
+                    return nb::make_iterator<nb::rv_policy::none>(nb::type<TrajectoryHandler>(), "other_function_iterator", self.m_otherFunctions.begin(), self.m_otherFunctions.end());
                 }, 
-                py::keep_alive<0, 1>() // Keep object alive while iterator is used
+                nb::keep_alive<0, 1>() // Keep object alive while iterator is used
             )
             .def
             (

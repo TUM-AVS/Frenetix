@@ -1,5 +1,6 @@
 //pybind includes
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 #include <memory>
 
 //Submodule includes
@@ -11,18 +12,18 @@
 
 #include "trajectoryStrategyBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindTrajectoryStrategy(pybind11::module &m) 
+    void initBindTrajectoryStrategy(nb::module_ &m) 
     {
-        py::module sub_m = m.def_submodule("trajectory_functions");
+        nb::module_ sub_m = m.def_submodule("trajectory_functions");
 
-        py::class_<TrajectoryStrategy, std::shared_ptr<TrajectoryStrategy>>(sub_m, "TrajectoryStrategy")
-            .def("evaluate_trajectory", &TrajectoryStrategy::evaluateTrajectory, py::arg("trajectory"))
-            .def_property_readonly("name", &TrajectoryStrategy::getFunctionName);
+        nb::class_<TrajectoryStrategy>(sub_m, "TrajectoryStrategy")
+            .def("evaluate_trajectory", &TrajectoryStrategy::evaluateTrajectory, nb::arg("trajectory"))
+            .def_prop_ro("name", &TrajectoryStrategy::getFunctionName);
 
         initBindCostStrategy(sub_m);
         initBindFeasabilityStrategy(sub_m);
