@@ -1,7 +1,7 @@
 from ... import _frenetix
-#import trajectory_functions
+from ..._frenetix import TrajectorySample, PredictedObject
 
-__all__ = []
+__all__ = ["TrajectorySample", "PredictedObject"]
 
 for function_name in dir(_frenetix.trajectory_functions.cost_functions):
     globals().update({function_name: getattr(_frenetix.trajectory_functions.cost_functions, function_name)})

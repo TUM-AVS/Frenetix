@@ -27,7 +27,8 @@ namespace plannerCPP
                 return oss.str();
             })
             .def_readonly("position", &PoseWithCovariance::position)
-            .def_readonly("orientation", &PoseWithCovariance::orientation)
+            .def_property_readonly("orientation",
+                          [](PoseWithCovariance &self) -> Eigen::Ref<Eigen::Vector4d> { return self.orientation.coeffs(); })
             .def_readonly("covariance", &PoseWithCovariance::covariance);
 
         py::class_<PredictedObject>(m, "PredictedObject")
