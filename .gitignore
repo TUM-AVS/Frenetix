@@ -1,11 +1,11 @@
-venv
-/thirdParty/*
-/dist/*
-build
+/src/python/frenetix/_version.py
+/build-python
+/dist
+
 *.egg-info
 *.so
-_skbuild
-/src/python/frenetix/_version.py
-.idea
+
+/venv*
 
 __pycache__
+

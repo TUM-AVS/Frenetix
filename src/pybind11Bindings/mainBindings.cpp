@@ -1,5 +1,5 @@
 #include <math/covariance.hpp>
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 #include <pyerrors.h>
 
 #include "cartesianSampleBinding.hpp"
@@ -12,10 +12,10 @@
 #include "trajectorySampleBinding.hpp"
 #include "trajectoryStrategyBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 namespace plannerCPP
 {
-    PYBIND11_MODULE(_frenetix, m)
+    NB_MODULE(_frenetix, m)
     {
         // NOTE: Order of these bindings is critical to ensure proper stubs generation
         initBindCoordinateSystemWrapper(m);
@@ -31,7 +31,7 @@ namespace plannerCPP
 
         initBindHandler(m);
 
-        py::register_exception<invalid_covariance_matrix_error>(m, "InvalidCovarianceMatrixError", PyExc_ValueError);
+        nb::exception<invalid_covariance_matrix_error>(m, "InvalidCovarianceMatrixError", PyExc_ValueError);
     }
 } //plannerCPP
 

@@ -86,14 +86,14 @@ public:
     {
     }
 
-    constexpr OrderVectorX0 defaultX0Order()
+    static constexpr OrderVectorX0 defaultX0Order()
     {
         OrderVectorX0 x_0_order;
         std::iota(x_0_order.begin(), x_0_order.end(), 0);
         return x_0_order;
     }
 
-    constexpr OrderVectorXD defaultXDOrder()
+    static constexpr OrderVectorXD defaultXDOrder()
     {
         OrderVectorXD x_d_order;
         std::iota(x_d_order.begin(), x_d_order.end(), 0);
@@ -125,9 +125,6 @@ public:
      * @return The value of the polynomial at the given time and derivative.
      */
     double operator()(double t, double derivative = 0) const;
-
-    template<int Order>
-    constexpr double const_eval(double t) const;
 
     struct VVV {
         double x;

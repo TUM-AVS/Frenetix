@@ -63,23 +63,94 @@ target_include_directories(fp_core
         )
 
 # add pybind module
-if(SKBUILD)
-    message(STATUS "The project is built using scikit-build")
-endif()
-if(pybind11_FOUND AND NOT SKBUILD)
-    message(STATUS "Adding Python interface for compilation only")
-endif()
-if(pybind11_FOUND)
-        add_library(fp_python OBJECT ${FP_PYTHON_SRC_FILES} ${FP_PYTHON_HDR_FILES})
-        target_link_libraries(fp_python PRIVATE fp_core pybind11::module)
-        set_property(TARGET fp_python PROPERTY POSITION_INDEPENDENT_CODE ON)
-endif()
 
 if(SKBUILD)
     set(python_module_name _frenetix)
-    pybind11_add_module(${python_module_name} MODULE $<TARGET_OBJECTS:fp_python>)
+    nanobind_add_module(${python_module_name}
+        ${FP_PYTHON_SRC_FILES} ${FP_PYTHON_HDR_FILES}
+    )
 
     target_link_libraries(${python_module_name} PRIVATE fp_core)
+        
+    nanobind_add_stub(
+        _frenetix_stub
+        MODULE _frenetix
+        OUTPUT _frenetix/__init__.pyi
+        PYTHON_PATH $<TARGET_FILE_DIR:${python_module_name}>
+        DEPENDS ${python_module_name}
+        MARKER_FILE py.typed
+        INCLUDE_PRIVATE
+        VERBOSE
+    )
+
+    nanobind_add_stub(
+        _frenetix_trajectory_functions_stub
+        MODULE _frenetix.trajectory_functions
+        OUTPUT _frenetix/trajectory_functions/__init__.pyi
+        PYTHON_PATH $<TARGET_FILE_DIR:${python_module_name}>
+        DEPENDS ${python_module_name}
+        INCLUDE_PRIVATE
+        VERBOSE
+    )
+
+    nanobind_add_stub(
+        _frenetix_cost_functions_stub
+        MODULE _frenetix.trajectory_functions.cost_functions
+        OUTPUT _frenetix/trajectory_functions/cost_functions/__init__.pyi
+        PYTHON_PATH $<TARGET_FILE_DIR:${python_module_name}>
+        DEPENDS ${python_module_name}
+        INCLUDE_PRIVATE
+        VERBOSE
+    )
+
+    nanobind_add_stub(
+        _frenetix_feasability_functions_stub
+        MODULE _frenetix.trajectory_functions.feasability_functions
+        OUTPUT _frenetix/trajectory_functions/feasability_functions/__init__.pyi
+        PYTHON_PATH $<TARGET_FILE_DIR:${python_module_name}>
+        DEPENDS ${python_module_name}
+        INCLUDE_PRIVATE
+        VERBOSE
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/py.typed
+        DESTINATION frenetix
+        COMPONENT PythonModules
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/_frenetix/__init__.pyi
+        DESTINATION frenetix/_frenetix
+        COMPONENT PythonModules
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/_frenetix/trajectory_functions/__init__.pyi
+        DESTINATION frenetix/_frenetix/trajectory_functions
+        COMPONENT PythonModules
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/_frenetix/trajectory_functions/cost_functions/__init__.pyi
+        DESTINATION frenetix/_frenetix/trajectory_functions/cost_functions
+        COMPONENT PythonModules
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/_frenetix/trajectory_functions/feasability_functions/__init__.pyi
+        DESTINATION frenetix/_frenetix/trajectory_functions/feasability_functions
+        COMPONENT PythonModules
+    )
+
+    if(FALSE)
+        install(DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}/python/frenetix
+            DESTINATION ${SKBUILD_PLATLIB_DIR}
+            COMPONENT PythonModules
+            PATTERN "__pycache__" EXCLUDE
+        )
+    endif()
 
     install(TARGETS ${python_module_name}
             LIBRARY DESTINATION frenetix

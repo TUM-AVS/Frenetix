@@ -1,6 +1,13 @@
 //pybind includes
-#include <pybind11/eigen.h> // IWYU pragma: keep
-#include <pybind11/pybind11.h>
+#include <nanobind/eigen/dense.h> // IWYU pragma: keep
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/map.h>
+#include <nanobind/stl/optional.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/pair.h>
+
+
 #include <Eigen/Core>
 #include <map>
 #include <optional>
@@ -14,163 +21,161 @@
 
 #include "trajectorySampleBinding.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace plannerCPP
 {
 
-    void initBindTrajectorySample(pybind11::module &m) 
+    void initBindTrajectorySample(nb::module_ &m) 
     {
-        py::class_<PlannerState::Cartesian>(m, "CartesianPlannerState")
-            .def(py::init<Eigen::Vector2d, double, double, double, double>(),
-                 py::arg("pos"),
-                 py::arg("orientation"), 
-                 py::arg("velocity"),
-                 py::arg("acceleration"),
-                 py::arg("steering_angle")
+        nb::class_<PlannerState::Cartesian>(m, "CartesianPlannerState")
+            .def(nb::init<Eigen::Vector2d, double, double, double, double>(),
+                 nb::arg("pos"),
+                 nb::arg("orientation"), 
+                 nb::arg("velocity"),
+                 nb::arg("acceleration"),
+                 nb::arg("steering_angle")
             )
-            .def_readwrite("pos", &PlannerState::Cartesian::pos)
-            .def_readwrite("orientation", &PlannerState::Cartesian::orientation)
-            .def_readwrite("velocity", &PlannerState::Cartesian::velocity)
-            .def_readwrite("acceleration", &PlannerState::Cartesian::acceleration)
-            .def_readwrite("steering_angle", &PlannerState::Cartesian::steering_angle);
-
-        py::class_<PlannerState::Curvilinear>(m, "CurvilinearPlannerState")
-            .def(py::init<Eigen::Vector3d, Eigen::Vector3d>(),
-                 py::arg("x0_lon"),
-                 py::arg("x0_lat")
+            .def_rw("pos", &PlannerState::Cartesian::pos)
+            .def_rw("orientation", &PlannerState::Cartesian::orientation)
+            .def_rw("velocity", &PlannerState::Cartesian::velocity)
+            .def_rw("acceleration", &PlannerState::Cartesian::acceleration)
+            .def_rw("steering_angle", &PlannerState::Cartesian::steering_angle);
+        nb::class_<PlannerState::Curvilinear>(m, "CurvilinearPlannerState")
+            .def(nb::init<Eigen::Vector3d, Eigen::Vector3d>(),
+                 nb::arg("x0_lon"),
+                 nb::arg("x0_lat")
             )
-            .def_readwrite("x0_lon", &PlannerState::Curvilinear::x0_lon)
-            .def_readwrite("x0_lat", &PlannerState::Curvilinear::x0_lat);
-
-        py::class_<PlannerState>(m, "PlannerState")
-            .def(py::init<PlannerState::Cartesian, PlannerState::Curvilinear, double>(),
-                 py::arg("x_0"),
-                 py::arg("x_cl"),
-                 py::arg("wheelbase")
+            .def_rw("x0_lon", &PlannerState::Curvilinear::x0_lon)
+            .def_rw("x0_lat", &PlannerState::Curvilinear::x0_lat);
+        nb::class_<PlannerState>(m, "PlannerState")
+            .def(nb::init<PlannerState::Cartesian, PlannerState::Curvilinear, double>(),
+                 nb::arg("x_0"),
+                 nb::arg("x_cl"),
+                 nb::arg("wheelbase")
             )
-            .def_readwrite("x_0", &PlannerState::x_0)
-            .def_readwrite("x_cl", &PlannerState::x_cl)
-            .def_readwrite("wheelbase", &PlannerState::wheelbase);
+            .def_rw("x_0", &PlannerState::x_0)
+            .def_rw("x_cl", &PlannerState::x_cl)
+            .def_rw("wheelbase", &PlannerState::wheelbase);
 
         m.def("compute_initial_state",
                 &computeInitialState,
-                py::arg("coordinate_system"),
-                py::arg("x_0"),
-                py::arg("wheelbase"),
-                py::arg("low_velocity_mode")
-            );
+                nb::arg("coordinate_system"),
+                nb::arg("x_0"),
+                nb::arg("wheelbase"),
+                nb::arg("low_velocity_mode")
+        );
 
-        py::class_<TrajectorySample>(m, "TrajectorySample")
-            .def(py::init<double, TrajectorySample::LongitudinalTrajectory, TrajectorySample::LateralTrajectory, int>(),
-                 py::arg("dt"),
-                 py::arg("trajectoryLongitudinal"), 
-                 py::arg("trajectoryLateral"), 
-                 py::arg("uniqueId"))
-            .def(py::init<double, double, double, double, double>(),
-                 py::arg("x0"), 
-                 py::arg("y0"),
-                 py::arg("orientation0"), 
-                 py::arg("acceleration0"), 
-                 py::arg("velocity0"))
-            .def_readwrite("dt", &TrajectorySample::m_dT)
-            .def_readwrite("cost", &TrajectorySample::m_cost)
-            .def_readwrite("_cost", &TrajectorySample::m_cost)
-            .def_readwrite("harm_occ_module", &TrajectorySample::m_harm_occ_module)
-            .def_readwrite("_harm_occ_module", &TrajectorySample::m_harm_occ_module)
-            .def_readwrite("_coll_detected", &TrajectorySample::m_collisionDetected)
-            .def_readwrite("uniqueId", &TrajectorySample::m_uniqueId)
-            .def_readwrite("trajectory_long", &TrajectorySample::m_trajectoryLongitudinal)
-            .def_readwrite("trajectory_lat", &TrajectorySample::m_trajectoryLateral)
-            .def_readwrite("cartesian", &TrajectorySample::m_cartesianSample)
-            .def_readwrite("curvilinear", &TrajectorySample::m_curvilinearSample)
-            .def_readwrite("boundary_harm", &TrajectorySample::m_boundaryHarm)
-            .def_readwrite("_ego_risk", &TrajectorySample::m_egoRisk)
-            .def_readwrite("_obst_risk", &TrajectorySample::m_obstRisk)
-            .def_readwrite("feasabilityMap", &TrajectorySample::m_feasabilityMap)
-            .def_readwrite("costMap", &TrajectorySample::m_costMap)
-            .def_readwrite("feasible", &TrajectorySample::m_feasible)
-            .def_readwrite("valid", &TrajectorySample::m_valid)
-            .def_property("sampling_parameters",
+        nb::class_<TrajectorySample>(m, "TrajectorySample")
+            .def(nb::init<double, TrajectorySample::LongitudinalTrajectory, TrajectorySample::LateralTrajectory, int>(),
+                 nb::arg("dt"),
+                 nb::arg("trajectoryLongitudinal"), 
+                 nb::arg("trajectoryLateral"), 
+                 nb::arg("uniqueId"))
+            .def(nb::init<double, double, double, double, double>(),
+                 nb::arg("x0"), 
+                 nb::arg("y0"),
+                 nb::arg("orientation0"), 
+                 nb::arg("acceleration0"), 
+                 nb::arg("velocity0"))
+            .def_rw("dt", &TrajectorySample::m_dT)
+            .def_rw("cost", &TrajectorySample::m_cost)
+            .def_rw("_cost", &TrajectorySample::m_cost)
+            .def_rw("harm_occ_module", &TrajectorySample::m_harm_occ_module)
+            .def_rw("_harm_occ_module", &TrajectorySample::m_harm_occ_module)
+            .def_rw("_coll_detected", &TrajectorySample::m_collisionDetected)
+            .def_rw("uniqueId", &TrajectorySample::m_uniqueId)
+            .def_rw("trajectory_long", &TrajectorySample::m_trajectoryLongitudinal)
+            .def_rw("trajectory_lat", &TrajectorySample::m_trajectoryLateral)
+            .def_rw("cartesian", &TrajectorySample::m_cartesianSample)
+            .def_rw("curvilinear", &TrajectorySample::m_curvilinearSample)
+            .def_rw("boundary_harm", &TrajectorySample::m_boundaryHarm)
+            .def_rw("_ego_risk", &TrajectorySample::m_egoRisk)
+            .def_rw("_obst_risk", &TrajectorySample::m_obstRisk)
+            .def_rw("feasabilityMap", &TrajectorySample::m_feasabilityMap)
+            .def_rw("costMap", &TrajectorySample::m_costMap)
+            .def_rw("feasible", &TrajectorySample::m_feasible)
+            .def_rw("valid", &TrajectorySample::m_valid)
+            .def_prop_rw("sampling_parameters",
                 [](TrajectorySample &self) -> Eigen::Ref<Eigen::VectorXd> { return self.m_samplingParameters;},
                 [](TrajectorySample &self, const Eigen::Ref<const Eigen::VectorXd> arr) {self.m_samplingParameters = arr;})
 
             .def_static("compute_standstill_trajectory",
                 &TrajectorySample::standstillTrajectory,
-                py::arg("coordinate_system"),
-                py::arg("planner_state"),
-                py::arg("dt"),
-                py::arg("horizon")
+                nb::arg("coordinate_system"),
+                nb::arg("planner_state"),
+                nb::arg("dt"),
+                nb::arg("horizon")
             )
 
+            .def("__getstate__",
+                [](const TrajectorySample &traj) {
+                    nb::dict d;
 
-            .def(py::pickle(
-                [](const TrajectorySample &traj) { // __getstate__
-                    using namespace pybind11::literals; // to bring in the `_a` literal
-                    py::dict d(
-                        "dt"_a=traj.m_dT,
+                    d["dt"]=traj.m_dT;
 
-                        "cost"_a=traj.m_cost,
-                        "feasible"_a=traj.m_feasible,
-                        "valid"_a=traj.m_valid,
+                    d["cost"]=traj.m_cost;
+                    d["feasible"]=traj.m_feasible;
+                    d["valid"]=traj.m_valid;
 
-                        "harm_occ_module"_a=traj.m_harm_occ_module,
-                        "boundary_harm"_a=traj.m_boundaryHarm,
-                        "ego_risk"_a=traj.m_egoRisk,
-                        "obst_risk"_a=traj.m_obstRisk,
-                        "coll_detected"_a=traj.m_collisionDetected,
+                    d["harm_occ_module"]=traj.m_harm_occ_module;
+                    d["boundary_harm"]=traj.m_boundaryHarm;
+                    d["ego_risk"]=traj.m_egoRisk;
+                    d["obst_risk"]=traj.m_obstRisk;
+                    d["coll_detected"]=traj.m_collisionDetected;
 
-                        "feasabilityMap"_a=traj.m_feasabilityMap,
-                        "costMap"_a=traj.m_costMap,
+                    d["feasabilityMap"]=traj.m_feasabilityMap;
+                    d["costMap"]=traj.m_costMap;
 
-                        "uniqueId"_a=traj.m_uniqueId,
+                    d["uniqueId"]=traj.m_uniqueId;
 
-                        "sampling_parameters"_a=traj.m_samplingParameters,
+                    d["sampling_parameters"]=traj.m_samplingParameters;
 
-                        "trajectory_long"_a=traj.m_trajectoryLongitudinal,
-                        "trajectory_lat"_a=traj.m_trajectoryLateral,
+                    d["trajectory_long"]=traj.m_trajectoryLongitudinal;
+                    d["trajectory_lat"]=traj.m_trajectoryLateral;
 
-                        "cartesian"_a=traj.m_cartesianSample,
-                        "curvilinear"_a=traj.m_curvilinearSample
-                    );
+                    d["cartesian"]=traj.m_cartesianSample;
+                    d["curvilinear"]=traj.m_curvilinearSample;
 
                     return d;
-                },
-                [](py::dict d) { // __setstate__
-                    auto traj_long = d["trajectory_long"].cast<TrajectorySample::LongitudinalTrajectory>();
-                    auto traj_lat = d["trajectory_lat"].cast<TrajectorySample::LateralTrajectory>();
+                })
+            .def("__setstate__",
+                [](TrajectorySample &traj, nb::dict d) {
+                    auto traj_long = nb::cast<TrajectorySample::LongitudinalTrajectory>(d["trajectory_long"]);
+                    auto traj_lat = nb::cast<TrajectorySample::LateralTrajectory>(d["trajectory_lat"]);
 
-                    TrajectorySample traj {
-                        d["dt"].cast<double>(),
+                    new (&traj) TrajectorySample {
+                        nb::cast<double>(d["dt"]),
                         traj_long,
                         traj_lat,
-                        d["uniqueId"].cast<int>(),
-                        d["sampling_parameters"].cast<Eigen::VectorXd>()
+                        nb::cast<int>(d["uniqueId"]),
+                        nb::cast<Eigen::VectorXd>(d["sampling_parameters"])
                     };
-                    traj.m_cartesianSample = d["cartesian"].cast<CartesianSample>();
-                    traj.m_curvilinearSample = d["curvilinear"].cast<CurviLinearSample>();
+                    traj.m_cartesianSample = nb::cast<CartesianSample>(d["cartesian"]);
+                    traj.m_curvilinearSample = nb::cast<CurviLinearSample>(d["curvilinear"]);
 
-                    traj.m_feasabilityMap = d["feasabilityMap"].cast<std::map<std::string, double>>();
-                    traj.m_costMap = d["costMap"].cast<std::map<std::string, std::pair<double, double>>>();
+                    traj.m_feasabilityMap = nb::cast<std::map<std::string, double>>(d["feasabilityMap"]);
+                    traj.m_costMap = nb::cast<std::map<std::string, std::pair<double, double>>>(d["costMap"]);
 
-                    traj.m_cost = d["cost"].cast<double>();
-                    traj.m_feasible = d["feasible"].cast<bool>();
-                    traj.m_valid = d["valid"].cast<bool>();
+                    traj.m_cost = nb::cast<double>(d["cost"]);
+                    traj.m_feasible = nb::cast<bool>(d["feasible"]);
+                    traj.m_valid = nb::cast<bool>(d["valid"]);
 
-                    traj.m_harm_occ_module = d["harm_occ_module"].cast<std::optional<double>>();
-                    traj.m_boundaryHarm = d["boundary_harm"].cast<std::optional<double>>();
-                    traj.m_egoRisk = d["ego_risk"].cast<std::optional<double>>();
-                    traj.m_obstRisk = d["obst_risk"].cast<std::optional<double>>();
-                    traj.m_collisionDetected = d["coll_detected"].cast<std::optional<bool>>();
+                    traj.m_harm_occ_module = nb::cast<std::optional<double>>(d["harm_occ_module"]);
+                    traj.m_boundaryHarm = nb::cast<std::optional<double>>(d["boundary_harm"]);
+                    traj.m_egoRisk = nb::cast<std::optional<double>>(d["ego_risk"]);
+                    traj.m_obstRisk = nb::cast<std::optional<double>>(d["obst_risk"]);
+                    traj.m_collisionDetected = nb::cast<std::optional<bool>>(d["coll_detected"]);
 
                     return traj;
                 }
-            ))
+            )
+
             .def("add_cost_value_to_list", 
                 (void (TrajectorySample::*)(std::string, double, double)) &TrajectorySample::addCostValueToList, 
-                py::arg("cost_function_name"), 
-                py::arg("cost"),
-                py::arg("weighted_costs"),
+                nb::arg("cost_function_name"), 
+                nb::arg("cost"),
+                nb::arg("weighted_costs"),
                 "Add a cost value to the list of cost values. This includes the weighted and unweighted cost."
             );
         
