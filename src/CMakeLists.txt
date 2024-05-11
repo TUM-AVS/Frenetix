@@ -1,17 +1,101 @@
-# TODO: List files explicitly
-file(GLOB_RECURSE FP_SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "*.cpp")
-file(GLOB_RECURSE FP_HDR_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "*.hpp")
+set(FP_SRC_FILES
+  "CoordinateSystemWrapper.cpp"
+  "TrajectoryHandler.cpp"
+  "geometryMsgs.cpp"
+  "strategies/CostFunctions/CalculateAccelerationCost.cpp"
+  "strategies/CostFunctions/CalculateCollisionProbabilityFast.cpp"
+  "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.cpp"
+  "strategies/CostFunctions/CalculateDistanceToObstacleCost.cpp"
+  "strategies/CostFunctions/CalculateDistanceToReferencePathCost.cpp"
+  "strategies/CostFunctions/CalculateJerkCost.cpp"
+  "strategies/CostFunctions/CalculateLaneCenterOffsetCost.cpp"
+  "strategies/CostFunctions/CalculateLateralJerkCost.cpp"
+  "strategies/CostFunctions/CalculateLongitudinalJerkCost.cpp"
+  "strategies/CostFunctions/CalculateLongitudinalVelocityCost.cpp"
+  "strategies/CostFunctions/CalculateOrientationOffsetCost.cpp"
+  "strategies/CostFunctions/CalculateSteeringAngleCost.cpp"
+  "strategies/CostFunctions/CalculateSteeringRateCost.cpp"
+  "strategies/CostFunctions/CalculateVelocityOffsetCost.cpp"
+  "strategies/CostFunctions/CalculateYawCost.cpp"
+  "strategies/FeasabilityFunctions/CheckAccelerationConstraint.cpp"
+  "strategies/FeasabilityFunctions/CheckCurvatureConstraints.cpp"
+  "strategies/FeasabilityFunctions/CheckCurvatureRateConstrains.cpp"
+  "strategies/FeasabilityFunctions/CheckVelocityConstraints.cpp"
+  "strategies/FeasabilityFunctions/CheckYawRateConstraint.cpp"
+  "strategies/FeasabilityFunctions/CheckYawRateConstraint.cpp"
+  "strategies/Functions/ComputeInitalState.cpp"
+  "strategies/Functions/FillCoordinates.cpp"
+  "trajectory/CartesianSample.cpp"
+  "trajectory/CurvilinearSample.cpp"
+  "trajectory/TrajectorySample.cpp"
+  "util.cpp"
+)
 
-list(FILTER FP_SRC_FILES EXCLUDE REGEX "math/")
-list(FILTER FP_HDR_FILES EXCLUDE REGEX "math/")
+set(FP_HDR_FILES
+  "CoordinateSystemWrapper.hpp"
+  "TrajectoryHandler.hpp"
+  "geometryMsgs.hpp"
+  "strategies/CostFunctions/CalculateAccelerationCost.hpp"
+  "strategies/CostFunctions/CalculateCollisionProbabilityFast.hpp"
+  "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.hpp"
+  "strategies/CostFunctions/CalculateDistanceToObstacleCost.hpp"
+  "strategies/CostFunctions/CalculateDistanceToReferencePathCost.hpp"
+  "strategies/CostFunctions/CalculateJerkCost.hpp"
+  "strategies/CostFunctions/CalculateLaneCenterOffsetCost.hpp"
+  "strategies/CostFunctions/CalculateLateralJerkCost.hpp"
+  "strategies/CostFunctions/CalculateLongitudinalJerkCost.hpp"
+  "strategies/CostFunctions/CalculateLongitudinalVelocityCost.hpp"
+  "strategies/CostFunctions/CalculateOrientationOffsetCost.hpp"
+  "strategies/CostFunctions/CalculateSteeringAngleCost.hpp"
+  "strategies/CostFunctions/CalculateSteeringRateCost.hpp"
+  "strategies/CostFunctions/CalculateVelocityOffsetCost.hpp"
+  "strategies/CostFunctions/CalculateYawCost.hpp"
+  "strategies/FeasabilityFunctions/CheckAccelerationConstraint.hpp"
+  "strategies/FeasabilityFunctions/CheckCurvatureConstraints.hpp"
+  "strategies/FeasabilityFunctions/CheckCurvatureRateConstrains.hpp"
+  "strategies/FeasabilityFunctions/CheckVelocityConstraints.hpp"
+  "strategies/FeasabilityFunctions/CheckYawRateConstraint.hpp"
+  "strategies/FeasabilityFunctions/CheckYawRateConstraint.hpp"
+  "strategies/Functions/ComputeInitalState.hpp"
+  "strategies/Functions/FillCoordinates.hpp"
+  "trajectory/CartesianSample.hpp"
+  "trajectory/CurvilinearSample.hpp"
+  "trajectory/TrajectorySample.hpp"
+  "util.hpp"
+)
 
-set(FP_PYTHON_SRC_FILES ${FP_SRC_FILES})
-set(FP_PYTHON_HDR_FILES ${FP_HDR_FILES})
+set(FP_PYTHON_SRC_FILES
+  "pybind11Bindings/cartesianSampleBinding.cpp"
+  "pybind11Bindings/coordinateSystemWrapperBinding.cpp"
+  "pybind11Bindings/costStrategyBinding.cpp"
+  "pybind11Bindings/curviLinearSampleBinding.cpp"
+  "pybind11Bindings/feasabilityStrategyBinding.cpp"
+  "pybind11Bindings/geometryMsgsBinding.cpp"
+  "pybind11Bindings/handlerBinding.cpp"
+  "pybind11Bindings/mainBindings.cpp"
+  "pybind11Bindings/polynomialTrajectoryBinding.cpp"
+  "pybind11Bindings/trajectoryFunctionsBinding/costFunctionsBinding.cpp"
+  "pybind11Bindings/trajectoryFunctionsBinding/feasabilityFunctionsBinding.cpp"
+  "pybind11Bindings/trajectoryFunctionsBinding/otherFunctionsBinding.cpp"
+  "pybind11Bindings/trajectorySampleBinding.cpp"
+  "pybind11Bindings/trajectoryStrategyBinding.cpp"
+)
 
-list(FILTER FP_SRC_FILES EXCLUDE REGEX "pybind11Bindings/")
-list(FILTER FP_HDR_FILES EXCLUDE REGEX "pybind11Bindings/")
-list(FILTER FP_PYTHON_SRC_FILES INCLUDE REGEX "pybind11Bindings/")
-list(FILTER FP_PYTHON_HDR_FILES INCLUDE REGEX "pybind11Bindings/")
+set(FP_PYTHON_HDR_FILES
+  "pybind11Bindings/cartesianSampleBinding.hpp"
+  "pybind11Bindings/coordinateSystemWrapperBinding.hpp"
+  "pybind11Bindings/costStrategyBinding.hpp"
+  "pybind11Bindings/curviLinearSampleBinding.hpp"
+  "pybind11Bindings/feasabilityStrategyBinding.hpp"
+  "pybind11Bindings/geometryMsgsBinding.hpp"
+  "pybind11Bindings/handlerBinding.hpp"
+  "pybind11Bindings/polynomialTrajectoryBinding.hpp"
+  "pybind11Bindings/trajectoryFunctionsBinding/costFunctionsBinding.hpp"
+  "pybind11Bindings/trajectoryFunctionsBinding/feasabilityFunctionsBinding.hpp"
+  "pybind11Bindings/trajectoryFunctionsBinding/otherFunctionsBinding.hpp"
+  "pybind11Bindings/trajectorySampleBinding.hpp"
+  "pybind11Bindings/trajectoryStrategyBinding.hpp"
+)
 
 add_library(mathutil OBJECT
         math/mvndst.f
