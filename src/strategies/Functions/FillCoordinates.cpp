@@ -142,14 +142,15 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
 
         if(trajectory.m_curvilinearSample.ss[iii] > 0.001)
         {
-            trajectory.m_curvilinearSample.theta[iii] = std::atan2(dp, 1.0);
+            // atan2(dp, 1.0) = atan(dp)
+            trajectory.m_curvilinearSample.theta[iii] = std::atan(dp);
             trajectory.m_cartesianSample.theta[iii] = trajectory.m_curvilinearSample.theta[iii] + interPolatedAngle;
         }
         else
         {
             if(m_lowVelocityMode)
             {
-                trajectory.m_curvilinearSample.theta[iii] = std::atan2(dp, 1.0);
+                trajectory.m_curvilinearSample.theta[iii] = std::atan(dp);
                 trajectory.m_cartesianSample.theta[iii] = trajectory.m_curvilinearSample.theta[iii] + interPolatedAngle;
             }
             else
