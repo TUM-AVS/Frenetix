@@ -19,6 +19,12 @@ namespace util
 
     double make_valid_orientation(double angle);
 
+    Eigen::Rotation2Dd interpolate_angle(const double x,
+                            const double x1, 
+                            const double x2, 
+                            const Eigen::Rotation2Dd r1, 
+                            const Eigen::Rotation2Dd r2);
+
     double interpolate_angle(const double x,
                              const double x1, 
                              const double x2, 

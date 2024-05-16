@@ -29,27 +29,33 @@ namespace util
         return angle;
     }
 
+    Eigen::Rotation2Dd interpolate_angle(const double x,
+                            const double x1, 
+                            const double x2, 
+                            const Eigen::Rotation2Dd r1, 
+                            const Eigen::Rotation2Dd r2)
+    {
+        // Define an epsilon value for comparison
+        const double epsilon = std::numeric_limits<double>::epsilon() * 100;
+
+        // Check if x1 and x2 are almost equal
+        if (Eigen::internal::isApprox(x1, x2, epsilon)) {
+            return r1;
+        }
+
+        return r1.slerp((x - x1) / (x2 - x1), r2);
+    }
+
     double interpolate_angle(const double x,
                             const double x1, 
                             const double x2, 
                             const double y1, 
                             const double y2)
     {
-        // Define an epsilon value for comparison
-        const double epsilon = std::numeric_limits<double>::epsilon() * 100;
+        Eigen::Rotation2Dd r1(y1);
+        Eigen::Rotation2Dd r2(y2);
 
-        // Check if x1 and x2 are almost equal
-        if (std::abs(x1 - x2) <= epsilon) {
-            return make_valid_orientation(y1);
-        }
-
-        auto delta = y2 - y1;
-        auto delta_2pi_minus = delta - TWO_PI;
-        auto delta_2pi_plus = delta + TWO_PI;
-        Eigen::VectorXd vec(3);
-        vec << delta, delta_2pi_minus, delta_2pi_plus;
-        delta = absmin(vec);
-        return make_valid_orientation(delta * (x - x1) / (x2 - x1) + y1);
+        return interpolate_angle(x, x1, x2, r1, r2).smallestAngle();
     }
 
     geometry::EigenPolyline matrixToVector2d(const RowMatrixXd& mat)
