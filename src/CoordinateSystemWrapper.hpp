@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include <memory>
+#include <optional>
 
 #include <geometry/util.h>
 #include <util.hpp>
@@ -38,7 +39,7 @@ public:
     
     CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> ref_path);
 
-    int getS_idx(double s) const;
+    std::optional<int> getS_idx(double s) const;
     double getSLambda(double s, int s_idx) const;
 
     const RowMatrixXd& getRefPath() const { return m_refPath; }

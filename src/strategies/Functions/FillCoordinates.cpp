@@ -122,7 +122,15 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
                 dpp = 0;
             }
         }
-        int s_idx = m_coordinateSystem->getS_idx(trajectory.m_curvilinearSample.s[iii]);
+
+        auto s_idx_opt = m_coordinateSystem->getS_idx(trajectory.m_curvilinearSample.s[iii]);
+        if (!s_idx_opt.has_value()) {
+            trajectory.m_valid = false;
+            trajectory.m_feasible = false;
+            return;
+        }
+        auto s_idx = s_idx_opt.value();
+
         double sLambda = m_coordinateSystem->getSLambda(trajectory.m_curvilinearSample.s[iii], s_idx);
 
         double interPolatedAngle = util::interpolate_angle(trajectory.m_curvilinearSample.s[iii],

@@ -23,8 +23,26 @@ CoordinateSystemWrapper::CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> refPath
 
 }
 
-int CoordinateSystemWrapper::getS_idx(double s) const
+std::optional<int> CoordinateSystemWrapper::getS_idx(double s) const
 {
+    auto it = std::lower_bound(m_refPos.cbegin(), m_refPos.cend(), s);
+    std::optional<int> new_idx = std::nullopt;
+
+    if (it == m_refPos.cend()) {
+        if (m_refPos.size() >= 2 && s >= m_refPos[m_refPos.size() - 1]) {
+            new_idx = m_refPos.size() - 1;
+        } else {
+            new_idx = std::nullopt;
+        }
+    } else if (std::distance(m_refPos.cbegin(), it) >= 1) {
+        new_idx = std::distance(m_refPos.cbegin(), it) - 1;
+    } else if (it == m_refPos.cbegin() && s >= *it) {
+        new_idx = 0;
+    } else {
+        new_idx = std::nullopt;
+    }
+
+#ifndef NDEBUG
     int s_idx=0;
     for(int k=0; k < m_refPos.size(); k++)
     {
@@ -34,7 +52,15 @@ int CoordinateSystemWrapper::getS_idx(double s) const
             break;
         }
     }
-    return s_idx-1;
+    auto orig_idx = s_idx - 1;
+
+    if (new_idx.value_or(-1) != orig_idx) {
+        fprintf(stderr, "s=%lf old=%d new=%d i0=%lf sz=%zd\n", s, orig_idx, new_idx.value_or(-1), m_refPos[0], m_refPos.size());
+        std::abort();
+    }
+#endif
+
+    return new_idx;
 }
 
 double CoordinateSystemWrapper::getSLambda(double s, int s_idx) const

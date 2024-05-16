@@ -100,8 +100,11 @@ PlannerState::Curvilinear computeInitialState(
     x_cl.x0_lon[0] = curviCords[0];
     x_cl.x0_lat[0] = curviCords[1];    
 
-    int s_idx = coordinateSystem->getS_idx(x_cl.x0_lon[0]);
-    assert(s_idx != -1);
+    auto s_idx_opt = coordinateSystem->getS_idx(x_cl.x0_lon[0]);
+    if (!s_idx_opt.has_value()) {
+        throw std::runtime_error { "failed to find CCS segment for initial state" };
+    }
+    auto s_idx = s_idx_opt.value();
     double sLambda = coordinateSystem->getSLambda(x_cl.x0_lon[0], s_idx);
 
     double theta = x_0.orientation - 
@@ -208,7 +211,11 @@ TrajectorySample TrajectorySample::standstillTrajectory(
     const Eigen::VectorXd& refPos = coordinateSystem->m_refPos;
     const Eigen::VectorXd& refTheta = coordinateSystem->m_refTheta;
 
-    int s_idx = coordinateSystem->getS_idx(state.x_cl.x0_lon[0]);
+    auto s_idx_opt = coordinateSystem->getS_idx(state.x_cl.x0_lon[0]);
+    if (!s_idx_opt.has_value()) {
+        throw std::runtime_error { "failed to find CCS segment for standstill trajectory" };
+    }
+    auto s_idx = s_idx_opt.value();
 
     double theta_cl = util::interpolate_angle(state.x_cl.x0_lon[0],
                                                        refPos[s_idx],
