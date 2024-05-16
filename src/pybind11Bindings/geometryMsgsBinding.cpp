@@ -34,7 +34,6 @@ namespace plannerCPP
             .def_ro("covariance", &PoseWithCovariance::covariance);
 
         nb::class_<PredictedObject>(m, "PredictedObject")
-            //.def(nb::init<size_t>())
             .def(nb::init<int, const std::vector<PoseWithCovariance>&, double, double>())
             .def("__repr__", [](const PredictedObject &p) {
                 std::ostringstream oss;

@@ -8,7 +8,6 @@
 
 struct PoseWithCovariance
 {
-    PoseWithCovariance();
     PoseWithCovariance(
         const Eigen::Vector3d& position,
         const Eigen::Quaterniond& orientation,
@@ -26,7 +25,6 @@ struct PoseWithCovariance
 
 struct PredictedObject
 {
-    PredictedObject(size_t length);
     PredictedObject(
         int object_id,
         std::vector<PoseWithCovariance> predictedPath,

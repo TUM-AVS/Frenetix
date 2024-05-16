@@ -1,12 +1,6 @@
 #include "geometryMsgs.hpp"
 
-PoseWithCovariance::PoseWithCovariance()
-    : position(0,0,0)
-    , orientation(0,0,0,0)
-    , covariance(Eigen::Matrix<double,6,6>::Zero())
-{
-
-}
+#include <math/covariance.hpp>
 
 PoseWithCovariance::PoseWithCovariance(
         const Eigen::Vector3d& position,
@@ -17,7 +11,7 @@ PoseWithCovariance::PoseWithCovariance(
     , orientation(orientation)
     , covariance(covariance)
 {
-
+    check_covariance_matrix(covariance);
 }
 
 std::ostream& operator<<(std::ostream& os, const PoseWithCovariance& pose)
@@ -30,12 +24,6 @@ std::ostream& operator<<(std::ostream& os, const PoseWithCovariance& pose)
     return os;
 }
 
-PredictedObject::PredictedObject(size_t length)
-    : predictedPath(length)
-{
-
-}
-
 PredictedObject::PredictedObject(
         int object_id,
         std::vector<PoseWithCovariance> predictedPath,
@@ -45,7 +33,7 @@ PredictedObject::PredictedObject(
     : object_id(object_id)
     , length(length)
     , width(width)
-    , predictedPath(predictedPath)
+    , predictedPath(std::move(predictedPath))
 {
 }
 
