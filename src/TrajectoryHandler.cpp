@@ -10,6 +10,9 @@
 #include "TrajectoryStrategy.hpp"
 #include "polynomial.hpp"
 
+#include <taskflow/algorithm/transform.hpp>
+#include <taskflow/algorithm/for_each.hpp>
+
 TrajectoryHandler::TrajectoryHandler(double dt)
     : m_dt(dt)
 {
@@ -54,82 +57,44 @@ void TrajectoryHandler::evaluateAllCurrentFunctions(bool calculateAllCosts)
     //Iterate over all trajectories
     for(auto& trajectory: m_trajectories)
     {
-        //Iterate over all otherFunctions and evaluate it for the given trajectory
-        for(auto& [funName, function] : m_otherFunctions)
-        {
-            function->evaluateTrajectory(trajectory);
-        }
-
-        if (!trajectory.m_valid) continue;
-
-        //Iterate over all costFunctions and evaluate it for the given trajectory
-        for(auto& [funName, function] : m_feasabilityFunctions)
-        {
-            function->evaluateTrajectory(trajectory);
-        }
-
-        if (trajectory.m_feasible || calculateAllCosts)
-        {
-            //All costFunctions
-            for(auto& [funName, function] : m_costFunctions)
-            {
-                function->evaluateTrajectory(trajectory);
-            }
-        }
+        evaluateTrajectory(trajectory, calculateAllCosts);    
     }
 
     removeInvalid();
 }
 
+void TrajectoryHandler::evaluateTrajectory(TrajectorySample& trajectory, bool calculateAllCosts)
+{
+    for(auto& [funName, function] : m_otherFunctions)
+    {
+        function->evaluateTrajectory(trajectory);
+    }
+
+    if (!trajectory.m_valid) return;
+
+    for(auto& [funName, function] : m_feasabilityFunctions) 
+    {
+        function->evaluateTrajectory(trajectory);
+    }
+
+    if (!trajectory.m_valid) return;
+
+    if (trajectory.m_feasible || calculateAllCosts) 
+    {
+        for(auto& [funName, function] : m_costFunctions)
+        {
+            function->evaluateTrajectory(trajectory);
+        }
+    }
+}
+
 void TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent(bool calculateAllCosts)
 {
     //Iterate over all trajectories
-    for(auto& trajectory: m_trajectories)
-    {
-        tf::Task A = m_taskflow.emplace
-        (
-            [this, &trajectory]()
-            {
-                for(auto& [funName, function] : m_otherFunctions)
-                {
-                    function->evaluateTrajectory(trajectory);
-                }
-            }
-        );
+    tf::Task t_eval = m_taskflow.for_each(m_trajectories.begin(), m_trajectories.end(), [this, calculateAllCosts] (auto& trajectory) {
+        evaluateTrajectory(trajectory, calculateAllCosts);
+    });
 
-        tf::Task B = m_taskflow.emplace
-        (
-            [this, &trajectory]()
-            {
-                if (!trajectory.m_valid) return;
-
-                for(auto& [funName, function] : m_feasabilityFunctions) 
-                {
-                    function->evaluateTrajectory(trajectory);
-                }
-            }
-        );
-
-        tf::Task C = m_taskflow.emplace
-        (
-            [this, &trajectory, calculateAllCosts]
-            {
-                if (!trajectory.m_valid) return;
-
-                if (trajectory.m_feasible || calculateAllCosts) 
-                {
-                    for(auto& [funName, function] : m_costFunctions)
-                    {
-                        function->evaluateTrajectory(trajectory);
-                    }
-                }
-            }
-        );
-
-        // Define the dependencies between the tasks
-        A.precede(B);
-        B.precede(C);
-    }
     m_executor.run(m_taskflow).wait();
 
     m_taskflow.clear();
