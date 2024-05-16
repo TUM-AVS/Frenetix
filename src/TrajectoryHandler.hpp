@@ -91,9 +91,9 @@ public:
     void resetTrajectories();
 
     std::vector<TrajectorySample> m_trajectories;
-    std::map<std::string, std::shared_ptr<CostStrategy>> m_costFunctions;
-    std::map<std::string, std::shared_ptr<FeasabilityStrategy>> m_feasabilityFunctions;
-    std::map<std::string, std::shared_ptr<TrajectoryStrategy>> m_otherFunctions;
+    std::unordered_map<std::string, std::shared_ptr<CostStrategy>> m_costFunctions;
+    std::unordered_map<std::string, std::shared_ptr<FeasabilityStrategy>> m_feasabilityFunctions;
+    std::unordered_map<std::string, std::shared_ptr<TrajectoryStrategy>> m_otherFunctions;
 private:
     double m_dt;
     tf::Taskflow m_taskflow;
