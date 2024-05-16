@@ -194,10 +194,6 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
             trajectory.m_feasible = false;
             return;
         }
-        catch(...)
-        {
-            std::cout << "Caught unknown exception" << std::endl;
-        }
     }
 }
 
