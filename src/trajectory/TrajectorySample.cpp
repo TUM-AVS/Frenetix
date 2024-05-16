@@ -12,15 +12,10 @@ TrajectorySample::TrajectorySample(double dT,
                                    TrajectorySample::LateralTrajectory trajectoryLateral,
                                    int uniqueId)
     : m_dT (dT)
-    , m_cost (0)
     , m_harm_occ_module (0)
     , m_uniqueId (uniqueId)
-    , m_feasible (true)
-    , m_samplingParameters ()
-    , m_trajectoryLongitudinal (trajectoryLongitudinal)
-    , m_trajectoryLateral (trajectoryLateral)
-    , m_cartesianSample ()
-    , m_curvilinearSample ()
+    , m_trajectoryLongitudinal (std::move(trajectoryLongitudinal))
+    , m_trajectoryLateral (std::move(trajectoryLateral))
 {
 
 }
@@ -31,15 +26,11 @@ TrajectorySample::TrajectorySample(double dT,
                                    int uniqueId,
                                    Eigen::VectorXd samplingParameters)
     : m_dT (dT)
-    , m_cost (0)
     , m_harm_occ_module (0)
     , m_uniqueId (uniqueId)
-    , m_feasible (true)
     , m_samplingParameters (samplingParameters)
-    , m_trajectoryLongitudinal (trajectoryLongitudinal)
-    , m_trajectoryLateral (trajectoryLateral)
-    , m_cartesianSample ()
-    , m_curvilinearSample ()
+    , m_trajectoryLongitudinal (std::move(trajectoryLongitudinal))
+    , m_trajectoryLateral (std::move(trajectoryLateral))
 {
 
 }
@@ -160,8 +151,8 @@ PlannerState::Curvilinear computeInitialState(
 }
 
 TrajectorySample TrajectorySample::standstillTrajectory(
-        std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-        PlannerState state,
+        const std::shared_ptr<CoordinateSystemWrapper>& coordinateSystem,
+        const PlannerState& state,
         double dt,
         double horizon
 ) {
@@ -192,8 +183,8 @@ TrajectorySample TrajectorySample::standstillTrajectory(
         -1
     );
 
-    size_t length = static_cast<size_t>(1+(horizon / dt));
-    traj.m_acutualSize = length;
+    const auto length = static_cast<size_t>(1+(horizon / dt));
+    traj.m_actualSize = length;
     traj.initArraysWithSize(length);
 
     double kappa_0 = tan(state.x_0.steering_angle) / state.wheelbase; 

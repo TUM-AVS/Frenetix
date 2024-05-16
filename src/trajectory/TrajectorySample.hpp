@@ -6,6 +6,7 @@
 #include <optional>
 #include <string>
 #include <utility>
+#include <unordered_map>
 
 #include "CartesianSample.hpp"
 #include "CurvilinearSample.hpp"
@@ -37,11 +38,30 @@ PlannerState::Curvilinear computeInitialState(
 class TrajectorySample
 {
 public:
-    size_t m_size;
-    size_t m_acutualSize;
-    double m_dT;
-    double m_cost;
+    CartesianSample m_cartesianSample;
+    CurviLinearSample m_curvilinearSample;
 
+    using LongitudinalTrajectory = PolynomialTrajectory<4, 3, 2>;
+    using LateralTrajectory = PolynomialTrajectory<5, 3, 3>;
+    static const LongitudinalTrajectory::OrderVectorX0 LongitudinalX0Order;
+    static const LongitudinalTrajectory::OrderVectorXD LongitudinalXDOrder;
+    LongitudinalTrajectory m_trajectoryLongitudinal;
+    LateralTrajectory m_trajectoryLateral;
+
+    Eigen::Vector<double, 13> m_samplingParameters;
+
+    std::unordered_map<std::string, std::pair<double,double>> m_costMap;
+    std::unordered_map<std::string, double> m_feasabilityMap;
+
+    size_t m_size;
+    size_t m_actualSize;
+    double m_dT; // = NaN
+    double m_cost = 0.0;
+
+    bool m_valid = true;
+    bool m_feasible = true;
+
+    // These variables are only used by Python
     std::optional<double> m_harm_occ_module;
     std::optional<double> m_boundaryHarm;
 
@@ -51,25 +71,6 @@ public:
 
     std::optional<int> m_currentTimeStep;
     std::optional<int> m_uniqueId;
-
-    bool m_feasible;
-
-    Eigen::VectorXd m_samplingParameters;
-
-    std::map<std::string, std::pair<double,double>> m_costMap;
-    std::map<std::string, double> m_feasabilityMap;
-
-    using LongitudinalTrajectory = PolynomialTrajectory<4, 3, 2>;
-    using LateralTrajectory = PolynomialTrajectory<5, 3, 3>;
-    static const LongitudinalTrajectory::OrderVectorX0 LongitudinalX0Order;
-    static const LongitudinalTrajectory::OrderVectorXD LongitudinalXDOrder;
-    LongitudinalTrajectory m_trajectoryLongitudinal;
-    LateralTrajectory m_trajectoryLateral;
-
-    CartesianSample m_cartesianSample;
-    CurviLinearSample m_curvilinearSample;
-
-    bool m_valid = true;
 
     TrajectorySample(double dt,
                      LongitudinalTrajectory trajectoryLongitudinal,
@@ -83,8 +84,8 @@ public:
                      Eigen::VectorXd samplingParameters);
 
     static TrajectorySample standstillTrajectory(
-        std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-        PlannerState state,
+        const std::shared_ptr<CoordinateSystemWrapper>& coordinateSystem,
+        const PlannerState& state,
         double dt,
         double horizon
     );

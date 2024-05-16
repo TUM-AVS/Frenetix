@@ -2,14 +2,14 @@
 #include <nanobind/eigen/dense.h> // IWYU pragma: keep
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
-#include <nanobind/stl/map.h>
+#include <nanobind/stl/unordered_map.h>
 #include <nanobind/stl/optional.h>
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/pair.h>
 
 
 #include <Eigen/Core>
-#include <map>
+#include <unordered_map>
 #include <optional>
 #include <string>
 #include <utility>
@@ -154,8 +154,8 @@ namespace plannerCPP
                     traj.m_cartesianSample = nb::cast<CartesianSample>(d["cartesian"]);
                     traj.m_curvilinearSample = nb::cast<CurviLinearSample>(d["curvilinear"]);
 
-                    traj.m_feasabilityMap = nb::cast<std::map<std::string, double>>(d["feasabilityMap"]);
-                    traj.m_costMap = nb::cast<std::map<std::string, std::pair<double, double>>>(d["costMap"]);
+                    traj.m_feasabilityMap = nb::cast<std::unordered_map<std::string, double>>(d["feasabilityMap"]);
+                    traj.m_costMap = nb::cast<std::unordered_map<std::string, std::pair<double, double>>>(d["costMap"]);
 
                     traj.m_cost = nb::cast<double>(d["cost"]);
                     traj.m_feasible = nb::cast<bool>(d["feasible"]);

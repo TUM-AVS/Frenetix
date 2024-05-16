@@ -33,12 +33,13 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
     const Eigen::VectorXd& refCurv = m_coordinateSystem->m_refCurv;
     const Eigen::VectorXd& refTheta = m_coordinateSystem->m_refTheta;
     const Eigen::VectorXd& refCurvD = m_coordinateSystem->m_refCurvD;
+    const auto& ccs = m_coordinateSystem->getSystem();
 
-    double dp {0};
-    double dpp {0};
+    double dp {0.0};
+    double dpp {0.0};
 
-    double currentHorizon = trajectory.m_samplingParameters[1] - trajectory.m_samplingParameters[0];
-    size_t actualLength = static_cast<size_t>(1+(currentHorizon / trajectory.m_dT));
+    const double currentHorizon = trajectory.m_samplingParameters[1] - trajectory.m_samplingParameters[0];
+    const auto actualLength = static_cast<size_t>(1+(currentHorizon / trajectory.m_dT));
     size_t length {0};
     
     if(m_horizon > currentHorizon)
@@ -50,7 +51,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         length = actualLength;        
     }
 
-    trajectory.m_acutualSize = actualLength;
+    trajectory.m_actualSize = actualLength;
     trajectory.initArraysWithSize(length);
     trajectory.m_currentTimeStep = length;
 
@@ -184,7 +185,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
 
         try
         {
-            Eigen::Vector2d cartesianPoints = m_coordinateSystem->getSystem()->convertToCartesianCoords(trajectory.m_curvilinearSample.s[iii],trajectory.m_curvilinearSample.d[iii]);
+            Eigen::Vector2d cartesianPoints = ccs->convertToCartesianCoords(trajectory.m_curvilinearSample.s[iii],trajectory.m_curvilinearSample.d[iii]);
             trajectory.m_cartesianSample.x[iii] = cartesianPoints[0];
             trajectory.m_cartesianSample.y[iii] = cartesianPoints[1];
         }

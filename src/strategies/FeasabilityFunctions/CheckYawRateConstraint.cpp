@@ -20,7 +20,7 @@ void CheckYawRateConstraint::evaluateTrajectory(TrajectorySample& trajectory)
 {
     double inFeasability {0};
 
-    size_t lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_acutualSize;
+    size_t lengthToCheck = (m_wholeTrajectory) ? trajectory.m_size : trajectory.m_actualSize;
 
     for (size_t iii = 0; iii < lengthToCheck; ++iii) 
     {
