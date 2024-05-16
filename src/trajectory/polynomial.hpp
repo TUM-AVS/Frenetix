@@ -58,7 +58,7 @@ public:
         : m_t0(t0)
         , m_t1(t1)
     {
-        if (X0 == Eigen::Dynamic || XD == Eigen::Dynamic) {
+        if constexpr (X0 == Eigen::Dynamic || XD == Eigen::Dynamic) {
             if (x_0.size() + x_d.size() != Degree + 1) {
                 throw std::invalid_argument { "Too many or too few equations for the chosen degree" };
             }
@@ -133,6 +133,18 @@ public:
     };
 
     constexpr VVV horner_eval(double t) const;
+
+    inline constexpr
+    double horner_eval_single(double t) const
+    {
+        double f = coeffs[Degree];
+
+        for (int i = Degree - 1; i >= 0; i--) {
+            f = std::fma(t, f, coeffs[i]);
+        }
+
+        return f;
+    }
 
     double get_t0() const { return m_t0; }
 
@@ -220,13 +232,13 @@ PolynomialTrajectory<Degree, X0, XD>::horner_eval(double t) const
     double fpp = fp;
 
     for (int i = Degree - 1; i >= 2; i--) {
-        f = std::fma(t, f, coeffs[i]);
-        fp = std::fma(t, fp, f);
-        fpp = std::fma(t, fpp, fp);
+        f = t * f + coeffs[i];
+        fp = t * fp + f;
+        fpp = t * fpp + fp;
     }
-    f = std::fma(t, f, coeffs[1]);
-    fp = std::fma(t, fp, f);
-    f = std::fma(t, f, coeffs[0]);
+    f = t * f + coeffs[1];
+    fp = t * fp + f;
+    f = t * f + coeffs[0];
 
     return VVV {f, fp, fpp};
 }
@@ -260,7 +272,7 @@ constexpr double PolynomialTrajectory<Degree, X0, XD>::squaredJerkIntegral(doubl
 {
     static_assert(Degree == 5 || Degree == 4, "squared_jerk_integral() is only implemented for Degree 4 and 5");
 
-    if (Degree == 5) {
+    if constexpr (Degree == 5) {
         double t2 = t * t;
         double t3 = t2 * t;
         double t4 = t3 * t;
