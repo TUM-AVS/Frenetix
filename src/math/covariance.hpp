@@ -23,7 +23,7 @@ bool is_positive_semidefinite(
     static_assert(Rows == Cols, "matrix needs to be square");
 
     Eigen::LDLT<Eigen::Matrix<Scalar, Rows, Cols>> ldlt(mat);
-    return ldlt.info() != Eigen::NumericalIssue && ldlt.isPositive();
+    return ldlt.info() == Eigen::Success && ldlt.isPositive();
 }
 
 class invalid_covariance_matrix_error : public std::domain_error {
