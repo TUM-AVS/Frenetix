@@ -7,6 +7,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/QR>
+#include <Eigen/LU>
 
 /**
  * @brief A class representing a polynomial trajectory of a given degree.
@@ -32,12 +33,21 @@ class PolynomialTrajectory
     static_assert((X0 >= 1 || X0 == Eigen::Dynamic) && (XD >= 1 || XD == Eigen::Dynamic), "dimensions need to be positive");
     static_assert(Degree >= 0, "degree needs to be positive");
 
+    static constexpr bool DynamicOrder = X0 == Eigen::Dynamic || XD == Eigen::Dynamic;
+
+    static constexpr int N = DynamicOrder ? Eigen::Dynamic : (Degree + 1);
+
 public:
     using VectorX0 = Eigen::Vector<double, X0>;
     using VectorXD = Eigen::Vector<double, XD>;
     using OrderVectorX0 = Eigen::Vector<int, X0>;
     using OrderVectorXD = Eigen::Vector<int, XD>;
-    using Coeffs = Eigen::Vector<double, Degree + 1>;
+    using Coeffs = Eigen::Vector<double, N>;
+    using TemporalMatrix = Eigen::Matrix<double, N, N>;
+
+    // Both decompositions work - PartialPivLU is a little faster while providing comparable accuracy
+    // using TemporalMatrixDecomp = Eigen::ColPivHouseholderQR<TemporalMatrix>;
+    using TemporalMatrixDecomp = Eigen::PartialPivLU<TemporalMatrix>;
 
     explicit PolynomialTrajectory(const Coeffs& coeffs) 
         : coeffs{coeffs} { }
@@ -84,6 +94,20 @@ public:
                          const VectorXD& x_d)
         : PolynomialTrajectory(t0, t1, x_0, x_d, defaultX0Order(), defaultXDOrder())
     {
+    }
+
+    /**
+     * @brief Constructs a new polynomial trajectory.
+     *
+     * @param x_0 The first point conditions.
+     * @param x_d The second point conditions.
+     */
+    PolynomialTrajectory(const TemporalMatrixDecomp& temp,
+                         const VectorX0& x_0,
+                         const VectorXD& x_d)
+    {
+        coeffs = calc_coeffs_cached(temp, x_0, x_d);
+
     }
 
     static constexpr OrderVectorX0 defaultX0Order()
@@ -164,6 +188,84 @@ public:
     * @throw std::invalid_argument If the Degree is not 4 or 5.
     */
     constexpr double squaredJerkIntegral(double t) const;
+
+    static inline typename Eigen::Vector<double, N> mkRow(int kkk, double t) {
+        Eigen::Vector<double, N> x = Eigen::Vector<double, N>::Zero();
+
+        double t_exp = 1.0;
+
+        for (int colIdx = kkk; colIdx < N; colIdx++)
+        {
+            int coeff = 1;
+
+            for(int uuu = colIdx + 1 - kkk; uuu <= colIdx; uuu++)
+            {
+                coeff *= uuu;
+            }
+
+            x(colIdx) = coeff * t_exp;
+            t_exp *= t;
+        }
+
+        return x;
+    }
+
+    static TemporalMatrix temporalMatrix(double t0, double t1,
+        const OrderVectorX0& x_0_order = defaultX0Order(), const OrderVectorXD& x_d_order = defaultXDOrder()) {
+        static_assert(X0 != Eigen::Dynamic && XD != Eigen::Dynamic, "dynamic order unsupported");
+
+        Eigen::Matrix<double, N, N> anew;
+
+        for (int idx = 0; idx < X0; idx++)
+        {
+            anew.row(idx) = mkRow(x_0_order[idx], t0);
+        }
+
+        for (int idx = 0; idx < XD; idx++)
+        {
+            anew.row(X0 + idx) = mkRow(x_d_order[idx], t1);
+        }
+
+        return anew;
+    }
+
+    static inline TemporalMatrixDecomp temporalCoeffsDecomp(const TemporalMatrix& temp) {
+        return TemporalMatrixDecomp(temp);
+    }
+
+    static TemporalMatrixDecomp temporalCoeffs(double t0, double t1,
+        const OrderVectorX0& x_0_order = defaultX0Order(), const OrderVectorXD& x_d_order = defaultXDOrder()) {
+        TemporalMatrix mat = temporalMatrix(t0, t1, x_0_order, x_d_order);
+        return temporalCoeffsDecomp(mat);
+    }
+
+    /**
+     * @brief Calculates the polynomial coefficients using a cached decomposition.
+     */
+    static Coeffs calc_coeffs_cached(const TemporalMatrixDecomp& temp,
+        const VectorX0& x_0, const VectorXD& x_d) {
+        static_assert(X0 != Eigen::Dynamic && XD != Eigen::Dynamic, "dynamic order unsupported");
+
+        Eigen::Vector<double, N> b;
+
+        b.template head<X0>() = x_0;
+        b.template tail<XD>() = x_d;
+
+        Coeffs solution = temp.solve(b);
+
+        return solution;
+    }
+
+    /**
+     * @brief Calculates the polynomial coefficients.
+     */
+    static Coeffs calc_coeffs_new(double t0, double t1,
+        const OrderVectorX0& x_0_order, const OrderVectorXD& x_d_order,
+        const VectorX0& x_0, const VectorXD& x_d) {
+        const auto temp = temporalCoeffs(t0, t1, x_0_order, x_d_order);
+
+        return calc_coeffs_cached(temp, x_0, x_d);
+    }
 
 private:
     Coeffs coeffs;
