@@ -106,8 +106,8 @@ public:
      * @brief Calculates the polynomial coefficients.
      */
     static Coeffs calc_coeffs(double t0, double t1,
-        VectorX0 x_0, VectorXD x_d,
-        OrderVectorX0 x_0_order, OrderVectorXD x_d_order);
+        const VectorX0& x_0, const VectorXD& x_d,
+        const OrderVectorX0& x_0_order, const OrderVectorXD& x_d_order);
 
 
     /**
@@ -172,8 +172,8 @@ private:
 
 template<int Degree, int X0, int XD>
 typename PolynomialTrajectory<Degree, X0, XD>::Coeffs PolynomialTrajectory<Degree, X0, XD>::calc_coeffs(double t0, double t1,
-    VectorX0 x_0, VectorXD x_d,
-    OrderVectorX0 x_0_order, OrderVectorXD x_d_order)
+    const VectorX0& x_0, const VectorXD& x_d,
+    const OrderVectorX0& x_0_order, const OrderVectorXD& x_d_order)
 {
     constexpr int n = Degree + 1;
 
