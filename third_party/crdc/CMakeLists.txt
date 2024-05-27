@@ -8,8 +8,10 @@ set(LIB_CRCCOSY_SRC
     ${CRCCOSY_SRC_ROOT}/segment.cc
     ${CRCCOSY_SRC_ROOT}/curvilinear_coordinate_system.cc
     ${CRCCOSY_SRC_ROOT}/util.cc
-    ${CRCCOSY_SRC_ROOT}/serialize/serialize_curvil_cs.cc
-    ${CRCCOSY_SRC_ROOT}/serialize/public/serialize_public.cc
+
+    # Unused by frenetix
+    # ${CRCCOSY_SRC_ROOT}/serialize/serialize_curvil_cs.cc
+    # ${CRCCOSY_SRC_ROOT}/serialize/public/serialize_public.cc
   )
 
 

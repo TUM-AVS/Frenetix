@@ -146,6 +146,12 @@ target_include_directories(fp_core
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/trajectory>
         )
 
+if(ENABLE_EXPERIMENTAL_OPTIMIZATIONS)
+  foreach(target fp_core crccosy)
+    target_compile_definitions(${target} PRIVATE ENABLE_EXPERIMENTAL_OPTIMIZATIONS)
+  endforeach()
+endif()
+
 # add pybind module
 
 if(SKBUILD)

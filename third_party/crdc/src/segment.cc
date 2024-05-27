@@ -155,12 +155,21 @@ Eigen::Vector2d Segment::computePseudoNormal(const Eigen::Vector2d& p_lambda,
 }
 
 Eigen::Vector2d Segment::computePseudoTangent(double lambda) const {
-  return (lambda * this->t_2_local_ + (1. - lambda) * this->t_1_local_)
-      .normalized();
+  // Normalization is not neessary (apart from FP errors) as t_{1,2}_local_ are already normalized
+#ifdef ENABLE_EXPERIMENTAL_OPTIMIZATIONS
+  return (lambda * this->t_2_local_ + (1. - lambda) * this->t_1_local_);
+#else
+  return (lambda * this->t_2_local_ + (1. - lambda) * this->t_1_local_).normalized();
+#endif
 }
 
 Eigen::Vector2d Segment::computePseudoTangentGlobal(double lambda) const {
+  // Normalization is not neessary (apart from FP errors) as t_{1,2}_ are already normalized
+#ifdef ENABLE_EXPERIMENTAL_OPTIMIZATIONS
+  return (lambda * this->t_2_ + (1. - lambda) * this->t_1_);
+#else
   return (lambda * this->t_2_ + (1. - lambda) * this->t_1_).normalized();
+#endif
 }
 
 double Segment::computeSignedPseudoDistance(const Eigen::Vector2d& pseudo_normal,

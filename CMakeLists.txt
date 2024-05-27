@@ -159,6 +159,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 include(CMakeDependentOption)
 
+option(ENABLE_EXPERIMENTAL_OPTIMIZATIONS "Enable experimental (potentially unsafe) alternatives" ON)
+
+
 option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library" ON)
 
 option(${PROJECT_NAME}_BUILD_SHARED_LIBS "Build using shared libraries" ${BUILD_SHARED_LIBS})

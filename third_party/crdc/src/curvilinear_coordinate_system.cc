@@ -231,10 +231,15 @@ Eigen::Vector2d CurvilinearCoordinateSystem::tangent(double s) const {
 
 Eigen::Vector2d CurvilinearCoordinateSystem::convertToCartesianCoords(
     double s, double l) const {
+#ifdef ENABLE_EXPERIMENTAL_OPTIMIZATIONS
+  // Skip projection domain check
+#else
   bool is_in_projection_domain = this->curvilinearPointInProjectionDomain(s, l);
   if (!is_in_projection_domain) {
     throw CurvilinearProjectionDomainError::general();
   }
+#endif
+
   int idx = this->findSegmentIndex(s);
   return this->segment_list_[idx]->convertToCartesianCoords(
       s - this->segment_longitudinal_coord_[idx], l);
