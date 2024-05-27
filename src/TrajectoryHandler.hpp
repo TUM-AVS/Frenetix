@@ -1,11 +1,11 @@
-#ifndef TRAJECTORYHANDLER_HPP
-#define TRAJECTORYHANDLER_HPP
+#pragma once
 
-#include <taskflow/taskflow.hpp>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <taskflow/taskflow.hpp>
 
 #include "trajectory/TrajectorySample.hpp"
 #include "util.hpp"
@@ -105,4 +105,4 @@ private:
     void removeInvalid();
 };
 
-#endif
+

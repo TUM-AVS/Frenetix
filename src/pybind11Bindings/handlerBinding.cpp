@@ -3,6 +3,7 @@
 #include <nanobind/eigen/dense.h> // IWYU pragma: keep
 #include <nanobind/make_iterator.h>
 #include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/string.h>
 
 #include <Eigen/Core>
 #include <map>
@@ -12,12 +13,11 @@
 #include "TrajectoryHandler.hpp"
 #include "TrajectorySample.hpp"
 #include "util.hpp"
-
-#include "handlerBinding.hpp"
-
 #include "TrajectoryStrategy.hpp"
 #include "FeasabilityStrategy.hpp"
 #include "CostStrategy.hpp"
+
+#include "handlerBinding.hpp"
 
 namespace nb = nanobind;
 

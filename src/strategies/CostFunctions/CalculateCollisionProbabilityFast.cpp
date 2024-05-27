@@ -1,10 +1,11 @@
 #include "CalculateCollisionProbabilityFast.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <math/mvn.hpp>
 #include <Eigen/Geometry>
 #include <cmath>
 #include <vector>
+#include <algorithm>
 
 #include <math/covariance.hpp>
 #include "CartesianSample.hpp"

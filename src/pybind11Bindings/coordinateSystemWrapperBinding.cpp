@@ -1,15 +1,12 @@
 //pybind includes
-#include <nanobind/eigen/dense.h> // IWYU pragma: keep
 #include <nanobind/nanobind.h>
+#include <nanobind/eigen/dense.h> // IWYU pragma: keep
 #include <nanobind/stl/shared_ptr.h>
 #include <nanobind/stl/unique_ptr.h>
-
+#include <nanobind/stl/vector.h>
 
 #include <Eigen/Core>
 #include <memory>
-
-#include <geometry/curvilinear_coordinate_system.h>
-#include <geometry/segment.h>
 
 #include "CoordinateSystemWrapper.hpp"
 #include "util.hpp"

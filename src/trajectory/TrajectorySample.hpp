@@ -7,11 +7,13 @@
 #include <string>
 #include <utility>
 #include <unordered_map>
+#include <memory>
 
 #include "CartesianSample.hpp"
 #include "CurvilinearSample.hpp"
 #include "polynomial.hpp"
-#include "CoordinateSystemWrapper.hpp"
+
+class CoordinateSystemWrapper;
 
 struct PlannerState {
     struct Cartesian {

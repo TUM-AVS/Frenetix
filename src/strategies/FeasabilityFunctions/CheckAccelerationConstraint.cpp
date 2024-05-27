@@ -1,6 +1,6 @@
 #include "CheckAccelerationConstraint.hpp"
 
-#include <stddef.h>
+#include <cstddef>
 #include <Eigen/Core>
 #include <memory>
 

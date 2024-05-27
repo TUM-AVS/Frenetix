@@ -1,16 +1,14 @@
 #pragma once
 
-#include <stdint.h>
-#include <Eigen/Core>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
 
-#include "mvndst.hpp"
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 
-namespace Eigen {
-template <typename _Scalar, int _AmbientDim> class AlignedBox;
-}  // namespace Eigen
+#include "mvndst.hpp"
 
 double bvn_prob(
     const Eigen::AlignedBox<double, 2>& box,

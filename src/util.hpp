@@ -1,11 +1,11 @@
-#ifndef UTIL_HPP
-#define UTIL_HPP
+#pragma once
 
-#include <math.h>
-#include <Eigen/Core>
+#include <cmath>
 #include <array>
+#include <vector>
 
-#include "geometry/util.h"
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using SamplingMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, 13, Eigen::RowMajor>;
@@ -41,7 +41,7 @@ namespace util
      * This function takes an input matrix mat with two columns and converts it into an EigenPolyline
      * of Vector2d points. If the input matrix doesn't have 2 columns, a std::runtime_error is thrown.
      */
-    geometry::EigenPolyline matrixToVector2d(const RowMatrixXd& mat);
+    std::vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d>> matrixToVector2d(const RowMatrixXd& mat);
 
     /**
      * @brief Computes the gradient of an array of values given the distances between them.
@@ -102,4 +102,4 @@ namespace util
         std::array<double, 36> covariance;
     };
 }
-#endif //UTIL_HPP
+

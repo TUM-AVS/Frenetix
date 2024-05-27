@@ -1,5 +1,9 @@
 #include "TrajectorySample.hpp"
-#include "geometry/curvilinear_coordinate_system.h"
+
+#include <geometry/curvilinear_coordinate_system.h>
+
+#include "CoordinateSystemWrapper.hpp"
+
 
 const TrajectorySample::LongitudinalTrajectory::OrderVectorX0 TrajectorySample::LongitudinalX0Order {0,1,2};
 const TrajectorySample::LongitudinalTrajectory::OrderVectorXD TrajectorySample::LongitudinalXDOrder {1,2};

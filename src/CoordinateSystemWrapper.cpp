@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 
+#include <stdexcept>
+
 #include "geometry/curvilinear_coordinate_system.h"
 
 CoordinateSystemWrapper::CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> refPath)

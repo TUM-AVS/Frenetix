@@ -18,6 +18,7 @@
 #include "CurvilinearSample.hpp"
 #include "TrajectorySample.hpp"
 #include "polynomial.hpp"
+#include "CoordinateSystemWrapper.hpp"
 
 #include "trajectorySampleBinding.hpp"
 

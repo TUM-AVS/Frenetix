@@ -1,6 +1,6 @@
 #include "util.hpp"
 
-#include <stddef.h>
+#include <cstddef>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
@@ -58,14 +58,14 @@ namespace util
         return interpolate_angle(x, x1, x2, r1, r2).smallestAngle();
     }
 
-    geometry::EigenPolyline matrixToVector2d(const RowMatrixXd& mat)
+    std::vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d>> matrixToVector2d(const RowMatrixXd& mat)
     {
         if (mat.cols() != 2)
         {
             throw std::runtime_error("Input matrix must have 2 columns.");
         }
 
-        geometry::EigenPolyline vec;
+        std::vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d>> vec;
 
         for (int i = 0; i < mat.rows(); ++i)
         {

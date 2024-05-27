@@ -1,8 +1,11 @@
-#include "TrajectoryHandler.hpp"
-#include "TrajectorySample.hpp"
-
 #include <Eigen/Core>
+#include <Eigen/QR>
 #include <algorithm>
+#include <map>
+#include <iterator>
+#include <functional>
+
+#include "TrajectoryHandler.hpp"
 
 #include "CostStrategy.hpp"
 #include "FeasabilityStrategy.hpp"
