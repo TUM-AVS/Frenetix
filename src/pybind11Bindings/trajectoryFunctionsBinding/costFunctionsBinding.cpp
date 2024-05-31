@@ -14,10 +14,17 @@
 #include "strategies/CostFunctions/CalculateDistanceToReferencePathCost.hpp"
 #include "strategies/CostFunctions/CalculateJerkCost.hpp"
 #include "strategies/CostFunctions/CalculateLaneCenterOffsetCost.hpp"
+#include "strategies/CostFunctions/CalculateLateralAccelerationCost.hpp"
 #include "strategies/CostFunctions/CalculateLateralJerkCost.hpp"
+#include "strategies/CostFunctions/CalculateLateralVelocityCost.hpp"
+#include "strategies/CostFunctions/CalculateLongitudinalAccelerationCost.hpp"
 #include "strategies/CostFunctions/CalculateLongitudinalJerkCost.hpp"
 #include "strategies/CostFunctions/CalculateLongitudinalVelocityCost.hpp"
+#include "strategies/CostFunctions/CalculateNegativeVelocityOffsetCost.hpp"
+#include "strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.hpp"
 #include "strategies/CostFunctions/CalculateOrientationOffsetCost.hpp"
+#include "strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.hpp"
+#include "strategies/CostFunctions/CalculatePositiveVelocityOffsetCost.hpp"
 #include "strategies/CostFunctions/CalculateSteeringAngleCost.hpp"
 #include "strategies/CostFunctions/CalculateSteeringRateCost.hpp"
 #include "strategies/CostFunctions/CalculateVelocityOffsetCost.hpp"
@@ -81,6 +88,24 @@ namespace plannerCPP
                 py::arg("trajectory")
             );
 
+        py::class_<CalculateLateralAccelerationCost, CostStrategy, std::shared_ptr<CalculateLateralAccelerationCost>>(m, "CalculateLateralAccelerationCost")
+            .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculateLateralAccelerationCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
+        py::class_<CalculateLateralVelocityCost, CostStrategy, std::shared_ptr<CalculateLateralVelocityCost>>(m, "CalculateLateralVelocityCost")
+            .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculateLateralVelocityCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
         py::class_<CalculateLongitudinalJerkCost, CostStrategy, std::shared_ptr<CalculateLongitudinalJerkCost>>(m, "CalculateLongitudinalJerkCost")
             .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
             .def
@@ -99,12 +124,57 @@ namespace plannerCPP
                 py::arg("trajectory")
             );
 
+        py::class_<CalculateLongitudinalAccelerationCost, CostStrategy, std::shared_ptr<CalculateLongitudinalAccelerationCost>>(m, "CalculateLongitudinalAccelerationCost")
+            .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculateLongitudinalAccelerationCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
+        py::class_<CalculateNegativeOrientationOffsetCost, CostStrategy, std::shared_ptr<CalculateNegativeOrientationOffsetCost>>(m, "CalculateNegativeOrientationOffsetCost")
+            .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculateNegativeOrientationOffsetCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
+        py::class_<CalculateNegativeVelocityOffsetCost, CostStrategy, std::shared_ptr<CalculateNegativeVelocityOffsetCost>>(m, "CalculateNegativeVelocityOffsetCost")
+            .def(py::init<std::string, double, double>(), py::arg("function_name"), py::arg("cost_weight"), py::arg("desiredSpeed"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculateNegativeVelocityOffsetCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
         py::class_<CalculateOrientationOffsetCost, CostStrategy, std::shared_ptr<CalculateOrientationOffsetCost>>(m, "CalculateOrientationOffsetCost")
             .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
             .def
             (
                 "evaluate_trajectory",
                 &CalculateOrientationOffsetCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
+        py::class_<CalculatePositiveOrientationOffsetCost, CostStrategy, std::shared_ptr<CalculatePositiveOrientationOffsetCost>>(m, "CalculatePositiveOrientationOffsetCost")
+            .def(py::init<std::string, double>(), py::arg("function_name"), py::arg("cost_weight"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculatePositiveOrientationOffsetCost::evaluateTrajectory,
+                py::arg("trajectory")
+            );
+
+        py::class_<CalculatePositiveVelocityOffsetCost, CostStrategy, std::shared_ptr<CalculatePositiveVelocityOffsetCost>>(m, "CalculatePositiveVelocityOffsetCost")
+            .def(py::init<std::string, double, double>(), py::arg("function_name"), py::arg("cost_weight"), py::arg("desiredSpeed"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculatePositiveVelocityOffsetCost::evaluateTrajectory,
                 py::arg("trajectory")
             );
 

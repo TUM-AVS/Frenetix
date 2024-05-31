@@ -10,9 +10,11 @@ CalculateOrientationOffsetCost::CalculateOrientationOffsetCost(std::string funNa
 
 void CalculateOrientationOffsetCost::evaluateTrajectory(TrajectorySample& trajectory)
 {
-    double cost {0};
+    const Eigen::VectorXd& theta = trajectory.m_curvilinearSample.theta;
 
-    // Define your cost calculation logic here
+    double cost = (theta.tail(theta.size() / 2).array()).matrix().norm();
+
+    cost += std::pow(theta(theta.size()-1), 2);
 
     trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

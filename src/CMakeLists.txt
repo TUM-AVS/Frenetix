@@ -33,7 +33,16 @@ target_link_libraries(mathutil
         Eigen3::Eigen
         )
 
-add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES})
+add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES}
+        main.cpp
+        strategies/CostFunctions/CalculateLongitudinalAccelerationCost.cpp
+        strategies/CostFunctions/CalculateLongitudinalAccelerationCost.hpp
+        strategies/CostFunctions/CalculateLateralAccelerationCost.cpp
+        strategies/CostFunctions/CalculateLateralAccelerationCost.hpp
+        strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.cpp
+        strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.hpp
+        strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.cpp
+        strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.hpp)
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23.0)
     target_sources(fp_core
