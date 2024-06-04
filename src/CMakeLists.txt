@@ -42,7 +42,11 @@ add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES}
         strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.cpp
         strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.hpp
         strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.cpp
-        strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.hpp)
+        strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.hpp
+        strategies/CostFunctions/CalculatePositiveAccelerationCost.cpp
+        strategies/CostFunctions/CalculatePositiveAccelerationCost.hpp
+        strategies/CostFunctions/CalculateNegativeAccelerationCost.cpp
+        strategies/CostFunctions/CalculateNegativeAccelerationCost.hpp)
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23.0)
     target_sources(fp_core
