@@ -136,7 +136,7 @@ target_link_libraries(fp_core
         PUBLIC
         Eigen3::Eigen
         crccosy
-        Taskflow
+        Taskflow::Taskflow
         )
 
 target_include_directories(fp_core

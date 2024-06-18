@@ -4,7 +4,7 @@ include(utils/FetchContentHelper)
 set(taskflow_version 3.7.0)
 
 FetchContent_Declare_Fallback(
-    taskflow
+    Taskflow
 
     SYSTEM
 
@@ -13,12 +13,18 @@ FetchContent_Declare_Fallback(
 
     #GIT_REPOSITORY "https://github.com/taskflow/taskflow.git"
     #GIT_TAG 12f8bd4e970ab27fd3dee3bffa24b5b48b54ba39
+
+    FIND_PACKAGE_ARGS
 )
 
 set(TF_BUILD_EXAMPLES OFF)
 set(TF_BUILD_TESTS OFF)
 
-FetchContent_MakeAvailable(taskflow)
+FetchContent_MakeAvailable(Taskflow)
 
-set_property(DIRECTORY ${taskflow_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL ON)
+set_property(DIRECTORY ${Taskflow_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL ON)
+
+if(NOT TARGET Taskflow::Taskflow)
+    add_library(Taskflow::Taskflow ALIAS Taskflow)
+endif()
 
