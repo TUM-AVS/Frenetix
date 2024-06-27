@@ -2,7 +2,6 @@
 
 #include <stddef.h>
 #include <Eigen/Core>
-#include <map>
 #include <optional>
 #include <string>
 #include <utility>
