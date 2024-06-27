@@ -135,9 +135,7 @@ target_link_libraries(mathutil
         Eigen3::Eigen
         )
 
-add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES}
-        main.cpp
-        )
+add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES})
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23.0)
     target_sources(fp_core
