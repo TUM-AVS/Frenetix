@@ -220,7 +220,15 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateVelocityOffsetCost, CostStrategy>(m, "CalculateVelocityOffsetCost")
-            .def(nb::init<std::string, double, double>(), nb::arg("function_name"), nb::arg("cost_weight"), nb::arg("desiredSpeed"))
+            .def(nb::init<std::string, double, double, double, double, bool, int>(), 
+                nb::arg("function_name"),
+                nb::arg("cost_weight"),
+                nb::arg("desiredSpeed"),
+                nb::arg("dT"),
+                nb::arg("t_min"),
+                nb::arg("limit_to_t_min"),
+                nb::arg("norm_order")
+            )
             .def
             (
                 "evaluate_trajectory",
