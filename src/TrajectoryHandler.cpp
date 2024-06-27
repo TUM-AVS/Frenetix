@@ -200,6 +200,45 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
     }
 }
 
+void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double stop_point_s, bool lowVelocityMode) {
+    Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, samplingConfig.t_min, samplingConfig.horizon);
+    Eigen::ArrayXd svals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, (state.x_cl.x0_lon(1) + stop_point_s) / 2.0, stop_point_s);
+    Eigen::ArrayXd dvals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, -samplingConfig.d_delta, samplingConfig.d_delta);
+
+    for (auto t: ts) {
+        for (auto s: svals) {
+            Eigen::Vector3d x1_lon {s, 0.0, 0.0};
+
+            TrajectorySample::FixedLongitudinalTrajectory longitudinalTrajectory (
+                0.0,
+                samplingConfig.horizon,
+                state.x_cl.x0_lon,
+                x1_lon
+                );
+
+            for (auto d: dvals) {
+
+                // Eigen::Vector3d x1_lat {state.x_cl.x0_lat[0], 0.0, 0.0};
+                Eigen::Vector3d x1_lat {d, 0.0, 0.0};
+
+                TrajectorySample::LateralTrajectory lateralTrajectory(
+                    0.0,
+                    samplingConfig.horizon,
+                    state.x_cl.x0_lat,
+                    x1_lat
+                );
+
+                m_trajectories.emplace_back(
+                    samplingConfig.dt,
+                    longitudinalTrajectory,
+                    lateralTrajectory,
+                    -1
+                );
+            }
+        }
+    }
+}
+
 void TrajectoryHandler::resetTrajectories()
 {
     m_trajectories.clear();

@@ -14,6 +14,14 @@ class CostStrategy;
 class FeasabilityStrategy;
 class TrajectoryStrategy;
 
+struct SamplingConfiguration {
+    double t_min;
+    double dt;
+    double horizon;
+    double d_delta;
+    int samplingLevel;
+};
+
 
 class TrajectoryHandler
 {
@@ -50,6 +58,7 @@ public:
      * ddd0/ddd1:   start/end lateral acceleration
      */
     void generateTrajectories(const SamplingMatrixXd& samplingMatrix, bool lowVelocityMode);
+    void generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double s, bool lowVelocityMode);
     void sort();
     void addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function);
     void addFunction(std::shared_ptr<TrajectoryStrategy> function);
