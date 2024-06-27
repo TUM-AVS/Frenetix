@@ -1,8 +1,8 @@
 #include "CalculateLongitudinalVelocityCost.hpp"
 
-#include <iostream>
-
 #include "TrajectorySample.hpp"
+
+#include <util.hpp>
 
 CalculateLongitudinalVelocityCost::CalculateLongitudinalVelocityCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
@@ -11,8 +11,9 @@ CalculateLongitudinalVelocityCost::CalculateLongitudinalVelocityCost(std::string
 
 void CalculateLongitudinalVelocityCost::evaluateTrajectory(TrajectorySample& trajectory)
 {
-    double cost {0};
-    std::cout << m_functionName << ": not implemented" << std::endl;
+    Eigen::VectorXd longitudinalVelSq = trajectory.m_curvilinearSample.ss.array().square();
+
+    double cost = util::simpsonIntegration(longitudinalVelSq, trajectory.m_dT);
 
     trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

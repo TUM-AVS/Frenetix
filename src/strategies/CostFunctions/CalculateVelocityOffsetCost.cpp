@@ -16,7 +16,7 @@ void CalculateVelocityOffsetCost::evaluateTrajectory(TrajectorySample& trajector
 {
     double cost {0};
 
-    const Eigen::VectorXd& vel = trajectory.m_cartesianSample.velocity;
+    const Eigen::VectorXd vel = trajectory.m_cartesianSample.velocity;
 
     cost = (vel.tail(vel.size() / 2).array() - m_desiredSpeed).matrix().norm();
 

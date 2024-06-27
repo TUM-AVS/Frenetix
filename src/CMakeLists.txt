@@ -9,10 +9,19 @@ set(FP_SRC_FILES
   "strategies/CostFunctions/CalculateDistanceToReferencePathCost.cpp"
   "strategies/CostFunctions/CalculateJerkCost.cpp"
   "strategies/CostFunctions/CalculateLaneCenterOffsetCost.cpp"
+  "strategies/CostFunctions/CalculateLateralAccelerationCost.cpp"
   "strategies/CostFunctions/CalculateLateralJerkCost.cpp"
+  "strategies/CostFunctions/CalculateLateralVelocityCost.cpp"
+  "strategies/CostFunctions/CalculateLongitudinalAccelerationCost.cpp"
   "strategies/CostFunctions/CalculateLongitudinalJerkCost.cpp"
   "strategies/CostFunctions/CalculateLongitudinalVelocityCost.cpp"
+  "strategies/CostFunctions/CalculateNegativeAccelerationCost.cpp"
+  "strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.cpp"
+  "strategies/CostFunctions/CalculateNegativeVelocityOffsetCost.cpp"
   "strategies/CostFunctions/CalculateOrientationOffsetCost.cpp"
+  "strategies/CostFunctions/CalculatePositiveAccelerationCost.cpp"
+  "strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.cpp"
+  "strategies/CostFunctions/CalculatePositiveVelocityOffsetCost.cpp"
   "strategies/CostFunctions/CalculateSteeringAngleCost.cpp"
   "strategies/CostFunctions/CalculateSteeringRateCost.cpp"
   "strategies/CostFunctions/CalculateVelocityOffsetCost.cpp"
@@ -42,10 +51,19 @@ set(FP_HDR_FILES
   "strategies/CostFunctions/CalculateDistanceToReferencePathCost.hpp"
   "strategies/CostFunctions/CalculateJerkCost.hpp"
   "strategies/CostFunctions/CalculateLaneCenterOffsetCost.hpp"
+  "strategies/CostFunctions/CalculateLateralAccelerationCost.hpp"
   "strategies/CostFunctions/CalculateLateralJerkCost.hpp"
+  "strategies/CostFunctions/CalculateLateralVelocityCost.hpp"
+  "strategies/CostFunctions/CalculateLongitudinalAccelerationCost.hpp"
   "strategies/CostFunctions/CalculateLongitudinalJerkCost.hpp"
   "strategies/CostFunctions/CalculateLongitudinalVelocityCost.hpp"
+  "strategies/CostFunctions/CalculateNegativeAccelerationCost.hpp"
+  "strategies/CostFunctions/CalculateNegativeOrientationOffsetCost.hpp"
+  "strategies/CostFunctions/CalculateNegativeVelocityOffsetCost.hpp"
   "strategies/CostFunctions/CalculateOrientationOffsetCost.hpp"
+  "strategies/CostFunctions/CalculatePositiveAccelerationCost.hpp"
+  "strategies/CostFunctions/CalculatePositiveOrientationOffsetCost.hpp"
+  "strategies/CostFunctions/CalculatePositiveVelocityOffsetCost.hpp"
   "strategies/CostFunctions/CalculateSteeringAngleCost.hpp"
   "strategies/CostFunctions/CalculateSteeringRateCost.hpp"
   "strategies/CostFunctions/CalculateVelocityOffsetCost.hpp"
@@ -117,7 +135,9 @@ target_link_libraries(mathutil
         Eigen3::Eigen
         )
 
-add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES})
+add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES}
+        main.cpp
+        )
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23.0)
     target_sources(fp_core
