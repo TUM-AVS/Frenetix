@@ -14,7 +14,7 @@ void CalculateLongitudinalJerkCost::evaluateTrajectory(TrajectorySample& traject
 {
     double cost {0};
 
-    cost = std::sqrt(trajectory.m_trajectoryLongitudinal.squaredJerkIntegral(trajectory.m_dT));
+    cost = std::sqrt(trajectory.m_trajectoryLongitudinal->squaredJerkIntegral(trajectory.m_dT));
 
     trajectory.addCostValueToList(m_functionName, cost, cost*m_costWeight);
 }

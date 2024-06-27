@@ -9,6 +9,20 @@
 #include <Eigen/QR>
 #include <Eigen/LU>
 
+struct HornerEvalResult {
+    double x;
+    double xx;
+    double xxx;
+};
+
+class LinearTrajectory {
+public:
+    virtual ~LinearTrajectory() = default;
+
+    virtual HornerEvalResult horner_eval(double t) const = 0;
+    virtual double squaredJerkIntegral(double t) const = 0;
+};
+
 /**
  * @brief A class representing a polynomial trajectory of a given degree.
  *
@@ -27,7 +41,7 @@
  * @tparam XD Static dimension of second point conditions.
  */
 template <int Degree, int X0 = Eigen::Dynamic, int XD = Eigen::Dynamic>
-class PolynomialTrajectory
+class PolynomialTrajectory : public LinearTrajectory
 {
     static_assert(X0 == Eigen::Dynamic || XD == Eigen::Dynamic || X0 + XD == Degree + 1, "dimensions error");
     static_assert((X0 >= 1 || X0 == Eigen::Dynamic) && (XD >= 1 || XD == Eigen::Dynamic), "dimensions need to be positive");
@@ -150,13 +164,7 @@ public:
      */
     double operator()(double t, double derivative = 0) const;
 
-    struct VVV {
-        double x;
-        double xx;
-        double xxx;
-    };
-
-    constexpr VVV horner_eval(double t) const;
+    HornerEvalResult horner_eval(double t) const override;
 
     inline constexpr
     double horner_eval_single(double t) const
@@ -187,7 +195,7 @@ public:
     *
     * @throw std::invalid_argument If the Degree is not 4 or 5.
     */
-    constexpr double squaredJerkIntegral(double t) const;
+    double squaredJerkIntegral(double t) const override;
 
     static inline typename Eigen::Vector<double, N> mkRow(int kkk, double t) {
         Eigen::Vector<double, N> x = Eigen::Vector<double, N>::Zero();
@@ -323,8 +331,8 @@ typename PolynomialTrajectory<Degree, X0, XD>::Coeffs PolynomialTrajectory<Degre
 }
 
 template<int Degree, int X0, int XD>
-inline constexpr
-typename PolynomialTrajectory<Degree, X0, XD>::VVV
+inline
+HornerEvalResult
 PolynomialTrajectory<Degree, X0, XD>::horner_eval(double t) const
 {
     static_assert(Degree > 2, "invalid Degree: must greater than 2 for horner_eval");
@@ -342,7 +350,7 @@ PolynomialTrajectory<Degree, X0, XD>::horner_eval(double t) const
     fp = t * fp + f;
     f = t * f + coeffs[0];
 
-    return VVV {f, fp, fpp};
+    return HornerEvalResult {f, fp, fpp};
 }
 
 template<int Degree, int X0, int XD>
@@ -370,7 +378,7 @@ inline double PolynomialTrajectory<Degree, X0, XD>::operator()(double t, double 
 }
 
 template<int Degree, int X0, int XD>
-constexpr double PolynomialTrajectory<Degree, X0, XD>::squaredJerkIntegral(double t) const
+double PolynomialTrajectory<Degree, X0, XD>::squaredJerkIntegral(double t) const
 {
     static_assert(Degree == 5 || Degree == 4, "squared_jerk_integral() is only implemented for Degree 4 and 5");
 

@@ -15,11 +15,16 @@ TrajectorySample::TrajectorySample(double dT,
                                    TrajectorySample::LongitudinalTrajectory trajectoryLongitudinal,
                                    TrajectorySample::LateralTrajectory trajectoryLateral,
                                    int uniqueId)
-    : m_dT (dT)
-    , m_harm_occ_module (0)
-    , m_uniqueId (uniqueId)
-    , m_trajectoryLongitudinal (std::move(trajectoryLongitudinal))
-    , m_trajectoryLateral (std::move(trajectoryLateral))
+    : TrajectorySample(dT, trajectoryLongitudinal, trajectoryLateral, uniqueId, Eigen::Vector<double, 13>::Zero())
+{
+
+}
+
+TrajectorySample::TrajectorySample(double dT,
+                                   TrajectorySample::FixedLongitudinalTrajectory trajectoryLongitudinal,
+                                   TrajectorySample::LateralTrajectory trajectoryLateral,
+                                   int uniqueId)
+    : TrajectorySample(dT, trajectoryLongitudinal, trajectoryLateral, uniqueId, Eigen::Vector<double, 13>::Zero())
 {
 
 }
@@ -33,12 +38,26 @@ TrajectorySample::TrajectorySample(double dT,
     , m_harm_occ_module (0)
     , m_uniqueId (uniqueId)
     , m_samplingParameters (samplingParameters)
-    , m_trajectoryLongitudinal (std::move(trajectoryLongitudinal))
-    , m_trajectoryLateral (std::move(trajectoryLateral))
+    , m_trajectoryLongitudinal (std::make_shared<TrajectorySample::LongitudinalTrajectory>(trajectoryLongitudinal))
+    , m_trajectoryLateral (std::make_shared<TrajectorySample::LateralTrajectory>(trajectoryLateral))
 {
 
 }
 
+TrajectorySample::TrajectorySample(double dT,
+                                   TrajectorySample::FixedLongitudinalTrajectory trajectoryLongitudinal,
+                                   TrajectorySample::LateralTrajectory trajectoryLateral,
+                                   int uniqueId,
+                                   Eigen::VectorXd samplingParameters)
+    : m_dT (dT)
+    , m_harm_occ_module (0)
+    , m_uniqueId (uniqueId)
+    , m_samplingParameters (samplingParameters)
+    , m_trajectoryLongitudinal (std::make_shared<TrajectorySample::FixedLongitudinalTrajectory>(trajectoryLongitudinal))
+    , m_trajectoryLateral (std::make_shared<TrajectorySample::LateralTrajectory>(trajectoryLateral))
+{
+
+}
 
 TrajectorySample::TrajectorySample(double x_0,
                                    double y_0,

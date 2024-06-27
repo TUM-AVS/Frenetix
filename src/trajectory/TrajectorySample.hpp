@@ -43,11 +43,12 @@ public:
     CurviLinearSample m_curvilinearSample;
 
     using LongitudinalTrajectory = PolynomialTrajectory<4, 3, 2>;
+    using FixedLongitudinalTrajectory = PolynomialTrajectory<5, 3, 3>;
     using LateralTrajectory = PolynomialTrajectory<5, 3, 3>;
     static const LongitudinalTrajectory::OrderVectorX0 LongitudinalX0Order;
     static const LongitudinalTrajectory::OrderVectorXD LongitudinalXDOrder;
-    LongitudinalTrajectory m_trajectoryLongitudinal;
-    LateralTrajectory m_trajectoryLateral;
+    std::shared_ptr<LinearTrajectory> m_trajectoryLongitudinal;
+    std::shared_ptr<LinearTrajectory> m_trajectoryLateral;
 
     Eigen::Vector<double, 13> m_samplingParameters;
 
@@ -80,6 +81,17 @@ public:
 
     TrajectorySample(double dt,
                      LongitudinalTrajectory trajectoryLongitudinal,
+                     LateralTrajectory trajectoryLateral,
+                     int uniqueId,
+                     Eigen::VectorXd samplingParameters);
+
+    TrajectorySample(double dt,
+                     FixedLongitudinalTrajectory trajectoryLongitudinal,
+                     LateralTrajectory trajectoryLateral,
+                     int uniqueId);
+
+    TrajectorySample(double dt,
+                     FixedLongitudinalTrajectory trajectoryLongitudinal,
                      LateralTrajectory trajectoryLateral,
                      int uniqueId,
                      Eigen::VectorXd samplingParameters);

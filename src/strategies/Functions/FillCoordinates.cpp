@@ -73,7 +73,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         }
         else
         {
-            const auto sv = trajectory.m_trajectoryLongitudinal.horner_eval(t);
+            const auto sv = trajectory.m_trajectoryLongitudinal->horner_eval(t);
             trajectory.m_curvilinearSample.s[iii] = sv.x;
             trajectory.m_curvilinearSample.ss[iii] = sv.xx; 
             trajectory.m_curvilinearSample.sss[iii] = sv.xxx;
@@ -85,7 +85,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
                 ttt = trajectory.m_curvilinearSample.s[iii] -  trajectory.m_curvilinearSample.s[0];
             }
 
-            const auto dv = trajectory.m_trajectoryLateral.horner_eval(ttt);
+            const auto dv = trajectory.m_trajectoryLateral->horner_eval(ttt);
             trajectory.m_curvilinearSample.d[iii] = dv.x;
             trajectory.m_curvilinearSample.dd[iii] = dv.xx;
             trajectory.m_curvilinearSample.ddd[iii] = dv.xxx;

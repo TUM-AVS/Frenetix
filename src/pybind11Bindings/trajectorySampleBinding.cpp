@@ -167,8 +167,6 @@ namespace plannerCPP
                     traj.m_egoRisk = nb::cast<std::optional<double>>(d["ego_risk"]);
                     traj.m_obstRisk = nb::cast<std::optional<double>>(d["obst_risk"]);
                     traj.m_collisionDetected = nb::cast<std::optional<bool>>(d["coll_detected"]);
-
-                    return traj;
                 }
             )
 
