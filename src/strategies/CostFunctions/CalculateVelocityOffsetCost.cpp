@@ -37,10 +37,10 @@ void CalculateVelocityOffsetCost::evaluateTrajectory(TrajectorySample& trajector
 
     switch (m_normOrder) {
     case 1:
-        cost = diffs.lpNorm<1>();
+        cost = diffs.matrix().lpNorm<1>();
         break;
     case 2:
-        cost = diffs.lpNorm<2>();
+        cost = diffs.matrix().lpNorm<2>();
         break;
     default:
         throw std::runtime_error { "invalid norm order" };
