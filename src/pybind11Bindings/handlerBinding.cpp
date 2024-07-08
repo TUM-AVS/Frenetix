@@ -26,8 +26,18 @@ namespace plannerCPP
 
     void initBindHandler(nb::module_ &m) 
     {
+        nb::class_<SamplingConfiguration>(m, "SamplingConfiguration")
+            .def(nb::init<double, double, double, double, int>(),
+                 nb::arg("t_min"),
+                 nb::arg("dt"),
+                 nb::arg("horizon"),
+                 nb::arg("d_delta"),
+                 nb::arg("sampling_level")
+            );
+
         nb::class_<TrajectoryHandler>(m, "TrajectoryHandler")
             .def(nb::init<double>(), nb::arg("dt"))
+            .def("generate_stopping_trajectories", &TrajectoryHandler::generateStoppingTrajectories)
             .def
             (
                 "generate_trajectories", 
