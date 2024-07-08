@@ -18,12 +18,14 @@
 FillCoordinates::FillCoordinates(bool lowVelocityMode, 
                                  double initialOrienation, 
                                  std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-                                 double horizon)
+                                 double horizon,
+                                 bool allowNegativeVelocity)
     : TrajectoryStrategy("Fill Coordinates")
     , m_lowVelocityMode(lowVelocityMode)
     , m_initialOrientation(initialOrienation)
     , m_coordinateSystem(coordinateSystem)
     , m_horizon(horizon)
+    , m_allowNegativeVelocity(allowNegativeVelocity)
 {
 }
 
@@ -93,7 +95,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
 
 
         double _EPS = 1e-5;
-        if(trajectory.m_curvilinearSample.ss[iii] < -_EPS)
+        if(!m_allowNegativeVelocity && trajectory.m_curvilinearSample.ss[iii] < -_EPS)
         {
             trajectory.m_valid = false;
             trajectory.m_feasible = false;

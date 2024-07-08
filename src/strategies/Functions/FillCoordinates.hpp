@@ -14,7 +14,8 @@ public:
     FillCoordinates(bool lowVelocityMode, 
                     double initialOrienation, 
                     std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-                    double horizon);
+                    double horizon,
+                    bool allowNegativeVelocity);
 
     virtual void evaluateTrajectory(TrajectorySample& trajectory) override;
 
@@ -23,6 +24,7 @@ private:
     double m_initialOrientation;
     std::shared_ptr<CoordinateSystemWrapper> m_coordinateSystem;
     double m_horizon;
+    bool m_allowNegativeVelocity;
 };
 
 

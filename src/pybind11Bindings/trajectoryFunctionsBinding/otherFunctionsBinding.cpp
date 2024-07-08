@@ -24,7 +24,8 @@ namespace plannerCPP
                 nb::arg("lowVelocityMode"),
                 nb::arg("initialOrientation"),
                 nb::arg("coordinateSystem"),
-                nb::arg("horizon")
+                nb::arg("horizon"),
+                nb::arg("allow_negative_velocity") = false
             )
             .def
             (
