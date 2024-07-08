@@ -20,7 +20,7 @@ namespace plannerCPP
     void initBindOtherFunctions(nb::module_ &m) 
     {
         nb::class_<FillCoordinates, TrajectoryStrategy>(m, "FillCoordinates")
-            .def(nb::init<bool, double, std::shared_ptr<CoordinateSystemWrapper>, double>(),
+            .def(nb::init<bool, double, std::shared_ptr<CoordinateSystemWrapper>, double, bool>(),
                 nb::arg("lowVelocityMode"),
                 nb::arg("initialOrientation"),
                 nb::arg("coordinateSystem"),
