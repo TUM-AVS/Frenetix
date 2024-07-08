@@ -200,14 +200,23 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
     }
 }
 
-void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double stop_point_s, bool lowVelocityMode) {
-    Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, samplingConfig.t_min, samplingConfig.horizon);
-    Eigen::ArrayXd svals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, (state.x_cl.x0_lon(1) + stop_point_s) / 2.0, stop_point_s);
+void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double stop_point_s, double stop_point_v, bool lowVelocityMode) {
+    Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel + 2, samplingConfig.t_min, samplingConfig.horizon);
+
+    // Eigen::ArrayXd svals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel + 2, (state.x_cl.x0_lon(0) + stop_point_s) / 2.0, stop_point_s);
+    double distance_to_stop_point = stop_point_s - state.x_cl.x0_lon(0);
+    Eigen::ArrayXd svals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel + 2, state.x_cl.x0_lon(0) + distance_to_stop_point * 0.1, stop_point_s);
+
     Eigen::ArrayXd dvals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, -samplingConfig.d_delta, samplingConfig.d_delta);
 
+    int iii = 0;
+
     for (auto t: ts) {
+        Eigen::Vector<double, 13> samplingParameters = Eigen::Vector<double, 13>::Zero();
+        samplingParameters(1) = t;
+
         for (auto s: svals) {
-            Eigen::Vector3d x1_lon {s, 0.0, 0.0};
+            Eigen::Vector3d x1_lon {s, stop_point_v, 0.0};
 
             TrajectorySample::FixedLongitudinalTrajectory longitudinalTrajectory (
                 0.0,
@@ -216,9 +225,7 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
                 x1_lon
                 );
 
-            for (auto d: dvals) {
-
-                // Eigen::Vector3d x1_lat {state.x_cl.x0_lat[0], 0.0, 0.0};
+            auto sample_d = [&] (double d) {
                 Eigen::Vector3d x1_lat {d, 0.0, 0.0};
 
                 TrajectorySample::LateralTrajectory lateralTrajectory(
@@ -232,8 +239,15 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
                     samplingConfig.dt,
                     longitudinalTrajectory,
                     lateralTrajectory,
-                    -1
+                    iii++,
+                    samplingParameters
                 );
+            };
+
+            sample_d(state.x_cl.x0_lat[0]);
+
+            for (auto d: dvals) {
+                sample_d(d);
             }
         }
     }

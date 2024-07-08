@@ -58,7 +58,7 @@ public:
      * ddd0/ddd1:   start/end lateral acceleration
      */
     void generateTrajectories(const SamplingMatrixXd& samplingMatrix, bool lowVelocityMode);
-    void generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double s, bool lowVelocityMode);
+    void generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double stop_point_s, double stop_point_v, bool lowVelocityMode);
     void sort();
     void addFeasabilityFunction(std::shared_ptr<FeasabilityStrategy> function);
     void addFunction(std::shared_ptr<TrajectoryStrategy> function);
