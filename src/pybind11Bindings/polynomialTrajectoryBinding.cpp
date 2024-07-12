@@ -32,7 +32,7 @@ namespace plannerCPP
 
         static_assert(std::is_same<RefType, Traj>::value, "RefType mismatch");
 
-        nb::class_<Traj>(m, (pre + "Trajectory").c_str())
+        nb::class_<Traj, LinearTrajectory>(m, (pre + "Trajectory").c_str())
             .def("__init__", [](Traj *traj,
                              double t0, 
                             double t1,
@@ -74,6 +74,10 @@ namespace plannerCPP
 
     void initBindPolynomialTrajectory(nb::module_ &m) 
     {
+        nb::class_<LinearTrajectory>(m, "LinearTrajectory")
+            .def("__call__", [] (const LinearTrajectory& traj, double t) { return traj.horner_eval(t).x; })
+            .def("squared_jerk_integral", &LinearTrajectory::squaredJerkIntegral);
+
         // Bind the PolynomialTrajectory class
         bindPolynomialtrajectory<4, 3, 2, TrajectorySample::LongitudinalTrajectory>(m, "Quartic");
         bindPolynomialtrajectory<5, 3, 3, TrajectorySample::LateralTrajectory>(m, "Quintic");
