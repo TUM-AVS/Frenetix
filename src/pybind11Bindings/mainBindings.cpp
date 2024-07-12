@@ -12,11 +12,15 @@
 #include "trajectorySampleBinding.hpp"
 #include "trajectoryStrategyBinding.hpp"
 
+#include "loggingSink.hpp"
+
 namespace nb = nanobind;
 namespace plannerCPP
 {
     NB_MODULE(_frenetix, m)
     {
+        m.def("setup_logger", setup_logger);
+
         // NOTE: Order of these bindings is critical to ensure proper stubs generation
         initBindCoordinateSystemWrapper(m);
 
