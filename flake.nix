@@ -13,6 +13,8 @@
           boost
           llvmPackages_18.openmp
           eigen
+          taskflow
+          spdlog
         ];
 
         # nativeBuildInputs is usually what you want -- tools you need to run

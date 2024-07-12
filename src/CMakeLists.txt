@@ -155,6 +155,7 @@ target_link_libraries(fp_core
         Eigen3::Eigen
         crccosy
         Taskflow::Taskflow
+        spdlog::spdlog
         )
 
 target_include_directories(fp_core

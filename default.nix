@@ -6,6 +6,7 @@
 , eigen
 , boost
 , taskflow
+, spdlog
 
 , gfortran
 , cmake
@@ -51,6 +52,7 @@ in python3Packages.buildPythonPackage {
     eigen
     boost
     taskflow
+    spdlog
   ];
 
   pythonImportsCheck = [

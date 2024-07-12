@@ -227,6 +227,7 @@ include(ExternalBoost)
 include(ExternalEigen)
 include(ExternalDrivabilityChecker)
 include(ExternalTaskflow)
+include(ExternalSpdlog)
 
 add_subdirectory(src)
 
