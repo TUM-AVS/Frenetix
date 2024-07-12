@@ -15,17 +15,17 @@
 #include "polynomial.hpp"
 #include "util.hpp"
 
+#include <spdlog/spdlog.h>
+
 FillCoordinates::FillCoordinates(bool lowVelocityMode, 
                                  double initialOrienation, 
                                  std::shared_ptr<CoordinateSystemWrapper> coordinateSystem,
-                                 double horizon,
-                                 bool allowNegativeVelocity)
+                                 double horizon)
     : TrajectoryStrategy("Fill Coordinates")
     , m_lowVelocityMode(lowVelocityMode)
     , m_initialOrientation(initialOrienation)
     , m_coordinateSystem(coordinateSystem)
     , m_horizon(horizon)
-    , m_allowNegativeVelocity(allowNegativeVelocity)
 {
 }
 
@@ -58,6 +58,8 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
     trajectory.m_currentTimeStep = length;
 
     double t {0};
+
+    bool infeasible_negative_velocity = false;
     
     for (int iii = 0; iii < length; ++iii) 
     {
@@ -95,14 +97,10 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
 
 
         double _EPS = 1e-5;
-        if(!m_allowNegativeVelocity && trajectory.m_curvilinearSample.ss[iii] < -_EPS)
-        {
-            trajectory.m_valid = false;
+        if (trajectory.m_curvilinearSample.ss[iii] < -_EPS) {
+            infeasible_negative_velocity = true;
             trajectory.m_feasible = false;
-            return;
-        }
-        else if(std::abs(trajectory.m_curvilinearSample.ss[iii]) < _EPS)
-        {
+        } else if(std::abs(trajectory.m_curvilinearSample.ss[iii]) < _EPS) {
             trajectory.m_curvilinearSample.ss[iii] = 0;
         }
 
@@ -128,6 +126,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
 
         auto s_idx_opt = m_coordinateSystem->getS_idx(trajectory.m_curvilinearSample.s[iii]);
         if (!s_idx_opt.has_value()) {
+            SPDLOG_INFO("marking trajectory {} invalid: s={} is out of bounds", trajectory.m_uniqueId.value_or(-1), trajectory.m_curvilinearSample.s[iii]);
             trajectory.m_valid = false;
             trajectory.m_feasible = false;
             return;
@@ -195,8 +194,15 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
         {
             trajectory.m_valid = false;
             trajectory.m_feasible = false;
+
+            SPDLOG_INFO("marking trajectory {} invalid: failed CCS conversion for s={}", trajectory.m_uniqueId.value_or(-1), trajectory.m_curvilinearSample.s[iii]);
+
             return;
         }
+    }
+
+    if (infeasible_negative_velocity) {
+        SPDLOG_INFO("trajectory {} infeasible due to negative velocity", trajectory.m_uniqueId.value_or(-1));
     }
 }
 
