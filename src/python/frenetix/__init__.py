@@ -8,7 +8,8 @@ from ._frenetix import (
     TrajectorySample,
     PlannerState,
     CartesianPlannerState,
-    CurvilinearPlannerState
+    CurvilinearPlannerState,
+    setup_logger
     # trajectory_functions
 )
 
@@ -28,6 +29,7 @@ __all__ = (
     "PlannerState",
     "CartesianPlannerState",
     "CurvilinearPlannerState",
+    "setup_logger",
     "trajectory_functions"
 )
 
