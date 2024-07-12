@@ -31,11 +31,14 @@ std::optional<int> CoordinateSystemWrapper::getS_idx(double s) const
     std::optional<int> new_idx = std::nullopt;
 
     if (it == m_refPos.cend()) {
+        // In theory the following logic is correct, however we can't use the last segment since
+        // we always need the following segment to be valid as well (in getSLambda etc.)
+        #if 0
         if (m_refPos.size() >= 2 && s >= m_refPos[m_refPos.size() - 1]) {
             new_idx = m_refPos.size() - 1;
-        } else {
-            new_idx = std::nullopt;
         }
+        #endif
+        new_idx = std::nullopt;
     } else if (std::distance(m_refPos.cbegin(), it) >= 1) {
         new_idx = std::distance(m_refPos.cbegin(), it) - 1;
     } else if (it == m_refPos.cbegin() && s >= *it) {
@@ -67,6 +70,10 @@ std::optional<int> CoordinateSystemWrapper::getS_idx(double s) const
 
 double CoordinateSystemWrapper::getSLambda(double s, int s_idx) const
 {
+    if (s_idx + 1 >= m_refPos.size()) {
+        throw std::invalid_argument { "out of range" };
+    }
+
     return (s-m_refPos[s_idx]) / (m_refPos[s_idx+1] - m_refPos[s_idx]);
 }
 
