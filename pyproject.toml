@@ -60,3 +60,13 @@ archs = ["auto"]
 environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }
 build-verbosity = 1
 
+[tool.cibuildwheel.linux]
+before-all = [
+  "yum install cmake -y",
+  "cmake -P cmake/ci-prefetch-dependencies.cmake"
+]
+
+[tool.cibuildwheel.linux.config-settings]
+"cmake.define.FETCHCONTENT_SOURCE_DIR_BOOST_SRC" = "/opt/dependencies/extract/boost_1_85_0"
+"cmake.define.FETCHCONTENT_SOURCE_DIR_SPDLOG" = "/opt/dependencies/extract/spdlog-1.14.1"
+"cmake.define.FETCHCONTENT_SOURCE_DIR_TASKFLOW" = "/opt/dependencies/extract/taskflow-3.7.0"
