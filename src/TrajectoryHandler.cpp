@@ -1,9 +1,9 @@
+#include <algorithm>
+#include <cmath>
+#include <stdexcept>
+
 #include <Eigen/Core>
 #include <Eigen/QR>
-#include <algorithm>
-#include <map>
-#include <iterator>
-#include <functional>
 
 #include "TrajectoryHandler.hpp"
 
@@ -15,6 +15,10 @@
 
 #include <taskflow/algorithm/transform.hpp>
 #include <taskflow/algorithm/for_each.hpp>
+
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+
 
 TrajectoryHandler::TrajectoryHandler(double dt)
     : m_dt(dt)
@@ -200,54 +204,209 @@ void TrajectoryHandler::generateTrajectories(const SamplingMatrixXd& samplingMat
     }
 }
 
+#if __cpp_lib_interpolate >= 201902L
+#define lerp std::lerp
+#else
+static inline double lerp(double a, double b, double t) {
+    return a + t * (b - a);
+}
+#endif
+
+template <> struct fmt::formatter<Eigen::ArrayXd> : fmt::ostream_formatter {};
+template <> struct fmt::formatter<Eigen::Transpose<Eigen::ArrayXd>> : fmt::ostream_formatter {};
+template <> struct fmt::formatter<Eigen::WithFormat<Eigen::Transpose<Eigen::ArrayXd>>> : fmt::ostream_formatter {};
+
 void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, SamplingConfiguration samplingConfig, double stop_point_s, double stop_point_v, bool lowVelocityMode) {
-    Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel + 2, samplingConfig.t_min, samplingConfig.horizon);
+    if (state.x_cl.x0_lon(1) < 0.0) {
+        throw std::invalid_argument { "invalid initial state: negative initial speed" };
+    }
+    if (stop_point_v < 0.0) {
+        throw std::invalid_argument { "invalid negative desired speed" };
+    }
+    if (state.x_cl.x0_lon(1) < stop_point_s) {
+        throw std::invalid_argument { "invalid stop point: behind current longitudinal position" };
+    }
 
-    // Eigen::ArrayXd svals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel + 2, (state.x_cl.x0_lon(0) + stop_point_s) / 2.0, stop_point_s);
-    double distance_to_stop_point = stop_point_s - state.x_cl.x0_lon(0);
-    Eigen::ArrayXd svals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel + 2, state.x_cl.x0_lon(0) + distance_to_stop_point * 0.1, stop_point_s);
+    auto linear_sample = [&] (auto min, auto max) -> Eigen::ArrayXd {
+        return Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, min, max);
+    };
+    auto linear_sample_odd = [&] (auto min, auto max) -> Eigen::ArrayXd {
+        auto level = samplingConfig.samplingLevel;
+        if (level % 2 == 0) {
+            level++;
+        }
+        return Eigen::ArrayXd::LinSpaced(level, min, max);
+    };
 
-    Eigen::ArrayXd dvals = Eigen::ArrayXd::LinSpaced(samplingConfig.samplingLevel, -samplingConfig.d_delta, samplingConfig.d_delta);
+    Eigen::ArrayXd svals = linear_sample(
+        lerp(state.x_cl.x0_lon(0), stop_point_s, 0.7),
+        stop_point_s
+    );
+
+    double base_distance_to_stop_point = stop_point_s - state.x_cl.x0_lon(0);
+    // double base_nominal_time = base_distance_to_stop_point / state.x_cl.x0_lon(1);
+    double base_nominal_time_final = base_distance_to_stop_point / stop_point_v;
+    double base_delta_v = stop_point_v - state.x_cl.x0_lon(1);
+    double desired_step_acc = base_delta_v / base_nominal_time_final;
+    double a_max = 10.0;
+    if (stop_point_v > state.x_cl.x0_lon(1)) {
+        // Acceleration
+        if (desired_step_acc > a_max) {
+            stop_point_v = lerp(state.x_cl.x0_lon(1), stop_point_v, a_max / desired_step_acc);
+            SPDLOG_WARN("desired_step_acc is {:.2}, reducing stop_point_v to {}", desired_step_acc, stop_point_v);
+        }
+    } else {
+        // Deceleration
+    }
+
+    Eigen::ArrayXd sdvals;
+    if (samplingConfig.strictVelocitySampling) {
+        if (stop_point_v <= 1e-2) {
+            sdvals = Eigen::Array<double, 1, 1>::Zero();
+        } else {
+            if (stop_point_v > state.x_cl.x0_lon(1)) {
+                sdvals = linear_sample(
+                    lerp(state.x_cl.x0_lon(1), stop_point_v, 0.7),
+                    stop_point_v
+                );
+            } else {
+                sdvals = linear_sample(
+                    std::max(0.0, lerp(state.x_cl.x0_lon(1), stop_point_v, 1.3)),
+                    stop_point_v
+                );
+            }
+        }
+    } else {
+        sdvals = linear_sample(
+            lerp(state.x_cl.x0_lon(1), stop_point_v, 0.7),
+            std::max(0.0, lerp(state.x_cl.x0_lon(1), stop_point_v, 1.3))
+        );
+    }
+
+    Eigen::ArrayXd dvals = linear_sample( 
+        state.x_cl.x0_lat(0) - samplingConfig.d_delta,
+        state.x_cl.x0_lat(0) + samplingConfig.d_delta
+    );
 
     int iii = 0;
 
-    for (auto t: ts) {
-        Eigen::Vector<double, 13> samplingParameters = Eigen::Vector<double, 13>::Zero();
-        samplingParameters(1) = t;
+    Eigen::IOFormat clean(2, 0, ", ", "\n", "[", "]");
+    SPDLOG_INFO(" s={}", svals.transpose().format(clean));
+    SPDLOG_INFO("ss={}", sdvals.transpose().format(clean));
 
-        for (auto s: svals) {
-            Eigen::Vector3d x1_lon {s, stop_point_v, 0.0};
+    for (auto s: svals) {
+        for (auto sd: sdvals) {
+            double distance_to_stop_point = s - state.x_cl.x0_lon(0);
 
-            TrajectorySample::FixedLongitudinalTrajectory longitudinalTrajectory (
-                0.0,
-                samplingConfig.horizon,
-                state.x_cl.x0_lon,
-                x1_lon
+            double nominal_time = distance_to_stop_point / state.x_cl.x0_lon(1);
+            double nominal_time_final = distance_to_stop_point / sd;
+            if (sd <= 1e-3) {
+                nominal_time_final = distance_to_stop_point / (0.5 * state.x_cl.x0_lon(1));
+            }
+
+            double t_min = samplingConfig.t_min;
+            double t_max = samplingConfig.t_max;
+
+            if (sd > state.x_cl.x0_lon(1)) {
+                // Acceleration
+                // Final speed greater than initial speed -> should not take more than current time at current velocity
+                if (samplingConfig.enforceTimeBounds) {
+                    t_max = nominal_time;
+                    t_min = nominal_time_final;
+                } else {
+                    t_max = std::min(t_max, nominal_time);
+                    t_min = std::max(t_min, nominal_time_final);
+                }
+                if (t_min > t_max) {
+                    t_min = 0.5 * t_max;
+                }
+            } else {
+                // Deceleration
+                if (samplingConfig.enforceTimeBounds) {
+                    t_min = nominal_time;
+                    t_max = nominal_time_final;
+                } else {
+                    t_min = std::max(t_min, nominal_time);
+                    t_max = std::min(t_max, nominal_time_final);
+                }
+                if (t_min > t_max) {
+                    t_max = 2.0 * t_min;
+                }
+            }
+
+            auto max_samples = static_cast<decltype(samplingConfig.samplingLevel)>(std::ceil((t_max - t_min) / samplingConfig.dt));
+            auto samples = std::min(max_samples, samplingConfig.samplingLevel);
+            Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samples, t_min, t_max);
+
+            SPDLOG_INFO("sampling {:3.1} -> {:4.1} t={}", t_min, t_max, ts.transpose().format(clean));
+            SPDLOG_DEBUG("nominal={:4.1} nominal_final={:4.1} t={}", nominal_time, nominal_time_final);
+
+            for (auto t: ts) {
+                if (!std::isfinite(t) || t <= 0.0) {
+                    throw std::runtime_error { "internal error: sampled invalid time" };
+                }
+
+                auto scaled_d_delta = (t / t_max) * samplingConfig.d_delta;
+                auto delta = samplingConfig.timeBasedLateralDeltaScaling ? scaled_d_delta : samplingConfig.d_delta;
+                Eigen::ArrayXd dvals = linear_sample_odd(
+                    state.x_cl.x0_lat(0) - delta,
+                    state.x_cl.x0_lat(0) + delta
                 );
+                SPDLOG_DEBUG("d={}", dvals.transpose().format(clean));
 
-            auto sample_d = [&] (double d) {
-                Eigen::Vector3d x1_lat {d, 0.0, 0.0};
+                Eigen::Vector3d x1_lon {s, sd, 0.0};
 
-                TrajectorySample::LateralTrajectory lateralTrajectory(
+                Eigen::Vector<double, 13> samplingParameters;
+                samplingParameters(0) = 0.0;
+                samplingParameters(1) = t;
+                samplingParameters(2) = state.x_cl.x0_lon(0);
+                samplingParameters(3) = state.x_cl.x0_lon(1);
+                samplingParameters(4) = state.x_cl.x0_lon(2);
+                samplingParameters(5) = x1_lon(0);
+                samplingParameters(6) = x1_lon(1);
+                samplingParameters(7) = state.x_cl.x0_lat(0);
+                samplingParameters(8) = state.x_cl.x0_lat(1);
+                samplingParameters(9) = state.x_cl.x0_lat(2);
+
+                TrajectorySample::FixedLongitudinalTrajectory longitudinalTrajectory (
                     0.0,
-                    samplingConfig.horizon,
-                    state.x_cl.x0_lat,
-                    x1_lat
-                );
+                    t,
+                    state.x_cl.x0_lon,
+                    x1_lon
+                    );
 
-                m_trajectories.emplace_back(
-                    samplingConfig.dt,
-                    longitudinalTrajectory,
-                    lateralTrajectory,
-                    iii++,
-                    samplingParameters
-                );
-            };
+                double t1 = 0.0;
+                if (lowVelocityMode) {
+                    t1 = longitudinalTrajectory(t) - state.x_cl.x0_lon(0);
+                    if (t1 <= 0.0) {
+                        t1 = t;
+                    }
+                } else {
+                    t1 = t;
+                }
 
-            sample_d(state.x_cl.x0_lat[0]);
+                for (auto d: dvals) {
+                    Eigen::Vector3d x1_lat {d, 0.0, 0.0};
 
-            for (auto d: dvals) {
-                sample_d(d);
+                    samplingParameters(10) = x1_lat(0);
+                    samplingParameters(11) = x1_lat(1);
+                    samplingParameters(12) = x1_lat(2);
+
+                    TrajectorySample::LateralTrajectory lateralTrajectory(
+                        0.0,
+                        t1,
+                        state.x_cl.x0_lat,
+                        x1_lat
+                    );
+
+                    m_trajectories.emplace_back(
+                        samplingConfig.dt,
+                        longitudinalTrajectory,
+                        lateralTrajectory,
+                        iii++,
+                        samplingParameters
+                    );
+                }
             }
         }
     }

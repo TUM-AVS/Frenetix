@@ -16,10 +16,13 @@ class TrajectoryStrategy;
 
 struct SamplingConfiguration {
     double t_min;
+    double t_max;
     double dt;
-    double horizon;
     double d_delta;
     int samplingLevel;
+    bool timeBasedLateralDeltaScaling;
+    bool enforceTimeBounds;
+    bool strictVelocitySampling;
 };
 
 
