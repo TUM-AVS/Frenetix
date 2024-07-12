@@ -25,7 +25,7 @@ dependencies = [
 
 [build-system]
 requires = [
-    "scikit-build-core~=0.9.4",
+    "scikit-build-core>=0.8, <0.10",
     "nanobind~=2.0.0",
     "setuptools_scm[toml]~=8.0.3"
 ]
