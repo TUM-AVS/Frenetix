@@ -60,6 +60,9 @@ archs = ["auto"]
 environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }
 build-verbosity = 1
 
+[tool.cibuildwheel.macos]
+environment = { MACOSX_DEPLOYMENT_TARGET = "12.0" }
+
 [tool.cibuildwheel.linux]
 build-frontend = "build[uv]"
 

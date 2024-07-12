@@ -20,6 +20,11 @@ else()
     string(REGEX MATCH "^[0-9]+\.[0-9]+\.[0-9]+" SKBUILD_PROJECT_VERSION ${SKBUILD_PROJECT_VERSION})
 endif()
 
+# macOS 10.14 is required for full C++17 support
+# 12 is required for gfortran/libomp from Homebrew
+# Needs to be set before project() call
+set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE INTERNAL "")
+
 project(${SKBUILD_PROJECT_NAME}
     LANGUAGES CXX Fortran
     # TODO: Find an automatic way to sync the version with setuptools_scm/Git tags
@@ -111,10 +116,6 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-# macOS 10.14 is required for full C++17 support
-# 12 is required for gfortran/libomp from Homebrew
-set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
 
 # Some extra debugging for project developers - safe to disable, but read on why they might be useful:
 
