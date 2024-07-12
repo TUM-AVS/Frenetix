@@ -9,9 +9,12 @@ endif()
 
 message(STATUS "Boost - falling back to external version")
 
+# set(_boost_mirror "https://boostorg.jfrog.io/artifactory/main")
+set(_boost_mirror "https://archives.boost.io")
+
 FetchContent_Declare(boost_src
-        URL https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz
-        URL_HASH SHA256=4b2136f98bdd1f5857f1c3dea9ac2018effe65286cf251534b6ae20cc45e1847
+        URL ${boost_mirror}/release/1.85.0/source/boost_1_85_0.tar.gz
+        URL_HASH SHA256=be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b
 )
 FetchContent_MakeAvailable(boost_src)
 
