@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.4
+        uses: pypa/cibuildwheel@v2.19.2
         env:
           # gcc is required for gfortran
           CIBW_BEFORE_ALL_MACOS: >
