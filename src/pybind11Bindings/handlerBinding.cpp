@@ -82,13 +82,15 @@ namespace plannerCPP
             (
                 "evaluate_all_current_functions", 
                 &TrajectoryHandler::evaluateAllCurrentFunctions, 
-                nb::arg("calculateAllCosts") = false
+                nb::arg("calculateAllCosts") = false,
+                nb::call_guard<nb::gil_scoped_release>()
             )
             .def
             (
                 "evaluate_all_current_functions_concurrent", 
-                &TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent, 
-                nb::arg("calculateAllCosts") = false
+                &TrajectoryHandler::evaluateAllCurrentFunctionsConcurrent,
+                nb::arg("calculateAllCosts") = false,
+                nb::call_guard<nb::gil_scoped_release>()
             )
             .def
             (
