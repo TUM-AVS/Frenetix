@@ -27,7 +27,10 @@ namespace plannerCPP
         // Unconditionally setup default logger
         setup_logger();
 
-        m.def("setup_logger", [] (const nb::object& logger) { setup_logger(logger); });
+        m.def("setup_logger",
+            [] (const nb::object& logger) { setup_logger(logger); },
+            nb::arg("logger")
+        );
 
         // NOTE: Order of these bindings is critical to ensure proper stubs generation
         initBindCoordinateSystemWrapper(m);
