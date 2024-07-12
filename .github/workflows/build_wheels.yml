@@ -31,9 +31,11 @@ jobs:
         env:
           # gcc is required for gfortran
           CIBW_BEFORE_ALL_MACOS: >
-            brew install boost eigen libomp gcc
+            brew install boost eigen spdlog
 
-          CIBW_ENVIRONMENT_MACOS: FC="$(brew --prefix gcc)/bin/gfortran"
+          CIBW_ENVIRONMENT_MACOS: >
+            FC="$(brew --prefix gcc)/bin/gfortran"
+            MACOSX_DEPLOYMENT_TARGET=12.0
 
       # macOS arm64: Disabled due to missing Fortran compiler
       #
