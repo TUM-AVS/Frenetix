@@ -19,6 +19,11 @@ namespace plannerCPP
 {
     NB_MODULE(_frenetix, m)
     {
+        // Disable leak warnings in Release builds
+        #ifdef NDEBUG
+        nb::set_leak_warnings(false);
+        #endif
+
         m.def("setup_logger", setup_logger);
 
         // NOTE: Order of these bindings is critical to ensure proper stubs generation
