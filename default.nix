@@ -22,7 +22,7 @@ let
   };
 in python3Packages.buildPythonPackage {
   pname = "frenetix";
-  version = "0.3.0";
+  version = "0.4.0-rc1";
 
   pyproject = true;
 
