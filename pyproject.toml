@@ -54,13 +54,15 @@ install.components = ["PythonModules"]
 # Skip building PyPy and musllinux wheels
 skip = "pp* *-musllinux*"
 
-build-frontend = "build[uv]"
+build-frontend = "build"
 
 archs = ["auto"]
 environment = { PIP_DISABLE_PIP_VERSION_CHECK="1" }
 build-verbosity = 1
 
 [tool.cibuildwheel.linux]
+build-frontend = "build[uv]"
+
 before-all = [
   "yum install cmake -y",
   "cmake -P cmake/ci-prefetch-dependencies.cmake"
