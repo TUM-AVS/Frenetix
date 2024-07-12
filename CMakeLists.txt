@@ -113,7 +113,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # macOS 10.14 is required for full C++17 support
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
+# 12 is required for gfortran/libomp from Homebrew
+set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
 
 # Some extra debugging for project developers - safe to disable, but read on why they might be useful:
 
