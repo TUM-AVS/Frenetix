@@ -14,7 +14,7 @@ FetchContent_Declare_Fallback(
     #GIT_REPOSITORY "https://github.com/taskflow/taskflow.git"
     #GIT_TAG 12f8bd4e970ab27fd3dee3bffa24b5b48b54ba39
 
-    FIND_PACKAGE_ARGS
+    FIND_PACKAGE_ARGS ${taskflow_version}
 )
 
 set(TF_BUILD_EXAMPLES OFF)
