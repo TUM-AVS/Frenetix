@@ -7,4 +7,5 @@
 
 namespace nb = nanobind;
 
+void setup_logger();
 void setup_logger(nb::object logger);

@@ -118,3 +118,7 @@ void setup_logger(nb::object logger) {
     python_forwarding_logger->set_level(spdlog::level::info);
     spdlog::set_default_logger(python_forwarding_logger);
 }
+
+void setup_logger() {
+    setup_logger(python_logging_sink_mt::get_logger("frenetix"));
+}

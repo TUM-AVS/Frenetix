@@ -24,7 +24,10 @@ namespace plannerCPP
         nb::set_leak_warnings(false);
         #endif
 
-        m.def("setup_logger", setup_logger);
+        // Unconditionally setup default logger
+        setup_logger();
+
+        m.def("setup_logger", [] (const nb::object& logger) { setup_logger(logger); });
 
         // NOTE: Order of these bindings is critical to ensure proper stubs generation
         initBindCoordinateSystemWrapper(m);
