@@ -333,9 +333,12 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
                     t_max = 2.0 * t_min;
                 }
             }
+            if (!std::isfinite(t_min) || t_min <= 0.0 || !std::isfinite(t_max) || t_max <= 0.0) {
+                throw std::runtime_error { "internal error: sampled invalid time" };
+            }
 
             auto max_samples = static_cast<decltype(samplingConfig.samplingLevel)>(std::ceil((t_max - t_min) / samplingConfig.dt));
-            auto samples = std::min(max_samples, samplingConfig.samplingLevel);
+            auto samples = std::max(1, std::min(max_samples, samplingConfig.samplingLevel));
             Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samples, t_min, t_max);
 
             SPDLOG_INFO("sampling {:3.1} -> {:4.1} t={}", t_min, t_max, ts.transpose().format(clean));
