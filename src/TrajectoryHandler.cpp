@@ -223,7 +223,7 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
     if (stop_point_v < 0.0) {
         throw std::invalid_argument { "invalid negative desired speed" };
     }
-    if (stop_point_s < state.x_cl.x0_lon(1)) {
+    if (stop_point_s < state.x_cl.x0_lon(0)) {
         throw std::invalid_argument { "invalid stop point: behind current longitudinal position" };
     }
 
