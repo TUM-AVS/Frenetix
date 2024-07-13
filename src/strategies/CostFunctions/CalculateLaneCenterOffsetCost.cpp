@@ -1,13 +1,13 @@
-#include "CalculateLaneCenterOffsetCost.hpp"
+#include <spdlog/spdlog.h>
 
-#include <iostream>
+#include "CalculateLaneCenterOffsetCost.hpp"
 
 #include "TrajectorySample.hpp"
 
 CalculateLaneCenterOffsetCost::CalculateLaneCenterOffsetCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {
-    std::cout << "Lane Center Offset Cost not implemented" << std::endl;
+    SPDLOG_WARN("Lane Center Offset Cost not implemented");
 }
 
 void CalculateLaneCenterOffsetCost::evaluateTrajectory(TrajectorySample& trajectory)

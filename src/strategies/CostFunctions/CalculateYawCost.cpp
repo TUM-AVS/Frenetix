@@ -1,13 +1,13 @@
-#include "CalculateYawCost.hpp"
+#include <spdlog/spdlog.h>
 
-#include <iostream>
+#include "CalculateYawCost.hpp"
 
 #include "TrajectorySample.hpp"
 
 CalculateYawCost::CalculateYawCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {
-    std::cout << "Yaw Cost not implemented" << std::endl;
+    SPDLOG_WARN("Yaw Cost not implemented");
 }
 
 void CalculateYawCost::evaluateTrajectory(TrajectorySample& trajectory)

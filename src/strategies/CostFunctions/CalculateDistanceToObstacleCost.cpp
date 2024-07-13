@@ -3,13 +3,15 @@
 #include "CartesianSample.hpp"
 #include "TrajectorySample.hpp"
 
+#include <spdlog/spdlog.h>
+
 CalculateDistanceToObstacleCost::CalculateDistanceToObstacleCost(std::string funName, double costWeight, Eigen::Ref<RowMatrixXd> obstacles)
     : CostStrategy(funName, costWeight)
     , m_obstacles(obstacles)
 {
 
     if (!isMatrixValid(m_obstacles)) {
-        std::cerr << "Warning: Invalid obstacle data (contains NaN or Inf). Obstacle Distance Costs will be set to 0.\n";
+        SPDLOG_WARN("Warning: Invalid obstacle data (contains NaN or Inf). Obstacle Distance Costs will be set to 0");
         m_obstacles.setZero(); // Optionally reset the matrix to zero
     }
 
@@ -19,7 +21,7 @@ void CalculateDistanceToObstacleCost::evaluateTrajectory(TrajectorySample& traje
 {
 
     if (!isVectorValid(trajectory.m_cartesianSample.x) || !isVectorValid(trajectory.m_cartesianSample.y)) {
-        std::cerr << "Warning: Invalid trajectory data (contains NaN or Inf). Obstacle Distance Costs will be set to 0.\n";
+        SPDLOG_WARN("Warning: Invalid trajectory data (contains NaN or Inf). Obstacle Distance Costs will be set to 0");
         trajectory.m_cartesianSample.x.setZero(); // Optionally reset the vectors to zero
         trajectory.m_cartesianSample.y.setZero();
         trajectory.addCostValueToList(m_functionName, 0, 0); // Set cost to 0

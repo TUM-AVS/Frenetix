@@ -3,6 +3,8 @@
 #include <Eigen/Dense>
 #include <Eigen/Cholesky>
 
+#include <spdlog/spdlog.h>
+
 #include <stdexcept>
 #include <iostream>
 
@@ -49,11 +51,11 @@ void check_covariance_matrix(
     const Eigen::Matrix<Scalar, Rows, Cols>& covariance
 ) {
     if (!is_symmetric(covariance)) {
-        std::cerr << "WARNING: covar not symmetric!" << std::endl;
+        SPDLOG_WARN("covar not symmetric!");
         throw not_symmetric_error {};
     }
     if (!is_positive_semidefinite(covariance)) {
-        std::cerr << "WARNING: covar not positive semi-definite!" << std::endl;
+        SPDLOG_WARN("covar not positive semi-definite!");
         throw not_positive_semidefinite_error {};
     }
 }

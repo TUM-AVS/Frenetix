@@ -1,11 +1,12 @@
 #include "CoordinateSystemWrapper.hpp"
 
-#include <stddef.h>
+#include <cstddef>
 #include <cassert>
 #include <cmath>
 #include <iostream>
-
 #include <stdexcept>
+
+#include <spdlog/spdlog.h>
 
 #include "geometry/curvilinear_coordinate_system.h"
 
@@ -21,7 +22,7 @@ CoordinateSystemWrapper::CoordinateSystemWrapper(Eigen::Ref<RowMatrixXd> refPath
     m_refCurvD = util::computeGradient(m_refCurv, m_refPos);
     m_refCurvDD = util::computeGradient(m_refCurvD, m_refPos);
     
-    std::cerr << "CoordinateSystemWrapper initialized" << std::endl;
+    SPDLOG_DEBUG("CoordinateSystemWrapper initialized");
 
 }
 

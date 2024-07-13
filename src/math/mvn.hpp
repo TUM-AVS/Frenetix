@@ -8,6 +8,8 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <spdlog/spdlog.h>
+
 #include "mvndst.hpp"
 
 double bvn_prob(
@@ -62,7 +64,7 @@ double mvn_prob(
         break;
     case 1:
         // Max iterations
-        std::cout << "WARNING: Reached max iterations in mvnun" << std::endl;
+        SPDLOG_WARN("Reached max iterations in mvnun");
         break;
     case -1:
         throw std::runtime_error { "Internal error: mvnun did not set inform" };

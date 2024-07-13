@@ -1,13 +1,13 @@
-#include "CalculateSteeringAngleCost.hpp"
+#include <spdlog/spdlog.h>
 
-#include <iostream>
+#include "CalculateSteeringAngleCost.hpp"
 
 #include "TrajectorySample.hpp"
 
 CalculateSteeringAngleCost::CalculateSteeringAngleCost(std::string funName, double costWeight)
     : CostStrategy(funName, costWeight)
 {
-    std::cout << "Steering Angle Cost not implemented" << std::endl;
+    SPDLOG_WARN("Steering Angle Cost not implemented");
 }
 
 void CalculateSteeringAngleCost::evaluateTrajectory(TrajectorySample& trajectory)

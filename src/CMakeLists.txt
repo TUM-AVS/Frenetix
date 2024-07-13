@@ -132,10 +132,9 @@ target_include_directories(mathutil
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/math>
 )
 
-target_link_libraries(mathutil
-        PUBLIC
-        Eigen3::Eigen
-        )
+target_link_libraries(mathutil PUBLIC Eigen3::Eigen)
+
+target_link_libraries(mathutil PRIVATE spdlog::spdlog)
 
 add_library(fp_core STATIC ${FP_SRC_FILES} ${FP_HDR_FILES})
 

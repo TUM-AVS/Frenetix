@@ -1,7 +1,6 @@
-#include "CheckVelocityConstraints.hpp"
+#include <spdlog/spdlog.h>
 
-#include <iostream>
-#include <string>
+#include "CheckVelocityConstraints.hpp"
 
 class TrajectorySample;
 
@@ -9,7 +8,7 @@ CheckVelocityConstraint::CheckVelocityConstraint(bool wholeTrajectory)
     : FeasabilityStrategy("Velocity Constraint", wholeTrajectory)
 
 {   
-    std::cout << m_functionName << ": not implemented yet" << std::endl;
+    SPDLOG_WARN("CheckVelocityConstraint not implemented yet");
 }
 
 void CheckVelocityConstraint::evaluateTrajectory(TrajectorySample& trajectory)

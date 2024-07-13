@@ -202,7 +202,7 @@ void FillCoordinates::evaluateTrajectory(TrajectorySample& trajectory)
     }
 
     if (infeasible_negative_velocity) {
-        SPDLOG_INFO("trajectory {} infeasible due to negative velocity", trajectory.m_uniqueId.value_or(-1));
+        SPDLOG_DEBUG("trajectory {} infeasible due to negative velocity", trajectory.m_uniqueId.value_or(-1));
     }
 }
 
