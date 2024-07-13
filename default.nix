@@ -32,7 +32,7 @@ in python3Packages.buildPythonPackage {
 
   build-system = with python3Packages; [
     scikit-build-core
-    nanobind
+    (nanobind.overridePythonAttrs (_old: { doCheck = false; }))
     setuptools-scm
     pathspec
     pyproject-metadata
