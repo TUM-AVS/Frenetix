@@ -27,7 +27,8 @@ dependencies = [
 requires = [
     "scikit-build-core>=0.8, <0.10",
     "nanobind~=2.0.0",
-    "setuptools_scm>=7"
+    "setuptools_scm>=7",
+    'typing-extensions; python_version < "3.11"',
 ]
 
 build-backend = "scikit_build_core.build"
