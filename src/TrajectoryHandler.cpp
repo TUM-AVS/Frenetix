@@ -283,14 +283,9 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
         );
     }
 
-    Eigen::ArrayXd dvals = linear_sample( 
-        state.x_cl.x0_lat(0) - samplingConfig.d_delta,
-        state.x_cl.x0_lat(0) + samplingConfig.d_delta
-    );
-
     int iii = 0;
 
-    Eigen::IOFormat clean(2, 0, ", ", "\n", "[", "]");
+    Eigen::IOFormat clean(4, 0, ", ", "\n", "[", "]");
     SPDLOG_INFO(" s={}", svals.transpose().format(clean));
     SPDLOG_INFO("ss={}", sdvals.transpose().format(clean));
 
@@ -298,55 +293,67 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
         for (auto sd: sdvals) {
             double distance_to_stop_point = s - state.x_cl.x0_lon(0);
 
-            double nominal_time = distance_to_stop_point / state.x_cl.x0_lon(1);
-            double nominal_time_final = distance_to_stop_point / sd;
-            if (sd <= 1e-3) {
-                nominal_time_final = distance_to_stop_point / (0.5 * state.x_cl.x0_lon(1));
+            if (!std::isfinite(distance_to_stop_point) || distance_to_stop_point <= 0.0) {
+                throw std::runtime_error { fmt::format("internal error: distance to stop point not positive (distance_to_stop_point={})", distance_to_stop_point) };
             }
 
             double t_min = samplingConfig.t_min;
             double t_max = samplingConfig.t_max;
 
-            if (sd > state.x_cl.x0_lon(1)) {
-                // Acceleration
-                // Final speed greater than initial speed -> should not take more than current time at current velocity
-                if (samplingConfig.enforceTimeBounds) {
-                    t_max = nominal_time;
-                    t_min = nominal_time_final;
+            if (std::abs(state.x_cl.x0_lon(1)) >= 1e-1) {
+                double nominal_time = distance_to_stop_point / state.x_cl.x0_lon(1);
+                double nominal_time_final;
+                if (sd <= 1e-3) {
+                    nominal_time_final = distance_to_stop_point / (0.5 * state.x_cl.x0_lon(1));
                 } else {
-                    t_max = std::min(t_max, nominal_time);
-                    t_min = std::max(t_min, nominal_time_final);
+                    nominal_time_final = distance_to_stop_point / sd;
                 }
-                if (t_min > t_max) {
-                    t_min = 0.5 * t_max;
-                }
-            } else {
-                // Deceleration
-                if (samplingConfig.enforceTimeBounds) {
-                    t_min = nominal_time;
-                    t_max = nominal_time_final;
+                SPDLOG_DEBUG("nominal={:4.1} nominal_final={:4.1} t={}", nominal_time, nominal_time_final);
+
+                if (sd > state.x_cl.x0_lon(1)) {
+                    // Acceleration
+                    // Final speed greater than initial speed -> should not take more than current time at current velocity
+                    if (samplingConfig.enforceTimeBounds) {
+                        t_max = nominal_time;
+                        t_min = nominal_time_final;
+                    } else {
+                        t_max = std::min(t_max, nominal_time);
+                        t_min = std::max(t_min, nominal_time_final);
+                    }
+                    if (t_min > t_max) {
+                        t_min = 0.5 * t_max;
+                    }
                 } else {
-                    t_min = std::max(t_min, nominal_time);
-                    t_max = std::min(t_max, nominal_time_final);
-                }
-                if (t_min > t_max) {
-                    t_max = 2.0 * t_min;
+                    // Deceleration
+                    if (samplingConfig.enforceTimeBounds) {
+                        t_min = nominal_time;
+                        t_max = nominal_time_final;
+                    } else {
+                        t_min = std::max(t_min, nominal_time);
+                        t_max = std::min(t_max, nominal_time_final);
+                    }
+                    if (t_min > t_max) {
+                        t_max = 2.0 * t_min;
+                    }
                 }
             }
-            if (!std::isfinite(t_min) || t_min <= 0.0 || !std::isfinite(t_max) || t_max <= 0.0) {
-                throw std::runtime_error { "internal error: sampled invalid time" };
+
+            if (!std::isfinite(t_min) || t_min <= 0.0) {
+                throw std::runtime_error { fmt::format("internal error: sampled invalid t_min (t_min={} sd={})", t_min, sd) };
+            }
+            if (!std::isfinite(t_max) || t_max <= 0.0) {
+                throw std::runtime_error { fmt::format("internal error: sampled invalid t_max (t_max={} sd={})", t_max, sd) };
             }
 
             auto max_samples = static_cast<decltype(samplingConfig.samplingLevel)>(std::ceil((t_max - t_min) / samplingConfig.dt));
             auto samples = std::max(1, std::min(max_samples, samplingConfig.samplingLevel));
             Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samples, t_min, t_max);
 
-            SPDLOG_INFO("sampling {:3.1} -> {:4.1} t={}", t_min, t_max, ts.transpose().format(clean));
-            SPDLOG_DEBUG("nominal={:4.1} nominal_final={:4.1} t={}", nominal_time, nominal_time_final);
+            SPDLOG_INFO("sd={} sampling {:3.1} -> {:4.1} t={}", sd, t_min, t_max, ts.transpose().format(clean));
 
             for (auto t: ts) {
                 if (!std::isfinite(t) || t <= 0.0) {
-                    throw std::runtime_error { "internal error: sampled invalid time" };
+                    throw std::runtime_error { fmt::format("internal error: sampled invalid time (t={})", t) };
                 }
 
                 auto scaled_d_delta = (t / t_max) * samplingConfig.d_delta;
