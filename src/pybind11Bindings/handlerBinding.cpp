@@ -27,7 +27,7 @@ namespace plannerCPP
     void initBindHandler(nb::module_ &m) 
     {
         nb::class_<SamplingConfiguration>(m, "SamplingConfiguration")
-            .def(nb::init<double, double, double, double, int, bool, bool, bool>(),
+            .def(nb::init<double, double, double, double, int, bool, bool, bool, bool>(),
                  // Requires nanobind >= 2.0
                  #if NB_VERSION_MAJOR >= 2
                  nb::kw_only(),
@@ -39,7 +39,8 @@ namespace plannerCPP
                  nb::arg("sampling_level"),
                  nb::arg("time_based_lateral_delta_scaling") = true,
                  nb::arg("enforce_time_bounds") = true,
-                 nb::arg("strict_velocity_sampling") = true
+                 nb::arg("strict_velocity_sampling") = true,
+                 nb::arg("ego_position_lateral_sampling") = false
             );
 
         nb::class_<TrajectoryHandler>(m, "TrajectoryHandler")

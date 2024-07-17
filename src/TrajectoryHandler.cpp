@@ -362,9 +362,13 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
 
                 auto scaled_d_delta = (t / t_max) * samplingConfig.d_delta;
                 auto delta = samplingConfig.timeBasedLateralDeltaScaling ? scaled_d_delta : samplingConfig.d_delta;
+                double base = 0.0;
+                if (samplingConfig.egoPositionLateralSampling) {
+                    base = state.x_cl.x0_lat(0);
+                }
                 Eigen::ArrayXd dvals = linear_sample_odd(
-                    state.x_cl.x0_lat(0) - delta,
-                    state.x_cl.x0_lat(0) + delta
+                    base - delta,
+                    base + delta
                 );
                 SPDLOG_DEBUG("d={}", dvals.transpose().format(clean));
 

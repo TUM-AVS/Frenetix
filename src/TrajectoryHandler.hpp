@@ -23,6 +23,7 @@ struct SamplingConfiguration {
     bool timeBasedLateralDeltaScaling;
     bool enforceTimeBounds;
     bool strictVelocitySampling;
+    bool egoPositionLateralSampling;
 };
 
 
