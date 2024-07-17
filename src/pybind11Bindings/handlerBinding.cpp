@@ -88,6 +88,14 @@ namespace plannerCPP
             )
             .def
             (
+                "evaluate_trajectory",
+                &TrajectoryHandler::evaluateTrajectory,
+                nb::arg("trajectory"),
+                nb::arg("calculateAllCosts") = false,
+                nb::call_guard<nb::gil_scoped_release>()
+            )
+            .def
+            (
                 "evaluate_all_current_functions", 
                 &TrajectoryHandler::evaluateAllCurrentFunctions, 
                 nb::arg("calculateAllCosts") = false,

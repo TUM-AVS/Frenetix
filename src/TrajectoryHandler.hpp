@@ -98,6 +98,12 @@ public:
     void evaluateAllCurrentFunctionsConcurrent(bool calculateAllCosts);
 
     /**
+     * @brief Evaluates all current functions for a single trajectory.
+     * 
+     */
+    void evaluateTrajectory(TrajectorySample& trajectory, bool calculateAllCosts = false);
+
+    /**
      * @brief Resets the trajectories container.
      * 
      */
@@ -108,8 +114,6 @@ public:
     std::unordered_map<std::string, std::shared_ptr<FeasabilityStrategy>> m_feasabilityFunctions;
     std::unordered_map<std::string, std::shared_ptr<TrajectoryStrategy>> m_otherFunctions;
 private:
-
-    void evaluateTrajectory(TrajectorySample& trajectory, bool calculateAllCosts = false);
 
     double m_dt;
     tf::Taskflow m_taskflow;
