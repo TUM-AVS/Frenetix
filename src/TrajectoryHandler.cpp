@@ -244,6 +244,10 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
     );
 
     double base_distance_to_stop_point = stop_point_s - state.x_cl.x0_lon(0);
+    if (std::abs(base_distance_to_stop_point) < 1e-6) {
+        throw std::invalid_argument { "invalid stop point: equal to current longitudinal position" };
+    }
+
     // double base_nominal_time = base_distance_to_stop_point / state.x_cl.x0_lon(1);
     double base_nominal_time_final = base_distance_to_stop_point / stop_point_v;
     double base_delta_v = stop_point_v - state.x_cl.x0_lon(1);
@@ -349,7 +353,7 @@ void TrajectoryHandler::generateStoppingTrajectories(const PlannerState& state, 
             auto samples = std::max(1, std::min(max_samples, samplingConfig.samplingLevel));
             Eigen::ArrayXd ts = Eigen::ArrayXd::LinSpaced(samples, t_min, t_max);
 
-            SPDLOG_INFO("sd={} sampling {:3.1} -> {:4.1} t={}", sd, t_min, t_max, ts.transpose().format(clean));
+            SPDLOG_INFO("sd={:5.2} sampling {:4.2} -> {:4.2} t={}", sd, t_min, t_max, ts.transpose().format(clean));
 
             for (auto t: ts) {
                 if (!std::isfinite(t) || t <= 0.0) {
