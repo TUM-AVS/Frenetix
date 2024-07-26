@@ -59,7 +59,7 @@ double CalculateCollisionProbabilityFast::integrate(const PoseWithCovariance& po
 
     auto evalAt = [&] (Eigen::Vector2d obsPos) {
         // Position of ego vehicle relative to obstacle
-        Eigen::Vector2d relativePos = egoInvRot * (egoPos - obsPos);
+        Eigen::Vector2d relativePos = egoPos - obsPos;
 
         // Rotate relative position to cancel ego vehicle orientation
         Eigen::Vector2d axisAlignedPos = egoInvRot * relativePos;
