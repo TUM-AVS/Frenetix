@@ -29,6 +29,8 @@ be sampled using a sampling matrix, consisting of longitudinal, lateral and temp
 5. Evaluating cost functions
 6. Retrieving the trajectories, possibly sorted by feasability and cost
 
+![frenetix_overview](./frenetix_overview.png)
+
 ### Quick Start
 First create a trajectory handler object, specifying the desired time step `dt`:
 ```python
