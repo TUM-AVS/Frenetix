@@ -9,9 +9,10 @@ authors = [
     { name = "Georg Schmalhofer", email = "georg.schmalhofer@tum.de" },
     { name = "Tobias Markus", email = "tobias.markus@tum.de" },
     { name = "Rainer Trauth", email = "rainer.trauth@tum.de" },
+    { name = "Korbinian Moller", email = "korbinian.moller@tum.de" },
 ]
 maintainers = [
-    { name = "Rainer Trauth", email = "rainer.trauth@tum.de" },
+    { name = "Korbinian Moller", email = "korbinian.moller@tum.de" },
 ]
 
 dependencies = [
