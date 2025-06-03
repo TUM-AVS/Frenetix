@@ -7,7 +7,7 @@ message(STATUS "Prefetching dependencies")
 file(MAKE_DIRECTORY ${_fetch_prefix})
 
 file(DOWNLOAD
-    https://boostorg.jfrog.io/artifactory/main/release/1.85.0/source/boost_1_85_0.tar.gz
+    https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
     ${_fetch_prefix}/boost_1_85_0.tar.gz
     EXPECTED_HASH SHA256=be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b
 )

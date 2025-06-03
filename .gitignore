@@ -1,11 +1,54 @@
-/src/python/frenetix/_version.py
-/build-python
-/dist
-
-*.egg-info
+# =====================
+# Python Build Artifacts
+# =====================
+__pycache__/
+*.py[cod]
+*.pyd
 *.so
+*.egg-info/
+dist/
+wheelhouse/
+_deps/
 
-/venv*
+# =====================
+# Project-specific
+# =====================
+/src/python/frenetix/_version.py
+/build-python/
+/venv*/
+*.vscode
 
-__pycache__
+# =====================
+# CMake Build Artifacts
+# =====================
+build/
+build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+CTestCostData.txt
+DartConfiguration.tcl
+Testing/
+install/
+_install/
 
+# =====================
+# OS / Editor Metadata
+# =====================
+.DS_Store
+*.swp
+*.swo
+*.bak
+*.tmp
+Thumbs.db
+
+# =====================
+# Generated C++ Files
+# =====================
+*.cxx
+*.o
+*.obj
+*.a
+*.out
