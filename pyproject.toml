@@ -26,6 +26,7 @@ dependencies = [
 [build-system]
 requires = [
     "scikit-build-core>=0.8, <0.10",
+    'exceptiongroup<1.1.0; python_version < "3.11"',
     "nanobind~=2.0.0",
     "setuptools_scm>=7",
     'typing-extensions; python_version < "3.11"',

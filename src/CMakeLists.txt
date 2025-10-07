@@ -3,6 +3,7 @@ set(FP_SRC_FILES
   "TrajectoryHandler.cpp"
   "geometryMsgs.cpp"
   "strategies/CostFunctions/CalculateAccelerationCost.cpp"
+  "strategies/CostFunctions/CalculateCartesianLateralAccelerationCost.cpp"
   "strategies/CostFunctions/CalculateCollisionProbabilityFast.cpp"
   "strategies/CostFunctions/CalculateCollisionProbabilityMahalanobis.cpp"
   "strategies/CostFunctions/CalculateDistanceToObstacleCost.cpp"

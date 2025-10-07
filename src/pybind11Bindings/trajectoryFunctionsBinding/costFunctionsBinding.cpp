@@ -18,6 +18,7 @@
 #include "strategies/CostFunctions/CalculateJerkCost.hpp"
 #include "strategies/CostFunctions/CalculateLaneCenterOffsetCost.hpp"
 #include "strategies/CostFunctions/CalculateLateralAccelerationCost.hpp"
+#include "strategies/CostFunctions/CalculateCartesianLateralAccelerationCost.hpp"
 #include "strategies/CostFunctions/CalculateLateralJerkCost.hpp"
 #include "strategies/CostFunctions/CalculateLateralVelocityCost.hpp"
 #include "strategies/CostFunctions/CalculateLongitudinalAccelerationCost.hpp"
@@ -54,6 +55,15 @@ namespace plannerCPP
             (
                 "evaluate_trajectory",
                 &CalculateAccelerationCost::evaluateTrajectory,
+                nb::arg("trajectory")
+            );
+
+        nb::class_<CalculateCartesianLateralAccelerationCost, CostStrategy>(m, "CalculateCartesianLateralAccelerationCost")
+            .def(nb::init<std::string, double, double>(), nb::arg("function_name"), nb::arg("cost_weight"), nb::arg("latAccRef"))
+            .def
+            (
+                "evaluate_trajectory",
+                &CalculateCartesianLateralAccelerationCost::evaluateTrajectory,
                 nb::arg("trajectory")
             );
 
@@ -148,7 +158,15 @@ namespace plannerCPP
             );
 
         nb::class_<CalculateNegativeVelocityOffsetCost, CostStrategy>(m, "CalculateNegativeVelocityOffsetCost")
-            .def(nb::init<std::string, double, double>(), nb::arg("function_name"), nb::arg("cost_weight"), nb::arg("desiredSpeed"))
+            .def(nb::init<std::string, double, double, double, double, bool, int>(), 
+                nb::arg("function_name"),
+                nb::arg("cost_weight"),
+                nb::arg("desiredSpeed"),
+                nb::arg("dT"),
+                nb::arg("t_min"),
+                nb::arg("limit_to_t_min"),
+                nb::arg("norm_order")
+            )
             .def
             (
                 "evaluate_trajectory",
@@ -193,7 +211,15 @@ namespace plannerCPP
             );
 
         nb::class_<CalculatePositiveVelocityOffsetCost, CostStrategy>(m, "CalculatePositiveVelocityOffsetCost")
-            .def(nb::init<std::string, double, double>(), nb::arg("function_name"), nb::arg("cost_weight"), nb::arg("desiredSpeed"))
+            .def(nb::init<std::string, double, double, double, double, bool, int>(), 
+                nb::arg("function_name"),
+                nb::arg("cost_weight"),
+                nb::arg("desiredSpeed"),
+                nb::arg("dT"),
+                nb::arg("t_min"),
+                nb::arg("limit_to_t_min"),
+                nb::arg("norm_order")
+            )
             .def
             (
                 "evaluate_trajectory",
