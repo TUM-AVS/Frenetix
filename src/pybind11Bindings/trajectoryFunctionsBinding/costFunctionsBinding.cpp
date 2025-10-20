@@ -281,13 +281,14 @@ namespace plannerCPP
                 nb::arg("vehicleWidth")
             )
             .def(
-                nb::init<std::string, double, std::map<int, PredictedObject>, double, double, double, double>(),
+                nb::init<std::string, double, std::map<int, PredictedObject>, double, double, double, double, double>(),
                 nb::arg("function_name"),
                 nb::arg("cost_weight"),
                 nb::arg("predictions"),
                 nb::arg("vehicle_length"),
                 nb::arg("vehicle_width"),
                 nb::arg("wheelbase_rear"),
+                nb::arg("prediction_dt"),
                 nb::arg("off_center_weight") = 0.5
             )
             .def

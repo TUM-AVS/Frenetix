@@ -63,6 +63,7 @@ private:
     std::map<int, PredictedObject> m_predictions; /**< A map holding the predicted states of other agents. */
     Dimensions m_dimensions; /**< The dimensions of the vehicle. */
     double m_wheelbaseRear; /**< The rear wheelbase of the vehicle. */
+    double m_prediction_dt; /**< The time difference between predictions */
     double m_offCenterWeight = 0.5; /**< The weight for off-center points */
 
     /**
@@ -90,7 +91,7 @@ public:
      * @param wheelbaseRear The rear wheelbase of the vehicle.
      * @param offCenterWeight Weight for off-center sampled points.
      */
-    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear, double offCenterWeight = 0.5);
+    CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear, double prediction_dt, double offCenterWeight = 0.5);
 
     /**
      * @brief Constructor for the CalculateCollisionProbabilityFast class.

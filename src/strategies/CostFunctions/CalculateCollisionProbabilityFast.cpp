@@ -11,17 +11,20 @@
 #include "CartesianSample.hpp"
 #include "TrajectorySample.hpp"
 
-CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear, double offCenterWeight)
+#include <spdlog/spdlog.h>
+
+CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth, double wheelbaseRear, double prediction_dt, double offCenterWeight)
     : CostStrategy(funName, costWeight)
     , m_predictions(predictions)
     , m_dimensions(vehicleLength, vehicleWidth)
     , m_wheelbaseRear(wheelbaseRear)
+    , m_prediction_dt(prediction_dt)
     , m_offCenterWeight(offCenterWeight)
 {
 }
 
 CalculateCollisionProbabilityFast::CalculateCollisionProbabilityFast(std::string funName, double costWeight, std::map<int, PredictedObject> predictions, double vehicleLength, double vehicleWidth)
-    : CalculateCollisionProbabilityFast(funName, costWeight, predictions, vehicleLength, vehicleWidth, vehicleLength / 2.0)
+    : CalculateCollisionProbabilityFast(funName, costWeight, predictions, vehicleLength, vehicleWidth, vehicleLength / 2.0, 0.1)
 {
 }
 
@@ -90,30 +93,65 @@ void CalculateCollisionProbabilityFast::evaluateTrajectory(TrajectorySample& tra
         throw std::logic_error { "tried to calculate cost of invalid trajectory" };
     }
 
+    // Check if pediction dt is aligned with trajectory dt
+    const double planner_dt = trajectory.m_dT;     
+    const double prediction_dt = m_prediction_dt;
+
+    // prediction dt must be >= planner dt
+    if (prediction_dt < planner_dt) {
+        throw std::runtime_error("Prediction DT is smaller than planner DT. This logic is not supported.");
+    }
+
+    const double ratio = prediction_dt / planner_dt; // e.g. 0.5 / 0.25 = 2.0
+    
+    // Check if ratio is an integer (i.e. prediction dt is a multiple of planner dt)
+    const double remainder = std::fmod(ratio, 1.0);
+    const double epsilon = 1e-5;
+
+    // If the remainder (e.g. 2.0 % 1.0 = 0.0) is not close to zero, it's not a multiple
+    if (std::abs(remainder) > epsilon && std::abs(1.0 - remainder) > epsilon) {
+        throw std::runtime_error("Prediction DT is not an integer multiple of planner DT.");
+    }
+
+    // Calculate the index step for the evaluation
+    const int index_step = static_cast<int>(std::round(ratio));
+
+    // Initialize cost
     double cost = 0.0;
+
+    // SPDLOG_ERROR("Matching results: prediction_dt {}, planner_dt {}, ratio {}, index_step {}", prediction_dt, planner_dt, ratio, index_step);
 
     const Eigen::AlignedBox2d dimbox = m_dimensions.centeredBox();
     const Eigen::Vector2d wheelbase(m_wheelbaseRear, 0.0);
 
+    // Iterate over all predicted obstacles
     for (const auto& [obstacle_id, prediction] : m_predictions) {
         std::vector<double> inv_dist;
 
         const Dimensions obsDimensions { prediction.length, prediction.width };
 
-        for (int i = 1; i < trajectory.m_cartesianSample.x.size(); ++i)
+        // Iterate over prediction points
+        for (int pred_idx = 1; pred_idx < prediction.predictedPath.size(); ++pred_idx)
         {
-            if (i >= prediction.predictedPath.size()) { break; }
+            
+            // Calculate corresponding planner trajectory index
+            const int planner_idx = pred_idx * index_step;
 
-            Eigen::Vector2d u(trajectory.m_cartesianSample.x[i], trajectory.m_cartesianSample.y[i]);
+            // SPDLOG_ERROR("matching pred_idx {} to planner_idx {}", pred_idx, planner_idx);
+            
+            // Check if planner index is within trajectory range
+            if (planner_idx >= trajectory.m_cartesianSample.x.size()) { break; }
 
-            Eigen::Rotation2D egoOrientation(trajectory.m_cartesianSample.theta[i]);
+            // Get ego vehicle position and orientation at the corresponding index
+            Eigen::Vector2d u(trajectory.m_cartesianSample.x[planner_idx], trajectory.m_cartesianSample.y[planner_idx]);
+            Eigen::Rotation2D egoOrientation(trajectory.m_cartesianSample.theta[planner_idx]);
 
             // Move rear axle position to center positoin
             u += egoOrientation * wheelbase;
 
             Eigen::AlignedBox2d box = dimbox.translated(u);
 
-            const auto& pose = prediction.predictedPath.at(i-1);
+            const auto& pose = prediction.predictedPath.at(pred_idx);
             Eigen::Vector2d v = pose.position.head<2>();
 
             // Check if the distance between the vehicles is larger than ~7 meters
