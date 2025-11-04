@@ -28,6 +28,18 @@ namespace plannerCPP
 
         nb::class_<CoordinateSystemWrapper>(m, "CoordinateSystemWrapper")
             .def(nb::init<Eigen::Ref<RowMatrixXd>>(), nb::arg("ref_path"))
+            //
+            .def(
+              "convert_to_cartesian", 
+              &CoordinateSystemWrapper::convertToCartesianCoords,
+              nb::arg("s"), nb::arg("d"),
+              "Convert (s, d) to (x, y). Returns Eigen::Vector2d [x, y].")
+            //
+            .def(
+              "convert_to_curvilinear", 
+              &CoordinateSystemWrapper::convertToCurvilinearCoords,
+              nb::arg("x"), nb::arg("y"),
+              "Convert (x, y) to (s, d). Returns Eigen::Vector2d [s, d].")
             // CCS property is problematic...
             // .def_prop_rw("system", &CoordinateSystemWrapper::getSystem, &CoordinateSystemWrapper::setSystem)
             .def_prop_rw("ref_pos",

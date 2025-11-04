@@ -103,6 +103,18 @@ Eigen::VectorXd CoordinateSystemWrapper::computeCurvatureFromPolyline(geometry::
     return curvatures;
 }
 
+Eigen::Vector2d CoordinateSystemWrapper::convertToCartesianCoords(double s, double d) const
+{
+    Eigen::Vector2d cartesianPoints = m_system->convertToCartesianCoords(s,d);
+    return cartesianPoints;
+}
+
+Eigen::Vector2d CoordinateSystemWrapper::convertToCurvilinearCoords(double x, double y) const
+{
+    Eigen::Vector2d curvilinearPoints = m_system->convertToCurvilinearCoords(x,y);
+    return curvilinearPoints;
+}
+
 
 Eigen::VectorXd CoordinateSystemWrapper::computeOrientationFromPolyline(geometry::EigenPolyline& polyline) 
 {

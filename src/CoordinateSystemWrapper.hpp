@@ -43,6 +43,9 @@ public:
     double getSLambda(double s, int s_idx) const;
 
     const RowMatrixXd& getRefPath() const { return m_refPath; }
+
+    Eigen::Vector2d convertToCartesianCoords(double s, double d) const;
+    Eigen::Vector2d convertToCurvilinearCoords(double x, double y) const;
 };
 
 
