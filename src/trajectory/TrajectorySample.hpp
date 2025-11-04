@@ -117,6 +117,15 @@ public:
                      double velocity0);
 
     /**
+     * @brief Construct a new Trajectory Sample object based on an old trajectory.
+     *
+     * @param size
+     * @param new_trajectory
+     */
+    TrajectorySample(size_t size,
+                     const TrajectorySample& new_trajectory);
+
+    /**
      * @brief Initialize arrays of the curvilinear and cartesian samples with the specified size.
      *
      * @param size The size to resize the arrays to.

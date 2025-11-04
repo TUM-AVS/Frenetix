@@ -26,6 +26,73 @@ TrajectoryHandler::TrajectoryHandler(double dt)
 
 }
 
+TrajectorySample TrajectoryHandler::splice(
+    const TrajectorySample& old_trajectory,
+    const TrajectorySample& new_trajectory,
+    size_t splice_index
+)
+{
+    // Check if splicing is needed (index 0 or old trajectory is invalid/too short)
+    // NOTE: m_size must be public in TrajectorySample.hpp
+    if (splice_index == 0 || splice_index >= old_trajectory.m_size) {
+        // If no splicing is needed, just return the new trajectory.
+        return new_trajectory; 
+    }
+
+    // Calculate the total size of the new combined trajectory
+    // NOTE: m_size must be public in TrajectorySample.hpp
+    size_t new_size = splice_index + new_trajectory.m_size;
+
+    // create new trajectory sample
+    TrajectorySample spliced_traj(new_size, new_trajectory);
+
+    // --- Fill Cartesian vectors ---
+    spliced_traj.m_cartesianSample.x.head(splice_index) = old_trajectory.m_cartesianSample.x.head(splice_index);
+    spliced_traj.m_cartesianSample.x.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.x;
+
+    spliced_traj.m_cartesianSample.y.head(splice_index) = old_trajectory.m_cartesianSample.y.head(splice_index);
+    spliced_traj.m_cartesianSample.y.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.y;
+
+    spliced_traj.m_cartesianSample.theta.head(splice_index) = old_trajectory.m_cartesianSample.theta.head(splice_index);
+    spliced_traj.m_cartesianSample.theta.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.theta;
+
+    spliced_traj.m_cartesianSample.velocity.head(splice_index) = old_trajectory.m_cartesianSample.velocity.head(splice_index);
+    spliced_traj.m_cartesianSample.velocity.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.velocity;
+
+    spliced_traj.m_cartesianSample.acceleration.head(splice_index) = old_trajectory.m_cartesianSample.acceleration.head(splice_index);
+    spliced_traj.m_cartesianSample.acceleration.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.acceleration;
+
+    spliced_traj.m_cartesianSample.kappa.head(splice_index) = old_trajectory.m_cartesianSample.kappa.head(splice_index);
+    spliced_traj.m_cartesianSample.kappa.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.kappa;
+
+    spliced_traj.m_cartesianSample.kappaDot.head(splice_index) = old_trajectory.m_cartesianSample.kappaDot.head(splice_index);
+    spliced_traj.m_cartesianSample.kappaDot.tail(new_trajectory.m_size) = new_trajectory.m_cartesianSample.kappaDot;
+
+    // --- Fill Curvilinear vectors ---
+    spliced_traj.m_curvilinearSample.s.head(splice_index) = old_trajectory.m_curvilinearSample.s.head(splice_index);
+    spliced_traj.m_curvilinearSample.s.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.s;
+
+    spliced_traj.m_curvilinearSample.d.head(splice_index) = old_trajectory.m_curvilinearSample.d.head(splice_index);
+    spliced_traj.m_curvilinearSample.d.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.d;
+
+    spliced_traj.m_curvilinearSample.theta.head(splice_index) = old_trajectory.m_curvilinearSample.theta.head(splice_index);
+    spliced_traj.m_curvilinearSample.theta.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.theta;
+
+    spliced_traj.m_curvilinearSample.dd.head(splice_index) = old_trajectory.m_curvilinearSample.dd.head(splice_index);
+    spliced_traj.m_curvilinearSample.dd.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.dd;
+
+    spliced_traj.m_curvilinearSample.ddd.head(splice_index) = old_trajectory.m_curvilinearSample.ddd.head(splice_index);
+    spliced_traj.m_curvilinearSample.ddd.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.ddd;
+
+    spliced_traj.m_curvilinearSample.ss.head(splice_index) = old_trajectory.m_curvilinearSample.ss.head(splice_index);
+    spliced_traj.m_curvilinearSample.ss.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.ss;
+
+    spliced_traj.m_curvilinearSample.sss.head(splice_index) = old_trajectory.m_curvilinearSample.sss.head(splice_index);
+    spliced_traj.m_curvilinearSample.sss.tail(new_trajectory.m_size) = new_trajectory.m_curvilinearSample.sss;
+
+    return spliced_traj;
+}
+
 void TrajectoryHandler::setAllCostWeightsToZero()
 {
     for(auto& [functionName, costStrategy] : m_costFunctions)

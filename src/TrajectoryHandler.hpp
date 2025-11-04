@@ -71,6 +71,19 @@ public:
     void setAllCostWeightsToZero();
 
     /**
+     * @brief Splices two trajectories together at a given index.
+     * @param old_trajectory The trajectory to take the prefix from.
+     * @param new_trajectory The trajectory to append.
+     * @param splice_index The number of samples to take from old_trajectory.
+     * @return TrajectorySample A new, combined TrajectorySample object.
+     */
+    TrajectorySample splice(
+        const TrajectorySample& old_trajectory,
+        const TrajectorySample& new_trajectory,
+        size_t splice_index
+    );
+
+    /**
      * Get number of feasible trajectories.
      */
     size_t getFeasibleCount() const;

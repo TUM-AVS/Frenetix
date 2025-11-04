@@ -160,6 +160,15 @@ namespace plannerCPP
                 "reset_Trajectories", 
                 &TrajectoryHandler::resetTrajectories, 
                 "Resets the trajectories container."
+            )
+            .def
+            (
+                "splice", 
+                &TrajectoryHandler::splice,
+                nb::arg("old_trajectory"),
+                nb::arg("new_trajectory"),
+                nb::arg("splice_index"),
+                "Splices an old and new trajectory together at the given index."
             );
     }
 

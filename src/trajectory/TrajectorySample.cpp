@@ -1,6 +1,7 @@
 #include "TrajectorySample.hpp"
 
 #include <geometry/curvilinear_coordinate_system.h>
+#include <cstddef>
 
 #include "CoordinateSystemWrapper.hpp"
 
@@ -72,6 +73,18 @@ TrajectorySample::TrajectorySample(double x_0,
     m_cartesianSample.theta[0] = orientation_0;
     m_cartesianSample.acceleration[0] = acceleration_0;
     m_cartesianSample.velocity[0] = velocity_0;
+}
+
+// Used for splicing trajectories
+TrajectorySample::TrajectorySample(size_t size,
+                                   const TrajectorySample& new_trajectory)
+    : m_dT (new_trajectory.m_dT)
+    , m_cost (new_trajectory.m_cost)
+    , m_uniqueId (new_trajectory.m_uniqueId)
+    , m_samplingParameters (new_trajectory.m_samplingParameters)
+
+{
+    initArraysWithSize(size);
 }
 
 void TrajectorySample::initArraysWithSize(size_t size)
